@@ -4,7 +4,7 @@ import { Line } from "react-chartjs-2";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 import { GameServices, GlobalEvents } from "../logic/services";
 import { BusinessCalculator } from "../logic/services/businessCalculator/BusinessCalculator";
-import { GameConfig } from "../logic/services/Config";
+import { EventNames, GameConfig } from "../logic/services/Config";
 import { TimeService } from "../logic/services/timeService/TimeService";
 import './BusinessChart.css'
 
@@ -45,7 +45,7 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
         this.initializeChart()
         let event = GameServices.getService<GlobalEvents>(GlobalEvents.serviceName)
 
-        event.subscribe('changePeriod', () => {
+        event.subscribe(EventNames.periodChange, () => {
 
             GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getAllBusiness().forEach(b => {
                 let s = b.stockPriceHistory[b.stockPriceHistory.length - 1];
@@ -119,12 +119,10 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
         }
 
         BusinessChart.cartRef?.update()
-        let business =
+
         this.setState({
             shortName: newComp,
         })
-
-       
     }
 
     render(): React.ReactNode {

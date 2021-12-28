@@ -1,32 +1,27 @@
-import { GameServices } from "..";
-import { IGameService } from "../IGameService";
-import { SaveDataService } from "../saveData/SaveDataService";
-
-/**
- * Ticks: 100
- * Period: 100
- * Circle: 100
- * 
- */
+import { GameServices, GlobalEvents } from '..'
+import { EventNames } from '../Config'
+import { IGameService } from '../IGameService'
+import { SaveDataService } from '../saveData/SaveDataService'
 export class TimeService implements IGameService {
     
     public static serviceName = 'TimeService'
 
-    public static readonly age: number = 100 * 100 * 100;
-    public static readonly circle: number = 100 * 100;
-    public static readonly period: number = 100;
+    public static readonly age: number = 100 * 100 * 100
+    public static readonly circle: number = 100 * 100
+    public static readonly period: number = 100
 
-    private _saveData: SaveDataService;
-    private static _in: TimeService;
-    /**
-     *
-     */
+    private _saveData: SaveDataService
+    private static _in: TimeService
+    private _lastTb: TimeBox
+
     constructor() {
         this._saveData = GameServices.getService<SaveDataService>(SaveDataService.serviceName);
         if(TimeService._in !== undefined){
-            throw new Error('Double TimeService!')
+            throw new Error('Recreate TimeService!')
         }
-        TimeService._in = this;
+        TimeService._in = this
+        this._lastTb = this.getCurrentTimeBox()
+
     }
 
     public static getInstance(){
@@ -50,6 +45,22 @@ export class TimeService implements IGameService {
 
     addTicks(ticks: number) {
         this._saveData.getGameSave().ticks += ticks;
+        this.calculatePeriodChange()
+    }
+
+    private calculatePeriodChange() {
+        let newTb = this.getCurrentTimeBox()
+        if (newTb.period > this._lastTb.period) {
+            GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).callEvent(EventNames.periodChange, this, { o: this._lastTb.period, n: newTb.period })
+        }
+        if (newTb.circle > this._lastTb.circle) {
+            GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).callEvent(EventNames.periodChange, this, { o: this._lastTb.period, n: newTb.period })
+        }
+        if (newTb.age > this._lastTb.age) {
+            GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).callEvent(EventNames.periodChange, this, { o: this._lastTb.period, n: newTb.period })
+        }
+
+        this._lastTb = newTb
     }
 
     getCurrentTimeBox(): TimeBox{
@@ -70,12 +81,12 @@ export class TimeService implements IGameService {
             box.age = Math.floor(box.ticks / TimeService.age);
             box.ticks -= TimeService.age * box.age;
         }
-
+        //calculate circles
         if (box.ticks >= TimeService.circle) {
             box.circle = Math.floor(box.ticks / TimeService.circle);
             box.ticks -= box.circle * TimeService.circle;
         }
-
+        //calculate periods
         if (box.ticks >= TimeService.period) {
             box.period = Math.floor(box.ticks / TimeService.period);
             box.ticks -= box.period * TimeService.period;
@@ -85,7 +96,7 @@ export class TimeService implements IGameService {
     }
 
     getCurrentTimeFormated(): string {
-        return this.getFormated("A-C-P (T)", this.getTicks());
+        return this.getFormated('A-C-P (T)', this.getTicks());
     }
 
     getFormated(format: string, time: number | TimeBox): string {
@@ -102,6 +113,7 @@ export class TimeService implements IGameService {
 
         return format;
     }
+    
 }
 
 export interface TimeBox {

@@ -1,4 +1,4 @@
-import { GameServices, GlobalEvents, LogService } from "..";
+import { GameServices, LogService } from "..";
 import { Business } from "../../../model/Business";
 import { MainSave } from "../../../model/MainSave";
 import { StockPriceKeyPoint } from "../../../model/StockPrice";
@@ -12,7 +12,6 @@ export class BusinessCalculator implements IGameService {
         return this._save.business;
     }
    
-    private _eventService: GlobalEvents
     private _logService: LogService
     private _save: MainSave
     public static serviceName = 'BusinessCalculator';
@@ -20,7 +19,6 @@ export class BusinessCalculator implements IGameService {
      *
      */
     constructor() {
-        this._eventService = GameServices.getService<GlobalEvents>(GlobalEvents.serviceName)
         this._logService = GameServices.getService<LogService>(LogService.serviceName)
         this._save = GameServices.getService<SaveDataService>(SaveDataService.serviceName).getGameSave()
         
@@ -31,11 +29,11 @@ export class BusinessCalculator implements IGameService {
         if(this._save.business.length === 0){
             this.addBusiness("A")
         }
+    }
 
-        this._eventService.subscribe('changePeriod',(caller,args) =>{
-            this._save.business.forEach(b => {
-                this.updateBusiness(b.shortName)
-            })
+    onPeriodChange(){
+        this._save.business.forEach(b => {
+            this.updateBusiness(b.shortName)
         })
     }
 

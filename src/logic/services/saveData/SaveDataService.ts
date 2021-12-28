@@ -43,7 +43,12 @@ export class SaveDataService implements IGameService {
                 name: 'unknown',
                 lastSave: new Date(),
                 ticks: 0,
-                business:[]
+                business:[],
+                player:{
+                    depots:[],
+                    mainAccount:{balance: 1000, id:'main', interest:0,interestForPeriods:0,isSaving:false,name:'Bank Account'},
+                    savingAccount:{balance: 100000, id:'saving', interest:5.8, interestForPeriods:100, name:'Saving Account', isSaving:true}
+                }
             }
             this._saveManager.addSaveObject('mainsave', ms)
         }
