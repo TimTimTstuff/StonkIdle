@@ -1,0 +1,23 @@
+.reactLog{
+    font-size: 12pt;
+    height: 200px;
+    overflow: auto;
+    width: 250px;
+}
+
+.logmessage{
+    font-size: 8pt;
+    min-width: 220px;
+}
+
+.info {
+    color: rgb(81, 172, 247)
+}
+
+.msg  {
+    color: white
+}
+
+.logTimeStamp{
+    font-size: 6pt;
+}

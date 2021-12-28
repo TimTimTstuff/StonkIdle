@@ -1,5 +1,6 @@
 import './App.css';
 import { BusinessChart } from './components/BusinessChart';
+import { GameLog } from './components/GameLog';
 import { TimeBox } from './components/TimeBox';
 import { Game } from './logic/Game';
 
@@ -18,7 +19,7 @@ function App() {
       </div>
 
       <div className='gameBox' id='box2'>
-        t
+        <GameLog  />
       </div>
 
       <div className='gameBox' id='box3'>

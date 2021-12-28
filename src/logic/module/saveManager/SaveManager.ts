@@ -37,7 +37,7 @@ export class SaveManager {
 
     public saveFile(): void {
         this._saveObject.lastSave = Date.now();
-        console.log(this._saveObject)
+        
         const file = JSON.stringify(this._saveObject);
         const compress = LZString.compressToBase64(file);
         localStorage.setItem(this._storageKey, compress);
@@ -60,7 +60,7 @@ export class SaveManager {
             }
 
             this._saveObject = JSON.parse(decodedSave);
-            console.log(this._saveObject)
+            
             if(this.saveLoaded != undefined)
                 this.saveLoaded();
 

@@ -1,4 +1,3 @@
-import { Business } from '../model/Business'
 import { ConsoleLogger, LogLevel } from './module/logger/Logger'
 import { GameServices, GlobalEvents, LogService } from './services'
 import { BusinessCalculator } from './services/businessCalculator/BusinessCalculator'
@@ -48,6 +47,7 @@ export class Game {
     registgerGameEvents() {
        this._gameEvent?.subscribe(EventNames.periodChange, (caller, args) => {
            this._businessCalculator?.onPeriodChange()
+           this._gameEvent?.callEvent(EventNames.AddLogMessage,this,{msg:`Period Changed!`, key:'info', ticks: this._timeService?.getTicks()})
         })
     }
 
@@ -55,7 +55,9 @@ export class Game {
         this._log = new LogService(new ConsoleLogger(LogLevel.Debug, true, true))
         
         GameServices.registerService(this._log)
-        GameServices.registerService(new SaveDataService(20))
+        let saveManager = SaveDataService.getInstance(20)
+        
+        GameServices.registerService(saveManager)
         this._gameEvent = new GlobalEvents()
         this._timeService = TimeService.getInstance()
         
