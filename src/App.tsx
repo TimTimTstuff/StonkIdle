@@ -5,8 +5,8 @@ import { Game } from './logic/Game';
 
 function App() {
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  let g = new Game();
+  Game.getInstance()
+  console.log('Call App')
 
   return (
     <div className="App" id='stonks'>

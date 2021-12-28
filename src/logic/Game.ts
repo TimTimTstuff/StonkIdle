@@ -8,17 +8,28 @@ import { TimeService } from './services/timeService/TimeService'
 
 export class Game {
 
-    public static testBusiness: Business
+    private static instance: Game;
     public static loopId:number
+    //Services
     private _gameEvent:GlobalEvents | undefined
     private _timeService:TimeService | undefined
     private _log: LogService | undefined
     private _businessCalculator: BusinessCalculator | undefined
 
     constructor() {
+        if(Game.instance !== undefined) throw new Error('Dublicate Game')
         this.registerServices()
         this.registgerGameEvents()
         this.setupGameLoop()
+    }
+
+    public static getInstance() {
+        if(Game.instance === undefined)
+        {
+            Game.instance = new Game()
+        }
+
+        return Game.instance
     }
 
     private setupGameLoop() {
@@ -41,7 +52,6 @@ export class Game {
     }
 
     registerServices(){
-        Game.testBusiness = {shortName: 'AAA', floatingStock: 1000, totalStock:2000, stockPriceHistory:[], name: 'Test Company'};
         this._log = new LogService(new ConsoleLogger(LogLevel.Debug, true, true))
         
         GameServices.registerService(this._log)

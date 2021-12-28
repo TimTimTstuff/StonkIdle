@@ -13,8 +13,12 @@ export class SaveDataService implements IGameService {
     private _autosaveSeconds = 30;
     //private _saveLoopId: number;
     public static serviceName = 'SaveDataService';
+    private static instance: SaveDataService;
 
     constructor(autosaveSeconds: number) {
+        if(SaveDataService.instance != undefined)
+            throw new Error(`Instance already exists`)
+        SaveDataService.instance = this;
         this._saveManager = new SaveManager('tgame');
         this._saveManager.initializeSave();
         this._saveManager.saveNotFound = () => {

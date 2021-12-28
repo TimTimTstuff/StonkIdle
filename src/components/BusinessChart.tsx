@@ -139,9 +139,9 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
             <span></span>
             <Line ref={(reference) => {BusinessChart.cartRef = reference}} height={270} width={620} data={this._chartData} options={
                 {
-                    responsive: false,
+                    responsive: true,
                     interaction: {
-                        intersect: false
+                        intersect: true
                     },
                     color: '#ffffff',
                     scales: {
@@ -164,7 +164,7 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
                         y: {
                             title: {
                                 color: '#ffffff',
-                                display: false,
+                                display: true,
                             },
                             grid: {
                                 drawBorder: false,
