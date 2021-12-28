@@ -1,0 +1,22 @@
+#accountWindow th{
+    font-size: 6pt;
+    text-align: right;
+    
+}
+
+#accountWindow {
+    border: solid thin #61666d;
+    margin-left: 5px;
+    height: 64px;
+}
+
+#accountWindow td{
+    font-size: 6pt;
+    text-align: right;
+}
+
+.balance{
+    font-size: 10pt !important;
+    width: 100px;
+}
+

@@ -1,6 +1,20 @@
+#reactLog h2{
+    padding: 0;
+    margin:0;
+}
+
+#reactLog{
+    border: solid thin #61666d;
+    width: 250px;
+    float:right;
+    margin-right: -20px;
+    margin-top: -15px;
+    padding-left: 5px;
+}
+
 .reactLog{
     font-size: 12pt;
-    height: 200px;
+    height: 284px;
     overflow: auto;
     width: 250px;
 }
@@ -16,6 +30,14 @@
 
 .msg  {
     color: white
+}
+
+.income {
+    color: #31e649
+}
+
+.out {
+    color:rgb(175, 30, 42)
 }
 
 .logTimeStamp{

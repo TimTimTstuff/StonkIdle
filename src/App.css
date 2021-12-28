@@ -18,7 +18,14 @@ body{
   float: left;
   border-left: solid thin #61666d;
   border-bottom: solid thin #61666d;
-  padding:15px;
+  padding-top:5px;
+  padding-bottom: 5px;
+  padding-left:5px;
+
+}
+
+.gameBoxHeader div {
+  float:left;
 }
 
 .gameBox {
@@ -28,6 +35,37 @@ body{
   border-left: solid thin #61666d;
   border-bottom: solid thin #61666d;
   padding:15px;
+}
+
+.tabBoxHeader{
+  border-bottom: solid thin #61666d;
+  height: 26px;
+}
+
+.tabBoxHeaderItem{
+  width: 82px;
+  text-align: center;
+  cursor: pointer;
+  float: left;
+  border: solid thin #61666d;
+  background-color: #353c47;
+  padding: 2px;
+  margin-left: 5px;
+}
+
+.tabBoxHeaderItem:hover {
+  background-color: #47505f;
+  border: solid thin #a7b0bd;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
 }
 
 #box1{

@@ -1,4 +1,5 @@
 import './App.css';
+import { AccountWindow } from './components/AccountWindow';
 import { BusinessChart } from './components/BusinessChart';
 import { GameLog } from './components/GameLog';
 import { TimeBox } from './components/TimeBox';
@@ -12,22 +13,32 @@ function App() {
   return (
     <div className="App" id='stonks'>
       <div className='gameBoxHeader' id='boxHeader'>
-        <TimeBox ticks={0} useGameTime={true} />
+        <TimeBox ticks={0} useGameTime={true} /> <AccountWindow />
       </div>
       <div className='gameBox' id='box1'>
         <BusinessChart shortName='AAA' />
       </div>
 
       <div className='gameBox' id='box2'>
-        <GameLog  />
+        <div className='tabBox'>
+          <div className='tabBoxHeader'>
+            <div className='tabBoxHeaderItem noselect'>Accounts</div>
+            <div className='tabBoxHeaderItem noselect'>Depot</div>
+          </div>
+          <div className='tabBoxContent'>
+            <div className='tabBoxContentItem tab1'>Tab 1</div>
+            <div className='tabBoxContentItem tab2'>Tab 2</div>
+          </div>
+        </div>
+       
       </div>
 
       <div className='gameBox' id='box3'>
-        t
+        t 
       </div>
 
       <div className='gameBox' id='box4'>
-        t
+      <GameLog  />
       </div>
     </div>
   );
