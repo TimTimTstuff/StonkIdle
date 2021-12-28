@@ -1,0 +1,29 @@
+.timebox {
+    text-transform: uppercase;
+    text-align: center;
+    
+}
+
+.timebox th{
+    font-size: 6pt;
+    text-align: center;
+    width: 60px;
+}
+
+.timeBoxContainer{
+    width: 150px;
+    border: solid thin lightgray;
+
+}
+
+.timeload{
+    height: 4px;
+    border: solid thin lightgray;
+    z-index: 9999;
+    
+}
+
+.timeloadinner{
+    background-color: #00bb00;
+    height: 5px;
+}

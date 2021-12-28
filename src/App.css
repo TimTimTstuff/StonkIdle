@@ -1,0 +1,44 @@
+*{
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #f0f6fc;
+}
+body{
+  padding-top: 10px;
+}
+#stonks {
+  background-color: #21262d; 
+  width: 1280px;
+  height: 720px;
+  margin: auto;
+  display: block;
+}
+
+.gameBoxHeader{
+  width: 1248px;
+  float: left;
+  border-left: solid thin #61666d;
+  border-bottom: solid thin #61666d;
+  padding:15px;
+}
+
+.gameBox {
+  width: 608px;
+  height: 288px;
+  float: left;
+  border-left: solid thin #61666d;
+  border-bottom: solid thin #61666d;
+  padding:15px;
+}
+
+#box1{
+ 
+}
+#box2{
+ 
+}
+#box3{
+  
+}
+#box4{
+ 
+}

@@ -1,0 +1,11 @@
+.downtrend{
+    color: red;
+}
+
+.uptrend{
+    color: green;
+}
+
+select {
+    background-color: #21262d;
+}
