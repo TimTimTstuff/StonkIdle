@@ -1,6 +1,7 @@
 import './App.css';
 import { AccountWindow } from './components/AccountWindow';
 import { BusinessChart } from './components/BusinessChart';
+import { DepotView } from './components/DepotView';
 import { GameLog } from './components/GameLog';
 import { TimeBox } from './components/TimeBox';
 import { Game } from './logic/Game';
@@ -20,7 +21,11 @@ function App() {
       </div>
 
       <div className='gameBox' id='box2'>
-        <div className='tabBox'>
+        <DepotView />
+      </div>
+
+      <div className='gameBox' id='box3'>
+      <div className='tabBox'>
           <div className='tabBoxHeader'>
             <div className='tabBoxHeaderItem noselect'>Accounts</div>
             <div className='tabBoxHeaderItem noselect'>Depot</div>
@@ -30,15 +35,10 @@ function App() {
             <div className='tabBoxContentItem tab2'>Tab 2</div>
           </div>
         </div>
-       
-      </div>
-
-      <div className='gameBox' id='box3'>
-        t 
       </div>
 
       <div className='gameBox' id='box4'>
-      <GameLog  />
+        <GameLog />
       </div>
     </div>
   );

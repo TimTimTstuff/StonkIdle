@@ -1,0 +1,22 @@
+.depotViewItem{
+    float: left;
+    border: solid thin #61666d;
+    width: 220px;
+    padding:5px;
+}
+
+.depotList{
+    overflow: auto;
+    height: 280px;
+}
+
+.depotListItem {
+    border: solid thin #61666d;
+    margin-bottom: 4px;
+    cursor: pointer;
+    background-color: #353c47;
+}
+
+.depotListItem:hover{
+    background-color: #47505f;
+}

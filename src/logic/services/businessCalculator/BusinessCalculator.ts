@@ -40,6 +40,15 @@ export class BusinessCalculator implements IGameService {
     getBusiness(shortname: string) : Business | undefined {
         return this._save.business.find(p => p.shortName === shortname)
     }
+
+    getBusinessCurrentPrices(shortName: string): {b:number, s:number} {
+        let cB = this.getBusiness(shortName)
+        if(cB === undefined) return {b:0,s:0}
+
+        let lastRecord = cB.stockPriceHistory[cB.stockPriceHistory.length -1]
+        
+        return {b: lastRecord.buyPrice, s: lastRecord.sellPrice}
+    }
     
     getServiceName(): string {
         return BusinessCalculator.serviceName

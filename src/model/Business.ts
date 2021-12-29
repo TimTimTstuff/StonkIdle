@@ -1,4 +1,4 @@
-import { StockPrice, StockPriceKeyPoint } from "./StockPrice"
+import { StockPrice } from "./StockPrice"
 
 export interface MarketIndex{
     name: string

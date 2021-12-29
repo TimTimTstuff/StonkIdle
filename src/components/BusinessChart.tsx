@@ -72,6 +72,10 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
 
             BusinessChart.cartRef?.update()
         })
+
+        event.subscribe(EventNames.selectedBusiness,(caller, shortName) =>{
+            this.changeCompany(shortName as string)
+        })
     }
 
     initializeChart() {
@@ -114,8 +118,9 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
         this._currentComp = newComp;
         
         for(var i = 0; i< this._chartData.datasets.length; i++){
+            // eslint-disable-next-line eqeqeq
             if(BusinessChart.cartRef == undefined) return  
-            BusinessChart.cartRef.data.datasets[i].hidden = i===this._businessToIndex[newComp]?false:true;
+                BusinessChart.cartRef.data.datasets[i].hidden = i===this._businessToIndex[newComp]?false:true;
         }
 
         BusinessChart.cartRef?.update()
@@ -130,10 +135,6 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
         let data = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getBusiness(this.state.shortName)
 
         return <div>
-            Stonk: <select onChange={e => this.changeCompany(e.target.value)}>
-                <option>AAA</option>
-                <option>BBB</option>
-            </select> 
             <span>{data?.name}</span>
             <span> Price: <span className={this.state.value.changePercent > 0 ? 'uptrend' : 'downtrend'}>{Math.round(this.state.value.currentValue * 100) / 100}€ {Math.round(this.state.value.changePercent * 100) / 100}%</span></span>
             <span></span>

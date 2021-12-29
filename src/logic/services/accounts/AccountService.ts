@@ -1,9 +1,9 @@
-import { GlobalEvents } from "../../services";
-import { EventNames } from "../../services/Config";
-import { IGameService } from "../../services/IGameService";
-import { SaveDataService } from "../../services/saveData/SaveDataService";
+import { GlobalEvents } from "..";
+import { EventNames } from "../Config";
+import { IGameService } from "../IGameService";
+import { SaveDataService } from "../saveData/SaveDataService";
 
-export class Account implements IGameService{
+export class AccountService implements IGameService{
   
     public static serviceName = 'Account'
     private _saveService: SaveDataService
@@ -15,7 +15,7 @@ export class Account implements IGameService{
     }
 
     getServiceName(): string {
-        return Account.serviceName
+        return AccountService.serviceName
     }
 
     onPeriodUpdate() {
