@@ -1,11 +1,52 @@
 .downtrend{
-    color: red;
+    color: rgb(184, 40, 40);
 }
 
 .uptrend{
-    color: green;
+    color: rgb(103, 230, 103);
 }
 
 select {
     background-color: #21262d;
+}
+.chartCompanyInfo{
+    margin-right: 5px;
+}
+.chartCompanyNameShort {
+    font-size: 8pt;
+    margin-left: 5px;
+}
+.businessChart table th {
+    font-size: 8pt;
+    text-transform: uppercase;
+    font-weight: bold;
+    width: 50px;
+    text-align: left;
+    border: solid thin #61666d;
+}
+
+.businessChart table td {
+    font-size: 8pt;
+    text-transform: uppercase;
+    font-weight: bold;
+    width: 50px;
+    border: solid thin #61666d;
+}
+
+.floatLeft {
+    float: left;
+}
+
+.businessChart table{
+    float:left;
+}
+
+.chartCompanyName{
+    font-weight: bold;
+}
+
+.chartPriceInfo {
+    font-size: 8pt;
+    font-weight: bold;
+    text-transform: uppercase;
 }

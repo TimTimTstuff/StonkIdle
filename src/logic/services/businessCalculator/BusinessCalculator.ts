@@ -1,7 +1,8 @@
 import { GameServices, LogService } from "..";
-import { Business } from "../../../model/Business";
+import { Business, Potential } from "../../../model/Business";
 import { MainSave } from "../../../model/MainSave";
-import { StockPriceKeyPoint } from "../../../model/StockPrice";
+import { BusinessHelper } from "../../module/business/BusinessHelper";
+import { GameCalculator } from "../../module/calculator/GameCalculator";
 import { GameConfig } from "../Config";
 import { IGameService } from "../IGameService";
 import { SaveDataService } from "../saveData/SaveDataService";
@@ -23,11 +24,8 @@ export class BusinessCalculator implements IGameService {
         this._save = GameServices.getService<SaveDataService>(SaveDataService.serviceName).getGameSave()
         
         if(this._save.business === undefined || this._save.business.length == 0){
-            this._save.business = [{totalStock:10000, name:'Test Comp A', floatingStock:1000, shortName:'AAA', stockPriceHistory:[]},{totalStock:10000, name:'Test Comp B', floatingStock:1000, shortName:'BBB', stockPriceHistory:[]}]
-        }
 
-        if(this._save.business.length === 0){
-            this.addBusiness("A")
+            this._save.business = [BusinessHelper.generateBusiness(), BusinessHelper.generateBusiness(), BusinessHelper.generateBusiness(), BusinessHelper.generateBusiness()]
         }
     }
 
@@ -46,22 +44,12 @@ export class BusinessCalculator implements IGameService {
         if(cB === undefined) return {b:0,s:0}
 
         let lastRecord = cB.stockPriceHistory[cB.stockPriceHistory.length -1]
-        
+        if(lastRecord == undefined) return {b:0, s:0}
         return {b: lastRecord.buyPrice, s: lastRecord.sellPrice}
     }
     
     getServiceName(): string {
         return BusinessCalculator.serviceName
-    }
-
-    addBusiness(sn:string) {
-        this._save.business.push({
-            floatingStock: 1000,
-            stockPriceHistory: [],
-            name: "Test Comp",
-            shortName: sn,
-            totalStock: 10000
-        })
     }
 
     cleanBusinessHistory(business: Business){
@@ -79,12 +67,14 @@ export class BusinessCalculator implements IGameService {
             this._logService.warn(this.getServiceName(),`Can't find Business: ${shortName}`)
             return;
         }
-        let buyPrice = Math.round(Math.random()*1000)/100;
+        let current = this.getBusinessCurrentPrices(shortName)
+        if(current.s == 0) {current.s +=1;current.s +=1}
+        let sellPrice = GameCalculator.getRangeWitWeight(current.s, Potential.Medium)
+        let buyPrice = sellPrice*1.012
         cB.stockPriceHistory.push({
             buyPrice:buyPrice,
             date:GameServices.getService<TimeService>(TimeService.serviceName).getTicks(), 
-            keyPoint:StockPriceKeyPoint.Day,
-            sellPrice:buyPrice})
+            sellPrice:sellPrice})
         this.cleanBusinessHistory(cB);
     }
 }

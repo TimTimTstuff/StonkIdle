@@ -15,8 +15,8 @@ type bcProps = {
 type bcState = {
     value: {
         changePercent: number,
-        currentValue: number,
-        buyValue:number
+        sellPrice: number,
+        buyPrice: number
     },
     shortName:string
 }
@@ -36,8 +36,8 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
         this.state = {
             value: {
                 changePercent: 0,
-                currentValue: 1,
-                buyValue:0
+                sellPrice: 0,
+                buyPrice:0
             },
             shortName: props.shortName
         }
@@ -49,17 +49,18 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
 
             GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getAllBusiness().forEach(b => {
                 let s = b.stockPriceHistory[b.stockPriceHistory.length - 1];
+                let pre = b.stockPriceHistory[b.stockPriceHistory.length - 2];
                 this._chartData.datasets[this._businessToIndex[b.shortName]].data.push(s?.sellPrice)
-                if (GameConfig.businessChartMaxPoints < (this._chartData.labels?.length ?? 0)) {
+                if (GameConfig.businessChartMaxPoints < (this._chartData.datasets[this._businessToIndex[b.shortName]].data.length ?? 0)) {
                     this._chartData.datasets[this._businessToIndex[b.shortName]].data.shift()
                 } 
                 if(b.shortName === this._currentComp) {
                     this._chartData.labels?.push(GameServices.getService<TimeService>(TimeService.serviceName).getFormated('A/C/P (T)', s?.date ?? 0))
                     this.setState({
                         value: {
-                            currentValue: s?.sellPrice??0,
-                            changePercent: 0,
-                            buyValue: s?.buyPrice??0
+                            sellPrice: s?.sellPrice??0,
+                            changePercent: (100/pre.sellPrice*s.sellPrice)-100,
+                            buyPrice: s?.buyPrice??0
                         },
                         shortName: this._currentComp
                     })
@@ -99,7 +100,7 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
                 }
             }
             counter++;
-
+            this.changeCompany(b.shortName)
         })
         GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getAllBusiness().forEach(b => {
             b?.stockPriceHistory.forEach(s => {
@@ -118,6 +119,8 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
         this._currentComp = newComp;
         let buyPrice = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getBusiness(newComp)
         let price = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getBusinessCurrentPrices(newComp)
+        let pre = buyPrice?.stockPriceHistory[buyPrice.stockPriceHistory.length-2]
+        if(pre === undefined) return
         for(var i = 0; i< this._chartData.datasets.length; i++){
             // eslint-disable-next-line eqeqeq
             if(BusinessChart.cartRef == undefined) return  
@@ -129,9 +132,9 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
         this.setState({
             shortName: newComp,
             value:{
-                buyValue: price.b,
-                currentValue: price.s,
-                changePercent: 0
+                buyPrice: price.b,
+                sellPrice: price.s,
+                changePercent: (100/pre?.sellPrice*price.s)-100,
             }
         })
     }
@@ -139,10 +142,28 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
     render(): React.ReactNode {
 
         let data = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getBusiness(this.state.shortName)
-        return <div>
-            <span>{data?.name}</span>
-            <span> Price: <span className={this.state.value.changePercent > 0 ? 'uptrend' : 'downtrend'}>{Math.round(this.state.value.currentValue * 100) / 100}€ {Math.round(this.state.value.changePercent * 100) / 100}%</span></span>
-            <span></span>
+        return <div className="businessChart">
+            <div className="floatLeft chartCompanyInfo">
+                <span className="chartCompanyName">{data?.name}</span>
+                <span className="chartCompanyNameShort">({data?.shortName})</span>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sell</th>
+                        <th>Buy</th>
+                        <th>%</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td className={this.state.value.changePercent > 0.0001 ? 'uptrend' : 'downtrend'}>{Math.round(this.state.value.sellPrice * 1000) / 1000}€ </td>
+                        <td className={this.state.value.changePercent > 0.0001 ? 'uptrend' : 'downtrend'}>{Math.round(this.state.value.buyPrice * 1000) / 1000}€ </td>
+                        <td className={this.state.value.changePercent > 0.0001 ? 'uptrend' : 'downtrend'}>{Math.round(this.state.value.changePercent * 100) / 100}%</td>
+                    </tr>
+                </tbody>
+            </table>
             <Line ref={(reference) => {BusinessChart.cartRef = reference}} height={270} width={620} data={this._chartData} options={
                 {
                     responsive: true,

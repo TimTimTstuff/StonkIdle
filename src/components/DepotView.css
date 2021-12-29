@@ -20,3 +20,9 @@
 .depotListItem:hover{
     background-color: #47505f;
 }
+
+.depotView table{
+    font-size: 8pt;
+    text-transform: uppercase;
+    
+}

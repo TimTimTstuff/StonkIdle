@@ -25,6 +25,10 @@ export class DepotView extends React.Component<{},DepotViewState> {
         let cDepot = GameServices.getService<DepotService>(DepotService.serviceName)
         let depot = cDepot.getDepotByCompanyName(this.state.currentBusiness)
         let business = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getBusiness(this.state.currentBusiness)
+        
+        let last = business?.stockPriceHistory[business.stockPriceHistory.length-1]
+        let first = business?.stockPriceHistory[0]
+        
         return (
             <div id='depots' className='depotView'>
                 <div className='depotViewItem depotList'>
@@ -38,8 +42,12 @@ export class DepotView extends React.Component<{},DepotViewState> {
                 <div className='depotViewItem depotDetails'>Selected: {this.state.currentBusiness} 
                 <table>
                     <tbody>
-                        <tr><td>Owned:</td><td>{depot?.shareAmount}</td><td>Float/Total</td><td>{business?.floatingStock}/{business?.totalStock}</td></tr>
+                        <tr><td>Owned:</td><td>{depot?.shareAmount}</td><td></td></tr>
+                        <tr><td>Float/Total</td><td>{business?.floatingStock}/{business?.totalStock}</td></tr>
                         <tr><td>Buy In:</td><td>{depot?.buyIn}€</td><td></td></tr>
+                        <tr><td>Buy:</td><td>{last?.buyPrice}€</td><td>Sell:</td><td>{last?.sellPrice}€</td></tr>
+                        <tr><td>f. Buy:</td><td>{first?.buyPrice}€</td><td>f.Sell:</td><td>{first?.sellPrice}€</td></tr>
+
                     </tbody>
                 </table>
                 <button onClick={(e)=>{cDepot.buyStock(this.state.currentBusiness, 10)}}>Buy 10</button>
