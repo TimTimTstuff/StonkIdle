@@ -33,26 +33,64 @@ export class DepotService implements IGameService {
         if(depot === undefined) {
             let existingBusiness = this._business.getBusiness(shortName)
             if(existingBusiness === undefined) return undefined
-            depot = {shareAmount:0, shareName: shortName, transactions: []}
+            depot = {shareAmount:0, shareName: shortName, transactions: [],buyIn:0}
             this._save.getGameSave().player.depots.push(depot)
         }
         return depot;
+    }
+
+    sellStock(shortName:string, amount:number){
+        let b = this._business.getBusinessCurrentPrices(shortName)
+        let depot = this.getDepotByCompanyName(shortName)
+        let business = this._business.getBusiness(shortName)
+        let sellPrice =  Math.round((b.s*amount)*100)/100
+
+        if(business == undefined || depot == undefined){
+            this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Can't find stock: ${shortName}`, key:'error'})
+            return false
+        }
+
+        if(depot.shareAmount < amount){
+            this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Not enough shares owned to sell ${shortName} - ${amount}pc (${depot.shareAmount} owned)`, key:'error'})
+            return false
+        }
+
+        business.floatingStock += amount
+        this._account.addMainAccount(sellPrice)
+        this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Soled ${shortName} - ${amount}pc (${sellPrice}€ / ${b.b}€/pc)`, key:'buy'})
+        depot.transactions.forEach(t => {
+            if(t.shareAmount <= 0 || amount === 0) return
+
+            if(t.shareAmount <= amount){
+                t.shareAmount -= amount
+                amount = 0
+            }else{
+                amount -= t.shareAmount
+                t.shareAmount = 0
+            }
+        })
+        this.recalculateStockAmount(shortName)
+        return true
+
     }
 
     buyStock(shortName:string, amount:number): boolean{
         let b = this._business.getBusinessCurrentPrices(shortName)
         let depot = this.getDepotByCompanyName(shortName)
         let business = this._business.getBusiness(shortName)
-        let buyPrice = b.b*amount
+        let buyPrice = Math.round((b.b*amount)*100)/100
+        
         if(business == undefined || depot == undefined){
             this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Can't find stock: ${shortName}`, key:'error'})
             return false
         }
+        
         if(this._account.getMainAccountBalance() < buyPrice){
             this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Not enough funding to buy ${shortName} - ${amount}pc (${buyPrice} needed)`, key:'error'})
             return false
         };
-        if(business?.floatingStock??0 < amount){
+
+        if(business.floatingStock < amount){
             this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Not enough free stocks to buy ${shortName} - ${amount}pc (${business?.floatingStock} avaliable)`, key:'error'})
             return false
         }
@@ -60,9 +98,25 @@ export class DepotService implements IGameService {
         business.floatingStock -= amount
         this._account.removeMainAccount(buyPrice)
         depot.transactions.push({shareName:shortName, shareAmount:amount, isSell:false, moneyAmount:buyPrice})
-        this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Bought ${shortName} - ${amount}pc (${buyPrice}€ / ${b.b}€/pc)`, key:'error'})
-
+        this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Bought ${shortName} - ${amount}pc (${buyPrice}€ / ${b.b}€/pc)`, key:'buy'})
+        this.recalculateStockAmount(shortName)
         return true
+    }
+
+    private recalculateStockAmount(shortName:string){
+        let depot = this.getDepotByCompanyName(shortName)
+        let b = this._business.getBusiness(shortName)
+        if(depot == undefined || b == undefined) return
+        let totalOwned = 0
+        let totalBuyPrice = 0
+        depot.transactions.forEach(d =>{ 
+            totalOwned += !d.isSell?d.shareAmount:0
+            totalBuyPrice += !d.isSell?d.moneyAmount:0
+        })
+        depot.shareAmount = totalOwned
+        //b.floatingStock -= totalOwned
+        depot.buyIn = Math.round((totalBuyPrice / totalOwned)*100)/100
+        depot.transactions = depot.transactions.filter(a => a.isSell === false && a.shareAmount > 0)       
     }
     
 }

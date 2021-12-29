@@ -22,7 +22,9 @@ export class DepotView extends React.Component<{},DepotViewState> {
 
     render(): React.ReactNode {
         let allBusiness = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getAllBusiness()
-
+        let cDepot = GameServices.getService<DepotService>(DepotService.serviceName)
+        let depot = cDepot.getDepotByCompanyName(this.state.currentBusiness)
+        let business = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getBusiness(this.state.currentBusiness)
         return (
             <div id='depots' className='depotView'>
                 <div className='depotViewItem depotList'>
@@ -33,7 +35,16 @@ export class DepotView extends React.Component<{},DepotViewState> {
                     <span>{a.name}</span><span>{a.shortName}</span><span>{depot?.shareAmount}</span>
                     </div>})}
                 </div>
-                <div className='depotViewItem depotDetails'>Selected: {this.state.currentBusiness}</div>
+                <div className='depotViewItem depotDetails'>Selected: {this.state.currentBusiness} 
+                <table>
+                    <tbody>
+                        <tr><td>Owned:</td><td>{depot?.shareAmount}</td><td>Float/Total</td><td>{business?.floatingStock}/{business?.totalStock}</td></tr>
+                        <tr><td>Buy In:</td><td>{depot?.buyIn}€</td><td></td></tr>
+                    </tbody>
+                </table>
+                <button onClick={(e)=>{cDepot.buyStock(this.state.currentBusiness, 10)}}>Buy 10</button>
+                <button onClick={(e)=>{cDepot.sellStock(this.state.currentBusiness, 10)}}>Sell 10</button>
+                </div>
             </div>
         )
     }

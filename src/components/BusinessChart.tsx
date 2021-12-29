@@ -51,7 +51,7 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
                 let s = b.stockPriceHistory[b.stockPriceHistory.length - 1];
                 this._chartData.datasets[this._businessToIndex[b.shortName]].data.push(s?.sellPrice)
                 if (GameConfig.businessChartMaxPoints < (this._chartData.labels?.length ?? 0)) {
-                    this._chartData.datasets[0].data.shift()
+                    this._chartData.datasets[this._businessToIndex[b.shortName]].data.shift()
                 } 
                 if(b.shortName === this._currentComp) {
                     this._chartData.labels?.push(GameServices.getService<TimeService>(TimeService.serviceName).getFormated('A/C/P (T)', s?.date ?? 0))
@@ -116,7 +116,8 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
 
     changeCompany(newComp:string){
         this._currentComp = newComp;
-        
+        let buyPrice = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getBusiness(newComp)
+        let price = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getBusinessCurrentPrices(newComp)
         for(var i = 0; i< this._chartData.datasets.length; i++){
             // eslint-disable-next-line eqeqeq
             if(BusinessChart.cartRef == undefined) return  
@@ -127,13 +128,17 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
 
         this.setState({
             shortName: newComp,
+            value:{
+                buyValue: price.b,
+                currentValue: price.s,
+                changePercent: 0
+            }
         })
     }
 
     render(): React.ReactNode {
 
         let data = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getBusiness(this.state.shortName)
-
         return <div>
             <span>{data?.name}</span>
             <span> Price: <span className={this.state.value.changePercent > 0 ? 'uptrend' : 'downtrend'}>{Math.round(this.state.value.currentValue * 100) / 100}€ {Math.round(this.state.value.changePercent * 100) / 100}%</span></span>

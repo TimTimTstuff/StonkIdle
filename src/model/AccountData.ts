@@ -15,6 +15,7 @@ export interface AccountData {
 }
 
 export interface DepotData {
+    buyIn: number;
     shareName:string
     shareAmount:number
     transactions:Transaction[]

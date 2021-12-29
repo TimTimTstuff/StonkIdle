@@ -79,8 +79,12 @@ export class BusinessCalculator implements IGameService {
             this._logService.warn(this.getServiceName(),`Can't find Business: ${shortName}`)
             return;
         }
-        let buyPrice = Math.round(Math.random()*10)-4;
-        cB.stockPriceHistory.push({buyPrice:buyPrice,date:GameServices.getService<TimeService>(TimeService.serviceName).getTicks(), keyPoint:StockPriceKeyPoint.Day,sellPrice:buyPrice})
+        let buyPrice = Math.round(Math.random()*1000)/100;
+        cB.stockPriceHistory.push({
+            buyPrice:buyPrice,
+            date:GameServices.getService<TimeService>(TimeService.serviceName).getTicks(), 
+            keyPoint:StockPriceKeyPoint.Day,
+            sellPrice:buyPrice})
         this.cleanBusinessHistory(cB);
     }
 }

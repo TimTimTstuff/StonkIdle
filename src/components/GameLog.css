@@ -35,9 +35,18 @@
 .income {
     color: #31e649
 }
+.buy {
+    color: #31e649;
+    font-style: italic;
+}
 
 .out {
     color:rgb(175, 30, 42)
+}
+
+.error {
+    color:rgb(175, 30, 42);
+    text-decoration: underline;
 }
 
 .logTimeStamp{
