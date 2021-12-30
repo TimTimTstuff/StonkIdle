@@ -1,10 +1,11 @@
 import { PlayerSave } from './AccountData'
-import { Business, Potential } from './Business'
+import { Business, MarketVolatility, Potential } from './Business'
 export interface MainSave {
     ticks: number
     name: string
     lastSave: Date
     business: Business[]
     player: PlayerSave,
-    marketPotential:Potential
+    marketPotential:Potential,
+    marketVolatility:MarketVolatility
 }

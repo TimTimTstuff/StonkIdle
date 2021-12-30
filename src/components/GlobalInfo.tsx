@@ -4,9 +4,10 @@ import { GameServices, GlobalEvents } from "../logic/services";
 import { BusinessCalculator } from "../logic/services/businessCalculator/BusinessCalculator";
 import { EventNames } from "../logic/services/Config";
 import { Potential } from "../model/Business";
-import { faAngleUp, faAngleDown, faAngleDoubleUp, faAngleDoubleDown, faEquals } from "@fortawesome/free-solid-svg-icons";
+import { faAngleUp, faAngleDown, faAngleDoubleUp, faAngleDoubleDown, faEquals, IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { TimeService } from "../logic/services/timeService/TimeService";
 import './GlobalInfo.css'
+import { GameCalculator } from "../logic/module/calculator/GameCalculator";
 
 type GlobalInfoState = {
     marketPotential: Potential
@@ -43,36 +44,13 @@ export class GlobalInfo extends React.Component<{}, GlobalInfoState> {
     }
 
     render(): React.ReactNode {
-        let icon = faEquals
-        let cClass = 'marketEqual'
-        switch (this._businessService.getMarketPerformance()) {
-            case Potential.VeryHigh:
-                icon = faAngleDoubleUp
-                cClass = 'marketVeryHigh'
-                break
-            case Potential.High:
-                icon = faAngleUp
-                cClass = 'marketHigh'
-                break
-            case Potential.Medium:
-                icon = faEquals
-                cClass = 'marketEqual'
-                break
-            case Potential.Low:
-                icon = faAngleDown
-                cClass = 'marketLow'
-
-                break
-            case Potential.VeryLow:
-                icon = faAngleDoubleDown
-                cClass = 'marketVeryLow'
-                break
-        }
-        return (<div className="globalInfo">
+        let iconClass = GameCalculator.getPotentialClassIcon(this._businessService.getMarketPerformance())
+        return (
+            <div>
             <div className="marketSituation">
             <span className="sincePotientialTop">Market Potential</span><br/>
-            <span className={cClass}>
-                <FontAwesomeIcon className={cClass + ' marketIcon'} icon={icon} /><br/>
+            <span className={iconClass.c}>
+                <FontAwesomeIcon className={iconClass.c + ' marketIcon'} icon={iconClass.i} /><br/>
                 </span>
                 <span className="sincePotiential">Since: {this._timeService.getFormated('A/C/P',this._tickChange)}</span>
                 

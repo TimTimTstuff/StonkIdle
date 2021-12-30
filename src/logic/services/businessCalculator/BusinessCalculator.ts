@@ -11,6 +11,7 @@ import { TimeService } from "../timeService/TimeService";
 
 export class BusinessCalculator implements IGameService {
     
+    
   
     private _timeService: TimeService;
       
@@ -55,17 +56,21 @@ export class BusinessCalculator implements IGameService {
                 this._logService.debug(BusinessCalculator.serviceName, `Switch Market Potential to ${newM}`)
                 this._save.marketPotential = newM
             }
+        if((Math.random()*1000) > GameConfig.marketVolatilityChange){
+            this._save.marketVolatility = BusinessHelper.getRandomVolatitlity()
+            this._logService.debug(BusinessCalculator.serviceName, `Swith Volatility to: ${this._save.marketVolatility}`)
+        }
     }
 
-    getSwitchPerformance() {
+    private getSwitchPerformance() {
         let chance = 1000
         if(this._save.marketPotential == Potential.VeryLow || this._save.marketPotential == Potential.VeryHigh){
             chance = 1200
         }
         if(this._save.marketPotential == Potential.Low || this._save.marketPotential == Potential.High){
-            chance = 1100
+            chance = 1150
         }
-        let erg = (Math.random()*chance)
+        let erg = (Math.random()*(chance + this._save.marketVolatility))
 
         return erg > GameConfig.businessChangesPotential
     }
@@ -79,6 +84,15 @@ export class BusinessCalculator implements IGameService {
         if(cB === undefined) return {b:0,s:0}
 
         let lastRecord = cB.stockPriceHistory[cB.stockPriceHistory.length -1]
+        if(lastRecord == undefined) return {b:0, s:0}
+        return {b: lastRecord.buyPrice, s: lastRecord.sellPrice}
+    }
+
+    getBusinessFirstPrice(shortName: string) {
+        let cB = this.getBusiness(shortName)
+        if(cB === undefined) return {b:0,s:0}
+
+        let lastRecord = cB.stockPriceHistory[0]
         if(lastRecord == undefined) return {b:0, s:0}
         return {b: lastRecord.buyPrice, s: lastRecord.sellPrice}
     }
@@ -147,7 +161,7 @@ export class BusinessCalculator implements IGameService {
         }
         let current = this.getBusinessCurrentPrices(shortName)
         if(current.s == 0) {current.s +=1;current.s +=1}
-        console.log(shortName)
+
         let sellPrice = GameCalculator.roundValue(GameCalculator.getRangeWitWeight(current.s, cB.potential,this._save.marketPotential),3)
         let buyPrice = GameCalculator.roundValue(sellPrice*GameConfig.getBaseSpread,3)
         this.addStockPriceHistory(cB, {

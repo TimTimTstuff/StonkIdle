@@ -1,4 +1,4 @@
-import { Business, Potential } from "../../../model/Business";
+import { Business, MarketVolatility, Potential } from "../../../model/Business";
 import { GameServices } from "../../services";
 import { GameConfig } from "../../services/Config";
 import { TimeService } from "../../services/timeService/TimeService";
@@ -13,6 +13,7 @@ const demoName = [
 ]
 
 export class BusinessHelper {
+   
     private static curIN:number =  0;
 
     public static generateBusiness():Business{
@@ -40,13 +41,20 @@ export class BusinessHelper {
         return business
     }
 
+    public static getRandomVolatitlity(): MarketVolatility {
+        let pot = (Math.random()*600)-300
+        if(pot <= MarketVolatility.Low) return MarketVolatility.Low
+        if(pot <= MarketVolatility.Medium) return MarketVolatility.Medium
+        return MarketVolatility.High
+    }
+
     public static getRandomPotential():Potential{
         let pot = Math.random()*GameConfig.maxPotential
         if(pot <= Potential.VeryLow)return Potential.VeryLow
         if(pot <= Potential.Low)return Potential.Low
         if(pot <= Potential.Medium)return Potential.Medium
         if(pot <= Potential.High)return Potential.High
-        return Potential.Low
+        return Potential.VeryHigh
     }
 
 }

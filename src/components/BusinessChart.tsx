@@ -144,6 +144,8 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
     render(): React.ReactNode {
 
         let data = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getBusiness(this.state.shortName)
+        let firstPrice = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getBusinessFirstPrice(this.state.shortName)
+        let changeChart = 100/this.state.value.sellPrice*(this.state.value.sellPrice - firstPrice.s)
         return <div className="businessChart">
            
             
@@ -153,6 +155,7 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
                         <th>Sell</th>
                         <th>Buy</th>
                         <th>%</th>
+                        <th>% Chart</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -160,6 +163,8 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
                         <td className={this.state.value.changePercent > 0.0001 ? 'uptrend' : 'downtrend'}>{GameCalculator.roundValueToEuro(this.state.value.sellPrice)}</td>
                         <td className={this.state.value.changePercent > 0.0001 ? 'uptrend' : 'downtrend'}>{GameCalculator.roundValueToEuro(this.state.value.buyPrice)} </td>
                         <td className={this.state.value.changePercent > 0.0001 ? 'uptrend' : 'downtrend'}>{GameCalculator.roundValue(this.state.value.changePercent)}%</td>
+                        <td className={changeChart > 0.0001 ? 'uptrend' : 'downtrend'}>{GameCalculator.roundValue(changeChart)}%</td>
+
                     </tr>
                 </tbody>
             </table>

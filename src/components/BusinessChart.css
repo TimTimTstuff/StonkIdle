@@ -1,9 +1,9 @@
-.downtrend{
-    color: rgb(184, 40, 40);
+.downtrend, .downtrend>path{
+    color: rgb(184, 40, 40) !important;
 }
 
-.uptrend{
-    color: rgb(103, 230, 103);
+.uptrend, .uptrend>path{
+    color: rgb(103, 230, 103) !important;
 }
 
 select {

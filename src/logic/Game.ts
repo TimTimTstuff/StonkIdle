@@ -53,7 +53,7 @@ export class Game {
        this._gameEvent?.subscribe(EventNames.periodChange, (caller, args) => {
            this._businessCalculator?.onPeriodChange()
            this._accountService?.onPeriodUpdate()
-           this._gameEvent?.callEvent(EventNames.AddLogMessage,this,{msg:`Period Changed! - Game Saved!`, key:'info', ticks: this._timeService?.getTicks()})
+           //this._gameEvent?.callEvent(EventNames.AddLogMessage,this,{msg:`Period Changed! - Game Saved!`, key:'info', ticks: this._timeService?.getTicks()})
            this._saveManager?.save()
         })
     }

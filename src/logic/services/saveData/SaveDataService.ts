@@ -1,5 +1,5 @@
 
-import { Potential } from "../../../model/Business";
+import { MarketVolatility, Potential } from "../../../model/Business";
 import { MainSave } from "../../../model/MainSave";
 import { SaveManager } from "../../module/saveManager/SaveManager";
 import { GlobalEvents } from "../eventHandler/GlobalEventService";
@@ -58,6 +58,7 @@ export class SaveDataService implements IGameService {
                 ticks: 0,
                 business:[],
                 marketPotential:Potential.High,
+                marketVolatility:MarketVolatility.Medium,
                 player:{
                     depots:[],
                     mainAccount:{balance: 1000, id:'main', interest:0,interestForPeriods:0,isSaving:false,name:'Bank Account'},

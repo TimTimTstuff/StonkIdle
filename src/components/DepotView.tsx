@@ -42,9 +42,10 @@ export class DepotView extends React.Component<{}, DepotViewState> {
         let last = business?.stockPriceHistory[business.stockPriceHistory.length - 1]
         let thisCirlce = business?.historyCicle[time.getFormated(GameConfig.CicleHistoryDateFormat, time.getTicks())]
         let thisAge = business?.historyAge[time.getFormated(GameConfig.AgeHistoryDateFormat, time.getTicks())]
-        
+        let iconClass = GameCalculator.getPotentialClassIcon(businessService.getMarketPerformance())
+        let iconClassStock = GameCalculator.getPotentialClassIcon(business?.potential??0)
 
-
+        let buySellDiff = GameCalculator.roundValue((last?.sellPrice ?? 0) - (depot?.buyIn ?? 0))
         return (
             <div id='depots' className='depotView'>
                 <div className='depotViewItem depotList'>
@@ -86,14 +87,14 @@ export class DepotView extends React.Component<{}, DepotViewState> {
                             <tr>
                                 <td>Owned:</td>
                                 <td>{depot?.shareAmount}</td>
-                                <td>Float/Total</td>
-                                <td>{business?.floatingStock}/{business?.totalStock}</td>
+                                <td>Performance</td>
+                                <td><FontAwesomeIcon className={iconClassStock.c} icon={iconClassStock.i} /></td>
                             </tr>
                             <tr>
 
                             </tr>
                             <tr>
-                                <td>Buy In:</td><td>{depot?.buyIn}€</td><td>Value:</td><td>{GameCalculator.roundValueToEuro((last?.sellPrice ?? 0) - (depot?.buyIn ?? 0))}</td>
+                                <td>Buy In:</td><td>{depot?.buyIn}€</td><td>Value:</td><td className={buySellDiff>0?'uptrend':'downtrend'}>{buySellDiff}€</td>
                             </tr>
                             <tr>
                                 <td>Sell:</td><td>{last?.sellPrice}€</td><td>Buy:</td><td>{last?.buyPrice}€</td>
@@ -122,24 +123,16 @@ export class DepotView extends React.Component<{}, DepotViewState> {
                             <tr>
                                 <td>Start:</td><td>{thisAge?.start}€</td><td>End:</td><td>{thisAge?.end}€</td>
                             </tr>
-                            <tr>
-                                <td colSpan={4} className='tableSpacer'>Other</td>
-                            </tr>
-                            <tr>
-                                <td>Performance:</td><td>{business?.potential}</td><td>Market:</td><td>{businessService.getMarketPerformance()}</td>
-                            </tr>
-
-
                         </tbody>
                     </table>
                     <button onClick={(e) => { cDepot.buyStock(this.state.currentBusiness, 1); this.updateStateWithCurrent() }}>Buy 1</button>
                     <button onClick={(e) => { cDepot.buyStock(this.state.currentBusiness, 10); this.updateStateWithCurrent() }}>Buy 10</button>
                     <button onClick={(e) => { cDepot.buyStock(this.state.currentBusiness, 100); this.updateStateWithCurrent() }}>Buy 100</button>
-                    <button onClick={(e) => { cDepot.buyStock(this.state.currentBusiness, 100); this.updateStateWithCurrent() }}>Buy 1000</button>
+                    <button onClick={(e) => { cDepot.buyStock(this.state.currentBusiness, 1000); this.updateStateWithCurrent() }}>Buy 1000</button>
                     <button onClick={(e) => { cDepot.sellStock(this.state.currentBusiness, 1); this.updateStateWithCurrent() }}>Sell 1</button>
                     <button onClick={(e) => { cDepot.sellStock(this.state.currentBusiness, 10); this.updateStateWithCurrent() }}>Sell 10</button>
                     <button onClick={(e) => { cDepot.sellStock(this.state.currentBusiness, 100); this.updateStateWithCurrent() }}>Sell 100</button>
-                    <button onClick={(e) => { cDepot.sellStock(this.state.currentBusiness, 100); this.updateStateWithCurrent() }}>Sell 1000</button>
+                    <button onClick={(e) => { cDepot.sellStock(this.state.currentBusiness, 1000); this.updateStateWithCurrent() }}>Sell 1000</button>
                 </div>
             </div>
         )
