@@ -1,5 +1,6 @@
 import { GlobalEvents } from "..";
 import { DepotData } from "../../../model/AccountData";
+import { GameCalculator } from "../../module/calculator/GameCalculator";
 import { BusinessCalculator } from "../businessCalculator/BusinessCalculator";
 import { EventNames } from "../Config";
 import { IGameService } from "../IGameService";
@@ -43,7 +44,7 @@ export class DepotService implements IGameService {
         let b = this._business.getBusinessCurrentPrices(shortName)
         let depot = this.getDepotByCompanyName(shortName)
         let business = this._business.getBusiness(shortName)
-        let sellPrice =  Math.round((b.s*amount)*100)/100
+        let sellPrice =  GameCalculator.roundValue(b.s*amount)
 
         if(business == undefined || depot == undefined){
             this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Can't find stock: ${shortName}`, key:'error'})
@@ -61,7 +62,7 @@ export class DepotService implements IGameService {
         depot.transactions.forEach(t => {
             if(t.shareAmount <= 0 || amount === 0) return
 
-            if(t.shareAmount <= amount){
+            if(t.shareAmount >= amount){
                 t.shareAmount -= amount
                 amount = 0
             }else{
@@ -78,7 +79,7 @@ export class DepotService implements IGameService {
         let b = this._business.getBusinessCurrentPrices(shortName)
         let depot = this.getDepotByCompanyName(shortName)
         let business = this._business.getBusiness(shortName)
-        let buyPrice = Math.round((b.b*amount)*100)/100
+        let buyPrice = GameCalculator.roundValue(b.b*amount)
         
         if(business == undefined || depot == undefined){
             this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Can't find stock: ${shortName}`, key:'error'})
@@ -115,7 +116,7 @@ export class DepotService implements IGameService {
         })
         depot.shareAmount = totalOwned
         //b.floatingStock -= totalOwned
-        depot.buyIn = Math.round((totalBuyPrice / totalOwned)*100)/100
+        depot.buyIn = GameCalculator.roundValue(totalBuyPrice / totalOwned)
         depot.transactions = depot.transactions.filter(a => a.isSell === false && a.shareAmount > 0)       
     }
     

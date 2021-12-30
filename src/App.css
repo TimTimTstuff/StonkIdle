@@ -13,6 +13,10 @@ body{
   display: block;
 }
 
+.floatRight{
+  float:right;
+}
+
 .gameBoxHeader{
   width: 1248px;
   float: left;

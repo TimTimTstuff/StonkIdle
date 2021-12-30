@@ -7,11 +7,11 @@ export interface MarketIndex{
 }
 
 export enum Potential{
-    VeryLow = 100,
-    Low = 300,
-    Medium = 500,
-    High = 700,
-    VeryHigh = 900
+    VeryLow = 150,
+    Low = 350,
+    Medium = 450,
+    High = 600,
+    VeryHigh = 950
 }
 
 export interface Business {

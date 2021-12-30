@@ -71,7 +71,7 @@ export class Game {
         this._timeService = TimeService.getInstance()
         GameServices.registerService(this._timeService)
 
-        this._businessCalculator = new BusinessCalculator()
+        this._businessCalculator = new BusinessCalculator(this._timeService)
         GameServices.registerService(this._businessCalculator)
 
         this._accountService = new AccountService(this._saveManager, this._gameEvent)

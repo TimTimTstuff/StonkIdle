@@ -2,6 +2,7 @@ import { Business, Potential } from "../../../model/Business";
 import { GameServices } from "../../services";
 import { GameConfig } from "../../services/Config";
 import { TimeService } from "../../services/timeService/TimeService";
+import { GameCalculator } from "../calculator/GameCalculator";
 
 const demoName = [
     {n: "World Idle Platform", s: "WIP"},
@@ -19,13 +20,13 @@ export class BusinessHelper {
         let floatingStock = Math.floor(maxStock/100*GameConfig.defaultFloatingPercentage)
         let demoBus = demoName[BusinessHelper.curIN]
         BusinessHelper.curIN++ 
-        let startPrice = Math.round((Math.random()*60)*100)/100
+        let startPrice = GameCalculator.roundValue(Math.random()*GameConfig.maxShareStartPrice)
 
         let business: Business = {
             createTick: GameServices.getService<TimeService>(TimeService.serviceName).getTicks(),
             floatingStock:floatingStock,
             name: demoBus.n,
-            potential: BusinessHelper.getRandomPotential(),
+            potential: Potential.High,
             shortName: demoBus.s,
             stockPriceHistory: [
                 {sellPrice: startPrice, buyPrice: startPrice+0.5, date: 100 },
@@ -41,11 +42,11 @@ export class BusinessHelper {
 
     public static getRandomPotential():Potential{
         let pot = Math.random()*GameConfig.maxPotential
-        if(pot < Potential.VeryLow)return Potential.VeryLow
-        if(pot < Potential.Low)return Potential.Low
-        if(pot < Potential.Medium)return Potential.Medium
-        if(pot < Potential.High)return Potential.High
-        return Potential.VeryHigh
+        if(pot <= Potential.VeryLow)return Potential.VeryLow
+        if(pot <= Potential.Low)return Potential.Low
+        if(pot <= Potential.Medium)return Potential.Medium
+        if(pot <= Potential.High)return Potential.High
+        return Potential.Low
     }
 
 }

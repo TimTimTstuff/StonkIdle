@@ -1,15 +1,34 @@
 import { Potential } from "../../../model/Business";
+import { Game } from "../../Game";
 
 export class GameCalculator {
-    public static getRangeWitWeight(base:number, potential:Potential) {
+    
+    public static getRangeWitWeight(base:number, potential:Potential, marketPotential:Potential) {
         
-        let chance = (Math.random()*1000)
-        let isPotent = chance < potential
-        let marketPotential = Potential.Medium
-        let factor = Math.random()*potential/(1000-marketPotential)
-        let value = base-(base * ((factor/100)+1))
-        console.log([base, factor, value])
+        let chance = Math.round(Math.random()*1000)
+        let potent = Math.round(Math.random()*(potential + (marketPotential/4))-(base/100))
+        let isPotent = chance < potent
+        let maxChange = isPotent ? (potent-chance):(chance-potent)
+        console.log(`${chance < potent?'win':'los'} Chance: ${chance} - ${potent} ${maxChange}`)
+        let factor = GameCalculator.roundValue((Math.random()*(potential+maxChange))/(1000+base/100),3)
+        let value =  GameCalculator.roundValue(base*factor/100,3)
+        console.log(`Factor: ${factor} - Value: ${value}`)
+        let result = base + (isPotent||base<=0.2?value:value*-1)
+        if(result < 0) result = GameCalculator.roundValue(Math.random()*0.5,2)
+        return result
+    }
+    
+    public static roundValue(value:number, precision:number = 2){
+        let base = 1;
+        for(var i = 0; i<precision; i++){
+            base *=10
+        }
+        let result = Math.round(value*base)/base
 
-        return base + (isPotent||base<=0.2?value:value*-1)
-    }   
+        return result
+    }
+
+    public static roundValueToEuro(value:number, precision:number = 2){
+        return GameCalculator.roundValue(value,precision)+'€'
+    }
 }

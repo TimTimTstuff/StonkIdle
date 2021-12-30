@@ -2,6 +2,7 @@ import { BarController, BarElement, CategoryScale, Chart, ChartData, LinearScale
 import React from "react";
 import { Line } from "react-chartjs-2";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
+import { GameCalculator } from "../logic/module/calculator/GameCalculator";
 import { GameServices, GlobalEvents } from "../logic/services";
 import { BusinessCalculator } from "../logic/services/businessCalculator/BusinessCalculator";
 import { EventNames, GameConfig } from "../logic/services/Config";
@@ -55,7 +56,7 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
                     this._chartData.datasets[this._businessToIndex[b.shortName]].data.shift()
                 } 
                 if(b.shortName === this._currentComp) {
-                    this._chartData.labels?.push(GameServices.getService<TimeService>(TimeService.serviceName).getFormated('A/C/P (T)', s?.date ?? 0))
+                    this._chartData.labels?.push(GameServices.getService<TimeService>(TimeService.serviceName).getFormated('C/P', s?.date ?? 0))
                     this.setState({
                         value: {
                             sellPrice: s?.sellPrice??0,
@@ -97,7 +98,8 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
                 radius: false,
                 segment: {
                     borderColor: (ctx: any) => down(ctx, '#b00b69') || up(ctx, '#39d353'),
-                }
+                },
+
             }
             counter++;
             this.changeCompany(b.shortName)
@@ -108,7 +110,7 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
                 this._chartData.datasets[this._businessToIndex[b.shortName]].hidden = b.shortName !== this._currentComp
                 if(b.shortName === this._currentComp){
                     
-                    this._chartData.labels?.push(GameServices.getService<TimeService>(TimeService.serviceName).getFormated('A/C/P (T)', s?.date ?? 0))
+                    this._chartData.labels?.push(GameServices.getService<TimeService>(TimeService.serviceName).getFormated('C/P', s?.date ?? 0))
                 }
             })
         })
@@ -143,10 +145,7 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
 
         let data = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getBusiness(this.state.shortName)
         return <div className="businessChart">
-            <div className="floatLeft chartCompanyInfo">
-                <span className="chartCompanyName">{data?.name}</span>
-                <span className="chartCompanyNameShort">({data?.shortName})</span>
-            </div>
+           
             
             <table>
                 <thead>
@@ -158,17 +157,31 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
                 </thead>
                 <tbody>
                     <tr>
-                        <td className={this.state.value.changePercent > 0.0001 ? 'uptrend' : 'downtrend'}>{Math.round(this.state.value.sellPrice * 1000) / 1000}€ </td>
-                        <td className={this.state.value.changePercent > 0.0001 ? 'uptrend' : 'downtrend'}>{Math.round(this.state.value.buyPrice * 1000) / 1000}€ </td>
-                        <td className={this.state.value.changePercent > 0.0001 ? 'uptrend' : 'downtrend'}>{Math.round(this.state.value.changePercent * 100) / 100}%</td>
+                        <td className={this.state.value.changePercent > 0.0001 ? 'uptrend' : 'downtrend'}>{GameCalculator.roundValueToEuro(this.state.value.sellPrice)}</td>
+                        <td className={this.state.value.changePercent > 0.0001 ? 'uptrend' : 'downtrend'}>{GameCalculator.roundValueToEuro(this.state.value.buyPrice)} </td>
+                        <td className={this.state.value.changePercent > 0.0001 ? 'uptrend' : 'downtrend'}>{GameCalculator.roundValue(this.state.value.changePercent)}%</td>
                     </tr>
                 </tbody>
             </table>
-            <Line ref={(reference) => {BusinessChart.cartRef = reference}} height={270} width={620} data={this._chartData} options={
+            <div className="floatLeft chartCompanyInfo">
+                <span className="chartCompanyName">{data?.name}</span>
+                <span className="chartCompanyNameShort">({data?.shortName})</span>
+            </div>
+            <Line className="chartPullLeft" ref={(reference) => {BusinessChart.cartRef = reference}} height={270} width={620} data={this._chartData} options={
                 {
                     responsive: true,
                     interaction: {
-                        intersect: true
+                        mode:'index',
+                        intersect: false
+                    },
+                    plugins:{
+                        legend: {
+                            position:'top'
+                        },
+                        title:{
+                            display:true,
+                            text:'Stonks'
+                        }
                     },
                     color: '#ffffff',
                     scales: {
@@ -200,7 +213,8 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
                             },
                             ticks: {
                                 color: '#ffffff'
-                            },
+                            }
+                            
                         }
                     }
                 }} />

@@ -15,14 +15,75 @@
     margin-bottom: 4px;
     cursor: pointer;
     background-color: #353c47;
+    height: 50px;
+}
+
+.shortName{
+    font-weight: bold;
+    padding-right: 5px;
+}
+
+.depotViewData div{
+    margin-left: 3px;
+}
+
+.depotViewBox{
+    width: 220px;
+}
+
+.price {
+    padding:0;
+    margin:0;
+    line-height: 1.3em;
+}
+
+.price{
+    font-size: 11pt;
+    text-align: right;
+    padding-top: 5px;
+    padding-right: 5px;
+}
+
+.smallNote{
+    font-size: 7pt;
+    padding-left: 2px;
+    text-align: right;
+}
+
+.compName{
+    font-size: 8pt;
+    margin-left: 2pt;
+    vertical-align: middle;
+    text-transform: uppercase;
 }
 
 .depotListItem:hover{
     background-color: #47505f;
 }
 
+.depotDetails{
+    width: 355px;
+    height: 280px;
+    overflow: auto;
+}
+
 .depotView table{
+    width: 300px;
     font-size: 8pt;
     text-transform: uppercase;
-    
+    border-collapse: collapse;
+}
+.depotView td:nth-child(2){
+    border-right: solid 1px #61666d;
+}
+.depotViewItem tr{
+    border-bottom: solid thin #61666d;
+}
+
+.tableSpacer{
+    background-color: #61666d;
+}
+
+button{
+    color:#61666d
 }

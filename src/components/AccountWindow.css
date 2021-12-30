@@ -20,3 +20,17 @@
     width: 100px;
 }
 
+#accountWindow button {
+    font-size: 7pt;
+    padding: 1px;
+    text-transform: uppercase;
+}
+
+#accountWindow table{
+    float:left;
+}
+
+#accountWindow div.floatLeft {
+    float: left;
+    width: 140px;
+}
