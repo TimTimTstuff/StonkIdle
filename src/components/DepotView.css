@@ -87,3 +87,13 @@
 button{
     color:#61666d
 }
+
+.depotListItemHeader{
+    height: 23px;
+    font-size: 11pt;
+}
+
+.depotListItemHeader .price{
+    margin-top: 0;
+    padding-top: 0;
+}

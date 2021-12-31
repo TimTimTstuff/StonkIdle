@@ -69,6 +69,7 @@ export class Game {
     registerServices(){
         this._log = new LogService(new ConsoleLogger(LogLevel.Debug, true, true))
         GameServices.registerService(this._log)
+        this.disableLoggerChannel()
 
         this._saveManager = SaveDataService.getInstance(0)
         GameServices.registerService(this._saveManager)
@@ -95,6 +96,10 @@ export class Game {
         GameServices.registerService(this._depotService)
 
 
+    }
+    disableLoggerChannel() {
+        let log = (<ConsoleLogger>this._log?.getLogger())
+        log.setChannelActive('BusinessCalculator',false)
     }
 
 }

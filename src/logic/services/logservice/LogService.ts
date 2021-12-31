@@ -9,6 +9,10 @@ export class LogService implements IGameService {
         this._logger = logger;
     }
 
+    getLogger(){
+        return this._logger
+    }
+
     getServiceName(): string {
         return LogService.serviceName;
     }

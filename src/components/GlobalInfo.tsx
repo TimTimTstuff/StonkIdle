@@ -2,12 +2,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { GameServices, GlobalEvents } from "../logic/services";
 import { BusinessCalculator } from "../logic/services/businessCalculator/BusinessCalculator";
-import { EventNames } from "../logic/services/Config";
+import { EventNames, GameFlags } from "../logic/services/Config";
 import { MarketVolatility, Potential } from "../model/Business";
 import { faAngleUp, faAngleDown, faAngleDoubleUp, faAngleDoubleDown, faEquals, IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { TimeService } from "../logic/services/timeService/TimeService";
 import './GlobalInfo.css'
 import { GameCalculator } from "../logic/module/calculator/GameCalculator";
+import { FlagService } from "../logic/services/saveData/FlagService";
+import { UIHelper } from "../logic/module/calculator/UiHelper";
 
 type GlobalInfoState = {
     marketPotential: Potential,
@@ -18,6 +20,7 @@ export class GlobalInfo extends React.Component<{}, GlobalInfoState> {
 
     private _businessService: BusinessCalculator
     private _timeService: TimeService
+    private _flag: FlagService
     private _preMarket: Potential
     private _tickChange: number
     private _volChanged: number
@@ -25,6 +28,7 @@ export class GlobalInfo extends React.Component<{}, GlobalInfoState> {
 
     constructor(arg: {}) {
         super(arg);
+        this._flag = GameServices.getService<FlagService>(FlagService.serviceName)
         this._businessService = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName)
         this._timeService = GameServices.getService<TimeService>(TimeService.serviceName)
         this.state = {
@@ -36,18 +40,27 @@ export class GlobalInfo extends React.Component<{}, GlobalInfoState> {
         this._preMarket = this.state.marketPotential
         this._tickChange = this._timeService.getTicks()
 
-       
+
     }
 
     componentDidMount() {
         GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).subscribe(EventNames.periodChange, (caller, args) => {
             let newMarket = this._businessService.getMarketPerformance()
-            if(newMarket != this._preMarket){
+            let newVol = this._businessService.getMarketVolatility()
+
+            if (newMarket != this._preMarket) {
                 this._tickChange = this._timeService.getTicks()
                 this._preMarket = newMarket
             }
+
+            if (newVol != this._preVol) {
+                this._volChanged = this._timeService.getTicks()
+                this._preVol = newVol
+            }
+
             this.setState({
-                marketPotential: newMarket
+                marketPotential: newMarket,
+                marketVolatility: newVol
             })
         })
     }
@@ -57,21 +70,22 @@ export class GlobalInfo extends React.Component<{}, GlobalInfoState> {
         let iconClassVol = GameCalculator.getVolatilityClassIcon(this._businessService.getMarketVolatility())
         return (
             <div>
-            <div className="marketSituation">
-            <span className="sincePotientialTop">Market Potential</span><br/>
-            <span className={iconClass.c}>
-                <FontAwesomeIcon className={iconClass.c + ' marketIcon'} icon={iconClass.i} /><br/>
-                </span>
-                <span className="sincePotiential">Since: {this._timeService.getFormated('A/C/P',this._tickChange)}</span>
-               </div> 
-                <div className="marketSituation">
-            <span className="sincePotientialTop">Market Volatility</span><br/>
-            <span className={iconClassVol.c}>
-                <FontAwesomeIcon className={iconClassVol.c + ' marketIcon'} icon={iconClassVol.i} /><br/>
-                </span>
-                <span className="sincePotiential">Since: {this._timeService.getFormated('A/C/P',this._volChanged)}</span>
-                
-            </div>
-        </div>)
+                <div className="marketSituation" style={UIHelper.getHiddenByFlag(GameFlags.f_MarketPotential)} >
+                    <span className="sincePotientialTop" >Market Potential</span><br />
+                    <span className={iconClass.c}>
+                        <FontAwesomeIcon className={iconClass.c + ' marketIcon'} icon={iconClass.i} /><br />
+                    </span>
+                    <span className="sincePotiential">Since: {this._timeService.getFormated('A/C/P', this._tickChange)}</span>
+                </div>
+
+                <div className="marketSituation" style={UIHelper.getHiddenByFlag(GameFlags.f_MarketVolatility)}>
+                    <span className="sincePotientialTop">Market Volatility</span><br />
+                    <span className={iconClassVol.c}>
+                        <FontAwesomeIcon className={iconClassVol.c + ' marketIcon'} icon={iconClassVol.i} /><br />
+                    </span>
+                    <span className="sincePotiential">Since: {this._timeService.getFormated('A/C/P', this._volChanged)}</span>
+
+                </div>
+            </div>)
     }
 }

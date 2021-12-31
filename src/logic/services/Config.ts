@@ -21,6 +21,9 @@ export class GameConfig {
 export class GameFlags {
     static taxPercentage: string = 'tax'
     static shareSpread: string = 'spread'
+    static f_MarketPotential: string = 'f_mpot'
+    static f_MarketVolatility: string = 'f_mvol'
+    static f_BusinessPotential: string = 'f_bpot'
 }
 
 export class EventNames {

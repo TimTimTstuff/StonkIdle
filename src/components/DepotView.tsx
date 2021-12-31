@@ -23,7 +23,7 @@ export class DepotView extends React.Component<{}, DepotViewState> {
         }
     }
 
-    componentDidMount(){
+    componentDidMount() {
         GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).subscribe(EventNames.periodChange, (caller, args) => {
             this.updateStateWithCurrent();
         })
@@ -44,21 +44,50 @@ export class DepotView extends React.Component<{}, DepotViewState> {
         let thisCirlce = business?.historyCicle[time.getFormated(GameConfig.CicleHistoryDateFormat, time.getTicks())]
         let thisAge = business?.historyAge[time.getFormated(GameConfig.AgeHistoryDateFormat, time.getTicks())]
         let iconClass = GameCalculator.getPotentialClassIcon(businessService.getMarketPerformance())
-        let iconClassStock = GameCalculator.getPotentialClassIcon(business?.potential??0)
+        let iconClassStock = GameCalculator.getPotentialClassIcon(business?.potential ?? 0)
 
         let buySellDiff = GameCalculator.roundValue((last?.sellPrice ?? 0) - (depot?.buyIn ?? 0))
+        let totalInStock = 0
+        allBusiness.forEach(a => {
+            let depot = GameServices.getService<DepotService>(DepotService.serviceName).getDepotByCompanyName(a.shortName)
+            let price = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getBusinessCurrentPrices(a.shortName)
+            totalInStock += GameCalculator.roundValue(price.s * (depot?.shareAmount ?? 0))
+        })
         return (
             <div id='depots' className='depotView'>
                 <div className='depotViewItem depotList'>
-                    {allBusiness.map((a, idx) => {
+
+                    <div className='depotListItem noselect depotListItemHeader'>
+                        <div className='depotViewData'>
+                            <div className='floatLeft'>
+                                <span className='shortName'>Depot:</span>
+                            </div>
+                            <div className='floatRight price'>
+                                <span className='uptrend'>{GameCalculator.roundValueToEuro(totalInStock)}
+
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {allBusiness.sort((a, b) => {
+                        let depot = GameServices.getService<DepotService>(DepotService.serviceName).getDepotByCompanyName(a.shortName)
+                        let price = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getBusinessCurrentPrices(a.shortName)
+                        let depots = GameServices.getService<DepotService>(DepotService.serviceName).getDepotByCompanyName(b.shortName)
+                        let prices = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getBusinessCurrentPrices(b.shortName)
+                        let result = (depots?.shareAmount ?? 0) * prices.s - ((depot?.shareAmount ?? 0) * price.s)
+                        return result
+
+                    }).map((a, idx) => {
                         let depot = GameServices.getService<DepotService>(DepotService.serviceName).getDepotByCompanyName(a.shortName)
                         let price = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getBusinessCurrentPrices(a.shortName)
                         let prePrice = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getBusinessPrePrices(a.shortName)
                         let isUptrend = (depot?.buyIn ?? 0) > price.s;
                         let sellPrice = GameCalculator.roundValue(price.s * (depot?.shareAmount ?? 0))
                         let buyPrice = GameCalculator.roundValue((depot?.buyIn ?? 0) * (depot?.shareAmount ?? 0))
-                        let diff = GameCalculator.roundValue(sellPrice  - buyPrice)
+                        let diff = GameCalculator.roundValue(sellPrice - buyPrice)
                         let icon = price.s > prePrice.s ? faAngleUp : faAngleDown
+
                         return <div key={idx} data-shortname={a.shortName} className='depotListItem noselect' onClick={(e) => {
                             this.selectCompany(a.shortName)
                         }}>
@@ -68,11 +97,11 @@ export class DepotView extends React.Component<{}, DepotViewState> {
                                     <span className='compName'>{a.name}</span><br />
                                     <span className='shortName'>{a.shortName}</span>
                                     <span className='compName'> Shares: {depot?.shareAmount}</span>
-                                    <span className={(price.s < prePrice.s?'downtrend':'uptrend')}> <FontAwesomeIcon className={price.s < prePrice.s?'downtrend':'uptrend'} icon={icon}/></span>
+                                    <span className={(price.s < prePrice.s ? 'downtrend' : 'uptrend')}> <FontAwesomeIcon className={price.s < prePrice.s ? 'downtrend' : 'uptrend'} icon={icon} /></span>
                                 </div>
                                 <div className='floatRight price'>
                                     <span className={'priceInfo ' + (isUptrend ? 'downtrend' : 'uptrend')}>{sellPrice}€
-                                        <br/><span className={'smallNote ' + (isUptrend ? 'downtrend' : 'uptrend')}>
+                                        <br /><span className={'smallNote ' + (isUptrend ? 'downtrend' : 'uptrend')}>
                                             {(isUptrend ? '' : '+')}{diff}€
                                         </span>
                                     </span>
@@ -81,6 +110,7 @@ export class DepotView extends React.Component<{}, DepotViewState> {
                         </div>
                     })}
                 </div>
+
                 <div className='depotViewItem depotDetails'>{this.state.currentBusiness}
                     <table>
                         <tbody>
@@ -95,7 +125,7 @@ export class DepotView extends React.Component<{}, DepotViewState> {
 
                             </tr>
                             <tr>
-                                <td>Buy In:</td><td>{depot?.buyIn}€</td><td>Value:</td><td className={buySellDiff>0?'uptrend':'downtrend'}>{buySellDiff}€</td>
+                                <td>Buy In:</td><td>{depot?.buyIn}€</td><td>Value:</td><td className={buySellDiff > 0 ? 'uptrend' : 'downtrend'}>{buySellDiff}€</td>
                             </tr>
                             <tr>
                                 <td>Sell:</td><td>{last?.sellPrice}€</td><td>Buy:</td><td>{last?.buyPrice}€</td>
