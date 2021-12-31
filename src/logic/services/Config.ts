@@ -1,4 +1,34 @@
+import { Potential, MarketVolatility } from "../../model/Business"
+import { MainSave } from "../../model/MainSave"
+
 export class GameConfig {
+    static getDefaultSave(): MainSave {
+        return {
+            name: 'unknown',
+            lastSave: new Date(),
+            ticks: 0,
+            business:[],
+            marketPotential:Potential.High,
+            marketVolatility:MarketVolatility.Medium,
+            player:{
+                depots:[],
+                mainAccount:{balance: 1000, id:'main', interest:0,interestForPeriods:0,isSaving:false,name:'Bank Account'},
+                savingAccount:{balance: 100000, id:'saving', interest:3.4, interestForPeriods:900000, name:'Saving Account', isSaving:true},
+                taxLog:{}
+            },
+            flags:{
+                tax:GameConfig.tax,
+                spread:GameConfig.getBaseSpread,
+                t_act:true,
+                t_s:0
+                
+            },
+            stats:{
+                
+            }
+        
+        }
+    }
     
     public static gameChartUpdate: number = 1500
     public static gameTickSpeedInMS:number = 44
@@ -19,11 +49,13 @@ export class GameConfig {
 }
 
 export class GameFlags {
-    static taxPercentage: string = 'tax'
-    static shareSpread: string = 'spread'
-    static f_MarketPotential: string = 'f_mpot'
-    static f_MarketVolatility: string = 'f_mvol'
-    static f_BusinessPotential: string = 'f_bpot'
+    static g_f_taxPercentage: string = 'tax'
+    static g_f_shareSpread: string = 'spread'
+    static f_i_MarketPotential: string = 'f_mpot'
+    static f_i_MarketVolatility: string = 'f_mvol'
+    static f_i_BusinessPotential: string = 'f_bpot'
+    static t_i_level: string = 't_s'
+    static t_b_active: string = 't_act'
 }
 
 export class EventNames {

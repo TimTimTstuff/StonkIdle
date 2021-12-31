@@ -61,7 +61,7 @@ export class AccountService implements IGameService {
 
     private recalculateTax(log: Taxlog) {
         log.totalIncome = GameCalculator.roundValue((log.sellShare + log.interest) - log.buyShare)
-        log.cost = GameCalculator.roundValue((log.totalIncome * this._flag.getFlagFloat(GameFlags.taxPercentage)) * -1)
+        log.cost = GameCalculator.roundValue((log.totalIncome * this._flag.getFlagFloat(GameFlags.g_f_taxPercentage)) * -1)
     }
 
     private getCurrentTaxLog() {

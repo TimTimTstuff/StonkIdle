@@ -2,12 +2,13 @@ import { AccountService } from './services/accounts/AccountService'
 import { ConsoleLogger, LogLevel } from './module/logger/Logger'
 import { GameServices, GlobalEvents, LogService } from './services'
 import { BusinessCalculator } from './services/businessCalculator/BusinessCalculator'
-import { EventNames, GameConfig } from './services/Config'
+import { EventNames, GameConfig, GameFlags } from './services/Config'
 import { SaveDataService } from './services/saveData/SaveDataService'
 import { TimeService } from './services/timeService/TimeService'
 import { DepotService } from './services/accounts/DepotService'
 import { FlagService } from './services/saveData/FlagService'
 import { StatsService } from './services/accounts/StatsService'
+import { TutorialModul } from './data/TutorialData'
 
 export class Game {
 
@@ -29,6 +30,11 @@ export class Game {
         this.registerServices()
         this.registgerGameEvents()
         this.setupGameLoop()
+
+        if(this._flagService?.getFlagBool(GameFlags.t_b_active)){
+            TutorialModul.RunTutorial()
+        }
+        
     }
 
     public static getInstance() {

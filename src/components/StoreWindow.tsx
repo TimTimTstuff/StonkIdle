@@ -2,6 +2,7 @@ import { faFileInvoice, faUserCog } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react"
 import { GameCalculator } from "../logic/module/calculator/GameCalculator";
+import { UIHelper } from "../logic/module/calculator/UiHelper";
 import { GameServices, GlobalEvents } from "../logic/services";
 import { AccountService } from "../logic/services/accounts/AccountService";
 import { EventNames } from "../logic/services/Config";
@@ -20,7 +21,7 @@ export class StoreWindow extends React.Component<{},StoreStage> {
     constructor(prop:{}) {
         super(prop);
         this.state = {
-            window:'tab1'
+            window:'tab0'
         }
         this._accountService = GameServices.getService<AccountService>(AccountService.serviceName)
         this._timeService = GameServices.getService<TimeService>(TimeService.serviceName)
@@ -36,7 +37,7 @@ export class StoreWindow extends React.Component<{},StoreStage> {
     }
 
     render(): React.ReactNode {
-         let content:string | React.ReactNode = 'tabNotFound'
+         let content:string | React.ReactNode = ''
          switch(this.state.window){
              case 'tab1':
                  content = this.getTab1Content()
@@ -44,7 +45,7 @@ export class StoreWindow extends React.Component<{},StoreStage> {
          }
         return (<div className='tabBox'>
        
-        <div className='tabBoxHeader'>
+        <div style={UIHelper.isVisible(UIHelper.hasTutorialCheck(8))} className='tabBoxHeader'>
           <div onClick={(e)=>{this.setState({window:'tab1'})}} className='tabBoxHeaderItem noselect' title="Account Information" ><FontAwesomeIcon icon={faFileInvoice} /></div>
           {/*} <div onClick={(e)=>{this.setState({window:'tab2'})}} className='tabBoxHeaderItem noselect'>Depot</div> {*/}
           {/*} <div onClick={(e)=>{this.setState({window:'tab3'})}} className='tabBoxHeaderItem noselect'>Depot</div>{*/}

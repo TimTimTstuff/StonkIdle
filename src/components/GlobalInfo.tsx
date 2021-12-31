@@ -70,21 +70,23 @@ export class GlobalInfo extends React.Component<{}, GlobalInfoState> {
         let iconClassVol = GameCalculator.getVolatilityClassIcon(this._businessService.getMarketVolatility())
         return (
             <div>
-                <div className="marketSituation" style={UIHelper.getHiddenByFlag(GameFlags.f_MarketPotential)} >
-                    <span className="sincePotientialTop" >Market Potential</span><br />
-                    <span className={iconClass.c}>
-                        <FontAwesomeIcon className={iconClass.c + ' marketIcon'} icon={iconClass.i} /><br />
-                    </span>
-                    <span className="sincePotiential">Since: {this._timeService.getFormated('A/C/P', this._tickChange)}</span>
-                </div>
+                <div style={UIHelper.isVisible(UIHelper.hasTutorialCheck(3))}>
+                    <div className="marketSituation" style={UIHelper.getHiddenByFlag(GameFlags.f_i_MarketPotential)} >
+                        <span className="sincePotientialTop" >Market Potential</span><br />
+                        <span className={iconClass.c}>
+                            <FontAwesomeIcon className={iconClass.c + ' marketIcon'} icon={iconClass.i} /><br />
+                        </span>
+                        <span className="sincePotiential">Since: {this._timeService.getFormated('A/C/P', this._tickChange)}</span>
+                    </div>
 
-                <div className="marketSituation" style={UIHelper.getHiddenByFlag(GameFlags.f_MarketVolatility)}>
-                    <span className="sincePotientialTop">Market Volatility</span><br />
-                    <span className={iconClassVol.c}>
-                        <FontAwesomeIcon className={iconClassVol.c + ' marketIcon'} icon={iconClassVol.i} /><br />
-                    </span>
-                    <span className="sincePotiential">Since: {this._timeService.getFormated('A/C/P', this._volChanged)}</span>
+                    <div className="marketSituation" style={UIHelper.getHiddenByFlag(GameFlags.f_i_MarketVolatility)}>
+                        <span className="sincePotientialTop">Market Volatility</span><br />
+                        <span className={iconClassVol.c}>
+                            <FontAwesomeIcon className={iconClassVol.c + ' marketIcon'} icon={iconClassVol.i} /><br />
+                        </span>
+                        <span className="sincePotiential">Since: {this._timeService.getFormated('A/C/P', this._volChanged)}</span>
 
+                    </div>
                 </div>
             </div>)
     }

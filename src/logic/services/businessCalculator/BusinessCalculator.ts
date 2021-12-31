@@ -169,7 +169,7 @@ export class BusinessCalculator implements IGameService {
         if(current.s == 0) {current.s +=1;current.s +=1}
 
         let sellPrice = GameCalculator.roundValue(GameCalculator.getRangeWitWeight(current.s, cB.potential,this._save.marketPotential),3)
-        let buyPrice = GameCalculator.roundValue(sellPrice*this._flag.getFlagFloat(GameFlags.shareSpread),3)
+        let buyPrice = GameCalculator.roundValue(sellPrice*this._flag.getFlagFloat(GameFlags.g_f_shareSpread),3)
         this.addStockPriceHistory(cB, {
             buyPrice:buyPrice,
             date:GameServices.getService<TimeService>(TimeService.serviceName).getTicks(), 

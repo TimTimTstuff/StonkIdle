@@ -7,6 +7,7 @@ import { GlobalInfo } from './components/GlobalInfo';
 import { StoreWindow } from './components/StoreWindow';
 import { TimeBox } from './components/TimeBox';
 import { Game } from './logic/Game';
+import { UIHelper } from './logic/module/calculator/UiHelper';
 
 function App() {
 
@@ -15,8 +16,10 @@ function App() {
 
   return (
     <div className="App" id='stonks'>
-      <div className='gameBoxHeader' id='boxHeader'>
-        <TimeBox ticks={0} useGameTime={true} /> <AccountWindow /> <GlobalInfo />
+      <div className='gameBoxHeader'   id='boxHeader'>
+         <TimeBox ticks={0} useGameTime={true} />
+         <AccountWindow  /> 
+         <GlobalInfo />
       </div>
       <div className='gameBox' id='box1'>
         <BusinessChart shortName='AAA' />

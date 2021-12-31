@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react'
 import { Game } from '../logic/Game';
 import { GameCalculator } from '../logic/module/calculator/GameCalculator';
+import { UIHelper } from '../logic/module/calculator/UiHelper';
 import { GameServices, GlobalEvents } from '../logic/services';
 import { DepotService } from '../logic/services/accounts/DepotService';
 import { BusinessCalculator } from '../logic/services/businessCalculator/BusinessCalculator';
@@ -55,7 +56,7 @@ export class DepotView extends React.Component<{}, DepotViewState> {
         })
         return (
             <div id='depots' className='depotView'>
-                <div className='depotViewItem depotList'>
+                <div style={UIHelper.isVisible(UIHelper.hasTutorialCheck(7))} className='depotViewItem depotList'>
 
                     <div className='depotListItem noselect depotListItemHeader'>
                         <div className='depotViewData'>
@@ -111,7 +112,7 @@ export class DepotView extends React.Component<{}, DepotViewState> {
                     })}
                 </div>
 
-                <div className='depotViewItem depotDetails'>{this.state.currentBusiness}
+                <div className='depotViewItem depotDetails' style={UIHelper.isVisible(UIHelper.hasTutorialCheck(8))}>{this.state.currentBusiness}
                     <table>
                         <tbody>
 

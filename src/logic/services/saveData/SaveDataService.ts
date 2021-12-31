@@ -19,6 +19,7 @@ export class SaveDataService implements IGameService {
 
     constructor(autosaveSeconds: number) {
 
+        // eslint-disable-next-line eqeqeq
         if(SaveDataService.instance != undefined)
             throw new Error(`Instance already exists`)
 
@@ -53,28 +54,7 @@ export class SaveDataService implements IGameService {
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         let ms: MainSave = <MainSave>this._saveManager.getSaveObject('mainsave')
         if (ms === undefined) {
-            ms = {
-                name: 'unknown',
-                lastSave: new Date(),
-                ticks: 0,
-                business:[],
-                marketPotential:Potential.High,
-                marketVolatility:MarketVolatility.Medium,
-                player:{
-                    depots:[],
-                    mainAccount:{balance: 1000, id:'main', interest:0,interestForPeriods:0,isSaving:false,name:'Bank Account'},
-                    savingAccount:{balance: 100000, id:'saving', interest:3.4, interestForPeriods:900000, name:'Saving Account', isSaving:true},
-                    taxLog:{}
-                },
-                flags:{
-                    tax:GameConfig.tax,
-                    spread:GameConfig.getBaseSpread
-                },
-                stats:{
-                    
-                }
-            
-            }
+            ms = GameConfig.getDefaultSave()
             this._saveManager.addSaveObject('mainsave', ms)
         }
 

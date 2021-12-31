@@ -47,7 +47,7 @@ export class GameLog extends React.Component<{}, GameLogState> {
         return (
             <div  id="reactLog">
                 <h2>Logs</h2>
-                <div className="reactLog">
+                <div  className="reactLog">
                     {this.state.messages.map((d, idx) => {
                         return (
                         <div className={"logmessage"} key={idx}>

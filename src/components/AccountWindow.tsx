@@ -4,6 +4,7 @@ import { GameServices, GlobalEvents } from "../logic/services";
 import { EventNames } from "../logic/services/Config";
 import './AccountWindow.css'
 import { GameCalculator } from "../logic/module/calculator/GameCalculator";
+import { UIHelper } from "../logic/module/calculator/UiHelper";
 
 type AccountWindowState = {
     balance: number
@@ -48,10 +49,9 @@ export class AccountWindow extends React.Component<{}, AccountWindowState> {
     }
 
     render(): React.ReactNode {
+        return (<div  id='accountWindow'> 
 
-        return (<div id='accountWindow'>
-
-            <table>
+            <table style={UIHelper.isVisible(UIHelper.hasTutorialCheck(1))}>
                 <thead>
                     <tr><th>#</th><th>Main Account</th><th>Savings Account</th><td ></td></tr>
                 </thead>
@@ -71,7 +71,7 @@ export class AccountWindow extends React.Component<{}, AccountWindowState> {
 
                 </tbody>
             </table>
-            <div className="floatLeft">
+            <div className="floatLeft" style={UIHelper.isVisible(UIHelper.hasTutorialCheck(2))}>
                 {/*}
                 <button onClick={(e) => {this._account.getSavingToMain(1); this.UpdateStateData()}}>Get 1</button>
                 <button onClick={(e) => {this._account.getSavingToMain(10); this.UpdateStateData()}}>Get 10</button>
