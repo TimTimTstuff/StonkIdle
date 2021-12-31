@@ -63,6 +63,7 @@ export class SaveDataService implements IGameService {
                     depots:[],
                     mainAccount:{balance: 1000, id:'main', interest:0,interestForPeriods:0,isSaving:false,name:'Bank Account'},
                     savingAccount:{balance: 100000, id:'saving', interest:3.4, interestForPeriods:900000, name:'Saving Account', isSaving:true},
+                    taxLog:{}
                 }
             
             }

@@ -1,5 +1,5 @@
 import { GameServices, LogService } from "..";
-import { Business, Potential } from "../../../model/Business";
+import { Business, MarketVolatility, Potential } from "../../../model/Business";
 import { MainSave } from "../../../model/MainSave";
 import { StockPrice } from "../../../model/StockPrice";
 import { BusinessHelper } from "../../module/business/BusinessHelper";
@@ -10,6 +10,7 @@ import { SaveDataService } from "../saveData/SaveDataService";
 import { TimeService } from "../timeService/TimeService";
 
 export class BusinessCalculator implements IGameService {
+   
     
     
   
@@ -30,6 +31,10 @@ export class BusinessCalculator implements IGameService {
 
             this._save.business = [BusinessHelper.generateBusiness(), BusinessHelper.generateBusiness(), BusinessHelper.generateBusiness(), BusinessHelper.generateBusiness()]
         }
+    }
+
+    getMarketVolatility(): MarketVolatility {
+        return this._save.marketVolatility
     }
 
     getMarketPerformance():number {

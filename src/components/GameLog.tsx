@@ -21,6 +21,11 @@ export class GameLog extends React.Component<{}, GameLogState> {
             messages: []
         }
 
+     
+
+    }
+
+    componentDidMount(){
         this._eventService.subscribe(EventNames.AddLogMessage, (caller, message) => {
             let messages = this.state.messages
             if (messages.length > GameConfig.maxLogMessages) {
@@ -35,7 +40,6 @@ export class GameLog extends React.Component<{}, GameLogState> {
             }
             this.setState({ messages: messages })
         })
-
     }
 
     render(): React.ReactNode {

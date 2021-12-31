@@ -53,9 +53,13 @@ export class Game {
        this._gameEvent?.subscribe(EventNames.periodChange, (caller, args) => {
            this._businessCalculator?.onPeriodChange()
            this._accountService?.onPeriodUpdate()
-           //this._gameEvent?.callEvent(EventNames.AddLogMessage,this,{msg:`Period Changed! - Game Saved!`, key:'info', ticks: this._timeService?.getTicks()})
            this._saveManager?.save()
         })
+
+        this._gameEvent?.subscribe(EventNames.circleChange, (caller, args) => {
+            this._gameEvent?.callEvent(EventNames.AddLogMessage,this,{msg:`Change of Cicle`, key:'info'})
+            this._accountService?.onCicleUpdate()
+         })
     }
 
     registerServices(){
@@ -74,7 +78,7 @@ export class Game {
         this._businessCalculator = new BusinessCalculator(this._timeService)
         GameServices.registerService(this._businessCalculator)
 
-        this._accountService = new AccountService(this._saveManager, this._gameEvent)
+        this._accountService = new AccountService(this._saveManager, this._gameEvent, this._timeService)
         GameServices.registerService(this._accountService)
 
         this._depotService = new DepotService(this._saveManager, this._businessCalculator,this._accountService, this._gameEvent)

@@ -2,9 +2,17 @@ export interface PlayerSave {
     mainAccount:AccountData
     savingAccount:AccountData
     depots:DepotData[]
-    
+    taxLog:{[index:string]:Taxlog}
 }
 
+export interface Taxlog {
+    cost: number;
+    sellShare:number
+    buyShare:number
+    interest:number
+    totalIncome:number
+    time:number
+}
 export interface AccountData {
     id:string
     name:string
@@ -22,9 +30,9 @@ export interface DepotData {
 }
 
 export interface Transaction {
-    isSell:boolean
-    shareName:string
-    shareAmount:number
-    moneyAmount:number
+    iS:boolean
+    sN:string
+    sA:number
+    sP:number
 }
 

@@ -21,11 +21,12 @@ export class DepotView extends React.Component<{}, DepotViewState> {
         this.state = {
             currentBusiness: GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getAllBusiness()[0].shortName
         }
+    }
 
+    componentDidMount(){
         GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).subscribe(EventNames.periodChange, (caller, args) => {
             this.updateStateWithCurrent();
         })
-
     }
 
     private updateStateWithCurrent() {

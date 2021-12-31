@@ -14,10 +14,6 @@ export class DepotService implements IGameService {
     private _account: AccountService
     private _event: GlobalEvents
     
-    
-    /**
-     *
-     */
     constructor(saveManager: SaveDataService, business: BusinessCalculator, accountService: AccountService, event: GlobalEvents) {
         this._save = saveManager
         this._business = business
@@ -58,16 +54,17 @@ export class DepotService implements IGameService {
 
         business.floatingStock += amount
         this._account.addMainAccount(sellPrice)
+        this._account.addToTaxLogSellStock(sellPrice)
         this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Soled ${shortName} - ${amount}pc (${sellPrice}€ / ${b.b}€/pc)`, key:'buy'})
         depot.transactions.forEach(t => {
-            if(t.shareAmount <= 0 || amount === 0) return
+            if(t.sA <= 0 || amount === 0) return
 
-            if(t.shareAmount >= amount){
-                t.shareAmount -= amount
+            if(t.sA >= amount){
+                t.sA -= amount
                 amount = 0
             }else{
-                amount -= t.shareAmount
-                t.shareAmount = 0
+                amount -= t.sA
+                t.sA = 0
             }
         })
         this.recalculateStockAmount(shortName)
@@ -98,7 +95,8 @@ export class DepotService implements IGameService {
 
         business.floatingStock -= amount
         this._account.removeMainAccount(buyPrice)
-        depot.transactions.push({shareName:shortName, shareAmount:amount, isSell:false, moneyAmount:buyPrice})
+        this._account.addToTaxLogBuyStock(buyPrice)
+        depot.transactions.push({sN:shortName, sA:amount, iS:false, sP:b.b})
         this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Bought ${shortName} - ${amount}pc (${buyPrice}€ / ${b.b}€/pc)`, key:'buy'})
         this.recalculateStockAmount(shortName)
         return true
@@ -111,13 +109,13 @@ export class DepotService implements IGameService {
         let totalOwned = 0
         let totalBuyPrice = 0
         depot.transactions.forEach(d =>{ 
-            totalOwned += !d.isSell?d.shareAmount:0
-            totalBuyPrice += !d.isSell?d.moneyAmount:0
+            totalOwned += !d.iS?d.sA:0
+            totalBuyPrice += !d.iS?(d.sP*d.sA):0
         })
         depot.shareAmount = totalOwned
         //b.floatingStock -= totalOwned
         depot.buyIn = GameCalculator.roundValue(totalBuyPrice / totalOwned)
-        depot.transactions = depot.transactions.filter(a => a.isSell === false && a.shareAmount > 0)       
+        depot.transactions = depot.transactions.filter(a => a.iS === false && a.sA > 0)       
     }
     
 }

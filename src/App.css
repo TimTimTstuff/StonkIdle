@@ -41,26 +41,6 @@ body{
   padding:15px;
 }
 
-.tabBoxHeader{
-  border-bottom: solid thin #61666d;
-  height: 26px;
-}
-
-.tabBoxHeaderItem{
-  width: 82px;
-  text-align: center;
-  cursor: pointer;
-  float: left;
-  border: solid thin #61666d;
-  background-color: #353c47;
-  padding: 2px;
-  margin-left: 5px;
-}
-
-.tabBoxHeaderItem:hover {
-  background-color: #47505f;
-  border: solid thin #a7b0bd;
-}
 
 .noselect {
   -webkit-touch-callout: none; /* iOS Safari */

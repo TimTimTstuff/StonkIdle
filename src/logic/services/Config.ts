@@ -1,4 +1,5 @@
 export class GameConfig {
+    
     public static gameChartUpdate: number = 1500
     public static gameTickSpeedInMS:number = 44
     public static businessChartMaxPoints: number = 50
@@ -12,7 +13,8 @@ export class GameConfig {
     static maxShareStartPrice: number = 25
     static getBaseSpread: number = 1.012
     static marketVolatilityChange: number = 995
-
+    static singleTimeTick: number = 1
+    static tax: number = 0.25
 }
 
 export class EventNames {

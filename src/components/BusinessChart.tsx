@@ -19,7 +19,7 @@ type bcState = {
         sellPrice: number,
         buyPrice: number
     },
-    shortName:string
+    shortName: string
 }
 const down = (ctx: any, value: any) => ctx.p0.parsed.y > ctx.p1.parsed.y ? value : undefined;
 const up = (ctx: any, value: any) => ctx.p0.parsed.y < ctx.p1.parsed.y ? value : undefined;
@@ -27,7 +27,7 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
     private _chartData: ChartData<any> = { labels: [], datasets: [{}] };
     private _currentComp: string;
     public static cartRef: ChartJSOrUndefined | null = undefined;
-    private _businessToIndex: {[index:string]:number} = {}
+    private _businessToIndex: { [index: string]: number } = {}
 
     /**
      *
@@ -38,14 +38,16 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
             value: {
                 changePercent: 0,
                 sellPrice: 0,
-                buyPrice:0
+                buyPrice: 0
             },
             shortName: props.shortName
         }
         this._currentComp = props.shortName
         this.initializeChart()
-        let event = GameServices.getService<GlobalEvents>(GlobalEvents.serviceName)
+    }
 
+    componentDidMount() {
+        let event = GameServices.getService<GlobalEvents>(GlobalEvents.serviceName)
         event.subscribe(EventNames.periodChange, () => {
 
             GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getAllBusiness().forEach(b => {
@@ -54,14 +56,14 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
                 this._chartData.datasets[this._businessToIndex[b.shortName]].data.push(s?.sellPrice)
                 if (GameConfig.businessChartMaxPoints < (this._chartData.datasets[this._businessToIndex[b.shortName]].data.length ?? 0)) {
                     this._chartData.datasets[this._businessToIndex[b.shortName]].data.shift()
-                } 
-                if(b.shortName === this._currentComp) {
+                }
+                if (b.shortName === this._currentComp) {
                     this._chartData.labels?.push(GameServices.getService<TimeService>(TimeService.serviceName).getFormated('C/P', s?.date ?? 0))
                     this.setState({
                         value: {
-                            sellPrice: s?.sellPrice??0,
-                            changePercent: (100/pre.sellPrice*s.sellPrice)-100,
-                            buyPrice: s?.buyPrice??0
+                            sellPrice: s?.sellPrice ?? 0,
+                            changePercent: (100 / pre.sellPrice * s.sellPrice) - 100,
+                            buyPrice: s?.buyPrice ?? 0
                         },
                         shortName: this._currentComp
                     })
@@ -75,7 +77,7 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
             BusinessChart.cartRef?.update()
         })
 
-        event.subscribe(EventNames.selectedBusiness,(caller, shortName) =>{
+        event.subscribe(EventNames.selectedBusiness, (caller, shortName) => {
             this.changeCompany(shortName as string)
         })
     }
@@ -87,7 +89,7 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
             this._businessToIndex[b.shortName] = counter;
             this._chartData.datasets[counter] = {
                 data: [],
-                label: 'Stonk: '+b.shortName,
+                label: 'Stonk: ' + b.shortName,
                 business: b,
                 borderWidth: 3,
                 fill: false,
@@ -108,8 +110,8 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
             b?.stockPriceHistory.forEach(s => {
                 this._chartData.datasets[this._businessToIndex[b.shortName]].data.push(s?.sellPrice)
                 this._chartData.datasets[this._businessToIndex[b.shortName]].hidden = b.shortName !== this._currentComp
-                if(b.shortName === this._currentComp){
-                    
+                if (b.shortName === this._currentComp) {
+
                     this._chartData.labels?.push(GameServices.getService<TimeService>(TimeService.serviceName).getFormated('C/P', s?.date ?? 0))
                 }
             })
@@ -117,26 +119,26 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
         this.changeCompany(this.state.shortName)
     }
 
-    changeCompany(newComp:string){
+    changeCompany(newComp: string) {
         this._currentComp = newComp;
         let buyPrice = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getBusiness(newComp)
         let price = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getBusinessCurrentPrices(newComp)
-        let pre = buyPrice?.stockPriceHistory[buyPrice.stockPriceHistory.length-2]
-        if(pre === undefined) return
-        for(var i = 0; i< this._chartData.datasets.length; i++){
+        let pre = buyPrice?.stockPriceHistory[buyPrice.stockPriceHistory.length - 2]
+        if (pre === undefined) return
+        for (var i = 0; i < this._chartData.datasets.length; i++) {
             // eslint-disable-next-line eqeqeq
-            if(BusinessChart.cartRef == undefined) return  
-                BusinessChart.cartRef.data.datasets[i].hidden = i===this._businessToIndex[newComp]?false:true;
+            if (BusinessChart.cartRef == undefined) return
+            BusinessChart.cartRef.data.datasets[i].hidden = i === this._businessToIndex[newComp] ? false : true;
         }
 
         BusinessChart.cartRef?.update()
 
         this.setState({
             shortName: newComp,
-            value:{
+            value: {
                 buyPrice: price.b,
                 sellPrice: price.s,
-                changePercent: (100/pre?.sellPrice*price.s)-100,
+                changePercent: (100 / pre?.sellPrice * price.s) - 100,
             }
         })
     }
@@ -145,10 +147,10 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
 
         let data = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getBusiness(this.state.shortName)
         let firstPrice = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getBusinessFirstPrice(this.state.shortName)
-        let changeChart = 100/this.state.value.sellPrice*(this.state.value.sellPrice - firstPrice.s)
+        let changeChart = 100 / this.state.value.sellPrice * (this.state.value.sellPrice - firstPrice.s)
         return <div className="businessChart">
-           
-            
+
+
             <table>
                 <thead>
                     <tr>
@@ -172,20 +174,20 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
                 <span className="chartCompanyName">{data?.name}</span>
                 <span className="chartCompanyNameShort">({data?.shortName})</span>
             </div>
-            <Line className="chartPullLeft" ref={(reference) => {BusinessChart.cartRef = reference}} height={270} width={620} data={this._chartData} options={
+            <Line className="chartPullLeft" ref={(reference) => { BusinessChart.cartRef = reference }} height={270} width={620} data={this._chartData} options={
                 {
                     responsive: true,
                     interaction: {
-                        mode:'index',
+                        mode: 'index',
                         intersect: false
                     },
-                    plugins:{
+                    plugins: {
                         legend: {
-                            position:'top'
+                            position: 'top'
                         },
-                        title:{
-                            display:true,
-                            text:'Stonks'
+                        title: {
+                            display: true,
+                            text: 'Stonks'
                         }
                     },
                     color: '#ffffff',
@@ -219,7 +221,7 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
                             ticks: {
                                 color: '#ffffff'
                             }
-                            
+
                         }
                     }
                 }} />

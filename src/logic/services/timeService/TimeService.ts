@@ -1,5 +1,5 @@
 import { GameServices, GlobalEvents } from '..'
-import { EventNames } from '../Config'
+import { EventNames, GameConfig } from '../Config'
 import { IGameService } from '../IGameService'
 import { SaveDataService } from '../saveData/SaveDataService'
 export class TimeService implements IGameService {
@@ -36,7 +36,7 @@ export class TimeService implements IGameService {
     }
 
     addTimeTick(): void {
-        this.addTicks(1);
+        this.addTicks(GameConfig.singleTimeTick);
     }
 
     getTicks(): number {
@@ -54,10 +54,10 @@ export class TimeService implements IGameService {
             GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).callEvent(EventNames.periodChange, this, { o: this._lastTb.period, n: newTb.period })
         }
         if (newTb.circle > this._lastTb.circle) {
-            GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).callEvent(EventNames.periodChange, this, { o: this._lastTb.period, n: newTb.period })
+            GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).callEvent(EventNames.circleChange, this, { o: this._lastTb.period, n: newTb.period })
         }
         if (newTb.age > this._lastTb.age) {
-            GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).callEvent(EventNames.periodChange, this, { o: this._lastTb.period, n: newTb.period })
+            GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).callEvent(EventNames.ageChange, this, { o: this._lastTb.period, n: newTb.period })
         }
 
         this._lastTb = newTb

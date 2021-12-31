@@ -26,14 +26,15 @@ export class AccountWindow extends React.Component<{}, AccountWindowState> {
             periodsLeft: this._account.getSavingInterestLeft(),
             savingInterest: this._account.getSavingInterest()
         }
+    }
 
+    componentDidMount(){
         GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).subscribe(EventNames.periodChange, (caller, args) => {
             this.UpdateStateData();
         })
         GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).subscribe(EventNames.moneyUpdate, (caller, args) => {
             this.UpdateStateData();
         })
-
 
     }
 
