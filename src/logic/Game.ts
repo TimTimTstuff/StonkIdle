@@ -6,6 +6,8 @@ import { EventNames, GameConfig } from './services/Config'
 import { SaveDataService } from './services/saveData/SaveDataService'
 import { TimeService } from './services/timeService/TimeService'
 import { DepotService } from './services/accounts/DepotService'
+import { FlagService } from './services/saveData/FlagService'
+import { StatsService } from './services/accounts/StatsService'
 
 export class Game {
 
@@ -19,6 +21,8 @@ export class Game {
     private _accountService: AccountService | undefined
     private _saveManager: SaveDataService | undefined
     private _depotService: DepotService | undefined
+    private _flagService: FlagService | undefined
+    private _statService: StatsService | undefined
 
     constructor() {
         if(Game.instance !== undefined) throw new Error('Dublicate Game')
@@ -68,21 +72,29 @@ export class Game {
 
         this._saveManager = SaveDataService.getInstance(0)
         GameServices.registerService(this._saveManager)
-
+        this._log.debug('GAME','Save Loaded',this._saveManager.getGameSave())
         this._gameEvent = new GlobalEvents()
         GameServices.registerService(this._gameEvent)
 
         this._timeService = TimeService.getInstance()
         GameServices.registerService(this._timeService)
 
-        this._businessCalculator = new BusinessCalculator(this._timeService)
+        this._flagService = new FlagService(this._saveManager)
+        GameServices.registerService(this._flagService)
+
+        this._statService = new StatsService(this._timeService, this._saveManager, this._log)
+        GameServices.registerService(this._statService)
+
+        this._businessCalculator = new BusinessCalculator(this._timeService, this._flagService)
         GameServices.registerService(this._businessCalculator)
 
-        this._accountService = new AccountService(this._saveManager, this._gameEvent, this._timeService)
+        this._accountService = new AccountService(this._saveManager, this._gameEvent, this._timeService, this._flagService, this._statService)
         GameServices.registerService(this._accountService)
 
         this._depotService = new DepotService(this._saveManager, this._businessCalculator,this._accountService, this._gameEvent)
         GameServices.registerService(this._depotService)
+
+
     }
 
 }

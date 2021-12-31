@@ -26,6 +26,11 @@
       width: 600px;
   }
 
+  .taxTableTime{
+      text-align: left !important;
+      width: 30px !important;
+  }
+
   table.taxTable {
       width: 600px;
       border-collapse: collapse;
@@ -37,6 +42,10 @@
   table.taxTable tr{
       border: solid thin #61666d
   }
+
+  table.taxTable tr:nth-child(even){
+    background-color: #353c47;
+}
 
   table.taxTable th, table.taxTable td{
       text-align: right;

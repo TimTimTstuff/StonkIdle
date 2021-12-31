@@ -15,6 +15,12 @@ export class GameConfig {
     static marketVolatilityChange: number = 995
     static singleTimeTick: number = 1
     static tax: number = 0.25
+    static maxTaxLogs: number = 10
+}
+
+export class GameFlags {
+    static taxPercentage: string = 'tax'
+    static shareSpread: string = 'spread'
 }
 
 export class EventNames {

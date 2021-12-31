@@ -7,5 +7,7 @@ export interface MainSave {
     business: Business[]
     player: PlayerSave,
     marketPotential:Potential,
-    marketVolatility:MarketVolatility
+    marketVolatility:MarketVolatility,
+    flags:{[index:string]:string|number|boolean}
+    stats:{[index:string]:number}
 }

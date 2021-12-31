@@ -66,7 +66,7 @@ export class StoreWindow extends React.Component<{},StoreStage> {
         return (<table className="taxTable">
                 <thead>
                 <tr>
-                    <th>Time</th>
+                    <th className="taxTableTime">Time</th>
                     <th>Buy</th>
                     <th>Sell</th>
                     <th>Interest</th>
@@ -78,12 +78,12 @@ export class StoreWindow extends React.Component<{},StoreStage> {
                     {taxData.map((i,idx)=>{
                         return (
                         <tr key={idx}>
-                            <td>{this._timeService.getFormated('A/C',i.time)}</td>
-                            <td>-{GameCalculator.roundValueToEuro(i.buyShare)}</td>
-                            <td>+{GameCalculator.roundValueToEuro(i.sellShare)}</td>
-                            <td>+{GameCalculator.roundValueToEuro(i.interest)}</td>
-                            <td>{GameCalculator.roundValueToEuro(i.totalIncome)}</td>
-                            <td>{GameCalculator.roundValueToEuro(i.cost)}</td>
+                            <td className="taxTableTime">{this._timeService.getFormated('A/C',i.time)}</td>
+                            <td className="downtrend">-{GameCalculator.roundValueToEuro(i.buyShare)}</td>
+                            <td className="uptrend">+{GameCalculator.roundValueToEuro(i.sellShare)}</td>
+                            <td className="uptrend">+{GameCalculator.roundValueToEuro(i.interest)}</td>
+                            <td className={(i.totalIncome > 0?'uptrend':'downtrend')}>{GameCalculator.roundValueToEuro(i.totalIncome)}</td>
+                            <td className={(i.cost > 0?'uptrend':'downtrend')}>{GameCalculator.roundValueToEuro(i.cost)}</td>
 
                         </tr>)
                     })}

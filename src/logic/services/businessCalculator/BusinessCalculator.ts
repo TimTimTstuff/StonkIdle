@@ -4,8 +4,9 @@ import { MainSave } from "../../../model/MainSave";
 import { StockPrice } from "../../../model/StockPrice";
 import { BusinessHelper } from "../../module/business/BusinessHelper";
 import { GameCalculator } from "../../module/calculator/GameCalculator";
-import { GameConfig } from "../Config";
+import { GameConfig, GameFlags } from "../Config";
 import { IGameService } from "../IGameService";
+import { FlagService } from "../saveData/FlagService";
 import { SaveDataService } from "../saveData/SaveDataService";
 import { TimeService } from "../timeService/TimeService";
 
@@ -18,17 +19,17 @@ export class BusinessCalculator implements IGameService {
       
     private _logService: LogService
     private _save: MainSave
+    private _flag: FlagService
     public static serviceName = 'BusinessCalculator';
     /**
      *
      */
-    constructor(timeService:TimeService) {
+    constructor(timeService:TimeService, flag:FlagService) {
         this._timeService = timeService
         this._logService = GameServices.getService<LogService>(LogService.serviceName)
         this._save = GameServices.getService<SaveDataService>(SaveDataService.serviceName).getGameSave()
-        
+        this._flag = flag
         if(this._save.business === undefined || this._save.business.length === 0){
-
             this._save.business = [BusinessHelper.generateBusiness(), BusinessHelper.generateBusiness(), BusinessHelper.generateBusiness(), BusinessHelper.generateBusiness()]
         }
     }
@@ -168,7 +169,7 @@ export class BusinessCalculator implements IGameService {
         if(current.s == 0) {current.s +=1;current.s +=1}
 
         let sellPrice = GameCalculator.roundValue(GameCalculator.getRangeWitWeight(current.s, cB.potential,this._save.marketPotential),3)
-        let buyPrice = GameCalculator.roundValue(sellPrice*GameConfig.getBaseSpread,3)
+        let buyPrice = GameCalculator.roundValue(sellPrice*this._flag.getFlagFloat(GameFlags.shareSpread),3)
         this.addStockPriceHistory(cB, {
             buyPrice:buyPrice,
             date:GameServices.getService<TimeService>(TimeService.serviceName).getTicks(), 

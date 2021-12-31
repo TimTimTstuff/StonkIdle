@@ -2,6 +2,7 @@
 import { MarketVolatility, Potential } from "../../../model/Business";
 import { MainSave } from "../../../model/MainSave";
 import { SaveManager } from "../../module/saveManager/SaveManager";
+import { GameConfig } from "../Config";
 import { GlobalEvents } from "../eventHandler/GlobalEventService";
 import { GameServices } from "../GameServices";
 import { IGameService } from "../IGameService";
@@ -64,6 +65,13 @@ export class SaveDataService implements IGameService {
                     mainAccount:{balance: 1000, id:'main', interest:0,interestForPeriods:0,isSaving:false,name:'Bank Account'},
                     savingAccount:{balance: 100000, id:'saving', interest:3.4, interestForPeriods:900000, name:'Saving Account', isSaving:true},
                     taxLog:{}
+                },
+                flags:{
+                    tax:GameConfig.tax,
+                    spread:GameConfig.getBaseSpread
+                },
+                stats:{
+                    
                 }
             
             }
