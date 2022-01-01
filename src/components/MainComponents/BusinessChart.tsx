@@ -2,12 +2,12 @@ import { BarController, BarElement, CategoryScale, Chart, ChartData, LinearScale
 import React from "react";
 import { Line } from "react-chartjs-2";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
-import { GameCalculator } from "../logic/module/calculator/GameCalculator";
-import { UIHelper } from "../logic/module/calculator/UiHelper";
-import { GameServices, GlobalEvents } from "../logic/services";
-import { BusinessCalculator } from "../logic/services/businessCalculator/BusinessCalculator";
-import { EventNames, GameConfig } from "../logic/services/Config";
-import { TimeService } from "../logic/services/timeService/TimeService";
+import { GameCalculator } from "../../logic/module/calculator/GameCalculator";
+import { UIHelper } from "../../logic/module/calculator/UiHelper";
+import { GameServices, GlobalEvents } from "../../logic/services";
+import { BusinessCalculator } from "../../logic/services/businessCalculator/BusinessCalculator";
+import { EventNames, GameConfig } from "../../logic/services/Config";
+import { TimeService } from "../../logic/services/timeService/TimeService";
 import './BusinessChart.css'
 
 type bcProps = {

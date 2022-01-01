@@ -1,4 +1,4 @@
-import { PopupState } from "../../components/Popup"
+import { PopupState } from "../../components/GenericComponents/Popup"
 import { GameServices, GlobalEvents, LogService } from "../services"
 import { BusinessCalculator } from "../services/businessCalculator/BusinessCalculator"
 import { EventNames, GameFlags } from "../services/Config"

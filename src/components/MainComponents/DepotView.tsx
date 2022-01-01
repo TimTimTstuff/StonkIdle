@@ -1,14 +1,13 @@
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react'
-import { Game } from '../logic/Game';
-import { GameCalculator } from '../logic/module/calculator/GameCalculator';
-import { UIHelper } from '../logic/module/calculator/UiHelper';
-import { GameServices, GlobalEvents } from '../logic/services';
-import { DepotService } from '../logic/services/accounts/DepotService';
-import { BusinessCalculator } from '../logic/services/businessCalculator/BusinessCalculator';
-import { EventNames, GameConfig } from '../logic/services/Config';
-import { TimeService } from '../logic/services/timeService/TimeService';
+import { GameCalculator } from '../../logic/module/calculator/GameCalculator';
+import { UIHelper } from '../../logic/module/calculator/UiHelper';
+import { GameServices, GlobalEvents } from '../../logic/services';
+import { DepotService } from '../../logic/services/accounts/DepotService';
+import { BusinessCalculator } from '../../logic/services/businessCalculator/BusinessCalculator';
+import { EventNames, GameConfig } from '../../logic/services/Config';
+import { TimeService } from '../../logic/services/timeService/TimeService';
 import './DepotView.css'
 
 type DepotViewState = {

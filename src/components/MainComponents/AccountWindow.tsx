@@ -1,10 +1,10 @@
 import React from "react";
-import { AccountService } from "../logic/services/accounts/AccountService";
-import { GameServices, GlobalEvents } from "../logic/services";
-import { EventNames } from "../logic/services/Config";
+import { AccountService } from "../../logic/services/accounts/AccountService";
+import { GameServices, GlobalEvents } from "../../logic/services";
+import { EventNames } from "../../logic/services/Config";
 import './AccountWindow.css'
-import { GameCalculator } from "../logic/module/calculator/GameCalculator";
-import { UIHelper } from "../logic/module/calculator/UiHelper";
+import { GameCalculator } from "../../logic/module/calculator/GameCalculator";
+import { UIHelper } from "../../logic/module/calculator/UiHelper";
 
 type AccountWindowState = {
     balance: number
@@ -78,10 +78,10 @@ export class AccountWindow extends React.Component<{}, AccountWindowState> {
                 <button onClick={(e) => {this._account.getSavingToMain(100); this.UpdateStateData()}}>Get 100</button>
                 <button onClick={(e) => {this._account.getSavingToMain(1000); this.UpdateStateData()}}>Get 1000</button>
                 {*/}
-                <button onClick={(e) => {this._account.getMainToSaving(1); this.UpdateStateData()}}>Store 1</button>
-                <button onClick={(e) => {this._account.getMainToSaving(10); this.UpdateStateData()}}>Store 10</button>
-                <button onClick={(e) => {this._account.getMainToSaving(100); this.UpdateStateData()}}>Store 100</button>
-                <button onClick={(e) => {this._account.getMainToSaving(1000); this.UpdateStateData()}}>Store 1000</button>
+                <button onClick={(e) => {this._account.transfereMainToSaving(1); this.UpdateStateData()}}>Store 1</button>
+                <button onClick={(e) => {this._account.transfereMainToSaving(10); this.UpdateStateData()}}>Store 10</button>
+                <button onClick={(e) => {this._account.transfereMainToSaving(100); this.UpdateStateData()}}>Store 100</button>
+                <button onClick={(e) => {this._account.transfereMainToSaving(1000); this.UpdateStateData()}}>Store 1000</button>
             </div>
         </div>)
     }

@@ -1,7 +1,7 @@
 import React from "react";
-import { GameServices, LogService } from "../logic/services";
-import { GameConfig } from "../logic/services/Config";
-import { TimeService } from "../logic/services/timeService/TimeService";
+import { LogService, GameServices } from "../../logic/services";
+import { GameConfig } from "../../logic/services/Config";
+import { TimeService } from "../../logic/services/timeService/TimeService";
 import './TimeBox.css'
 
 type TimeData = {

@@ -1,7 +1,7 @@
 import React from "react";
-import { GameServices, GlobalEvents } from "../logic/services";
-import { EventNames, GameConfig } from "../logic/services/Config";
-import { TimeService } from "../logic/services/timeService/TimeService";
+import { GlobalEvents, GameServices } from "../../logic/services";
+import { EventNames, GameConfig } from "../../logic/services/Config";
+import { TimeService } from "../../logic/services/timeService/TimeService";
 import './GameLog.css'
 
 type GameLogState = {

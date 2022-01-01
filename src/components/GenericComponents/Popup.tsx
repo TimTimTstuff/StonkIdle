@@ -1,7 +1,8 @@
 import React from "react";
-import { UIHelper } from "../logic/module/calculator/UiHelper";
-import { GameServices, GlobalEvents } from "../logic/services";
-import { EventNames } from "../logic/services/Config";
+import { UIHelper } from "../../logic/module/calculator/UiHelper";
+import { GameServices, GlobalEvents } from "../../logic/services";
+import { EventNames } from "../../logic/services/Config";
+
 import './Popup.css'
 
 export interface PopupState  {

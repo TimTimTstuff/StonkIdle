@@ -10,25 +10,30 @@ import { GameStats, GameStatsMethod, StatsService } from "./StatsService";
 
 export class AccountService implements IGameService {
 
+    //#region Service
     public static serviceName = 'Account'
+    public getServiceName(): string {
+        return AccountService.serviceName
+    }
+    //#endregion
+
+    //#region fields /ctor
     private _saveService: SaveDataService
     private _event: GlobalEvents;
     private _time: TimeService;
     private _flag: FlagService;
     private _stats: StatsService;
 
-    constructor(saveService: SaveDataService, event: GlobalEvents, time: TimeService, flag:FlagService, stats:StatsService) {
+    constructor(saveService: SaveDataService, event: GlobalEvents, time: TimeService, flag: FlagService, stats: StatsService) {
         this._saveService = saveService
         this._event = event
         this._time = time
         this._flag = flag
         this._stats = stats
     }
+    //#endregion
 
-    public getServiceName(): string {
-        return AccountService.serviceName
-    }
-
+    //#region taxes
     public getLastTaxInfo(count: number) {
         let taxInfo = []
         let log = this._saveService.getGameSave().player.taxLog
@@ -73,7 +78,7 @@ export class AccountService implements IGameService {
             if (keys.length > GameConfig.maxTaxLogs) {
                 delete save.taxLog[keys[0]]
             }
-           
+
         }
         return save.taxLog[saveKey];
     }
@@ -82,7 +87,9 @@ export class AccountService implements IGameService {
         let saveKey = this._time.getFormated('A_C', this._time.getTicks() - 1000)
         return this._saveService.getGameSave().player.taxLog[saveKey]
     }
+    //#endregion
 
+    //#region Game Updates
     public onPeriodUpdate() {
         let savingAccount = this._saveService.getGameSave().player.savingAccount
         if (savingAccount.interestForPeriods > 0) {
@@ -90,7 +97,7 @@ export class AccountService implements IGameService {
             let interest = GameCalculator.roundValue((savingAccount.interest / 100 / 100) * savingAccount.balance)
             this.addToTaxLogInterest(interest)
             this.addMainAccount(interest, 'interest income', false)
-            this._stats.setStat(GameStats.Interest,interest,GameStatsMethod.Add)
+            this._stats.setStat(GameStats.Interest, interest, GameStatsMethod.Add)
         }
     }
 
@@ -103,8 +110,10 @@ export class AccountService implements IGameService {
         }
 
     }
+    //#endregion
 
-    public getMainToSaving(amount: number): boolean {
+    //#region transfere methods
+    public transfereMainToSaving(amount: number): boolean {
         if (!this.hasMainAmount(amount)) {
             return false
         }
@@ -112,32 +121,18 @@ export class AccountService implements IGameService {
         return this.addSavingAccount(this.removeMainAccount(amount) ? amount : 0)
     }
 
-    public getSavingToMain(amount: number): boolean {
+    public transfereSavingToMain(amount: number): boolean {
         if (!this.hasSavingsAmount(amount)) {
             return false
         }
 
         return this.addMainAccount(this.removeSavingAccount(amount) ? amount : 0)
     }
+    //#endregion
 
-    public hasSavingsAmount(amount: number): boolean {
-        return this._saveService.getGameSave().player.savingAccount.balance > amount
-    }
-
+    //#region Main Account
     public hasMainAmount(amount: number): boolean {
         return this._saveService.getGameSave().player.mainAccount.balance > amount
-    }
-
-    public getSavingInterest(): number {
-        return this._saveService.getGameSave().player.savingAccount.interest
-    }
-
-    public getSavingInterestLeft(): number {
-        return this._saveService.getGameSave().player.savingAccount.interestForPeriods
-    }
-
-    public getSavingBalance(): number {
-        return this._saveService.getGameSave().player.savingAccount.balance
     }
 
     public getMainAccountBalance(): number {
@@ -155,6 +150,34 @@ export class AccountService implements IGameService {
         return true
     }
 
+    public addMainAccount(amount: number, reason?: string, notify: boolean = true): boolean {
+        this._saveService.getGameSave().player.mainAccount.balance += amount
+        if (notify) {
+            this._event.callEvent(EventNames.AddLogMessage, this, { msg: `Main: ${amount}€ ${reason !== undefined ? `Reason: ${reason}` : ''}`, key: 'income' })
+        }
+        this._event.callEvent(EventNames.moneyUpdate, this, { i: true, a: amount })
+        this._stats.setStat(GameStats.HighestMainAccount, this.getMainAccountBalance(), GameStatsMethod.OverwriteIfHigher)
+        return true
+    }
+    //#endregion
+    
+    //#region Saving Account
+    public hasSavingsAmount(amount: number): boolean {
+        return this._saveService.getGameSave().player.savingAccount.balance > amount
+    }
+
+    public getSavingInterest(): number {
+        return this._saveService.getGameSave().player.savingAccount.interest
+    }
+
+    public getSavingInterestLeft(): number {
+        return this._saveService.getGameSave().player.savingAccount.interestForPeriods
+    }
+
+    public getSavingBalance(): number {
+        return this._saveService.getGameSave().player.savingAccount.balance
+    }
+
     public removeSavingAccount(amount: number, reason?: string): boolean {
         if (amount < 0) return false
         if (this._saveService.getGameSave().player.savingAccount.balance < amount) {
@@ -167,20 +190,13 @@ export class AccountService implements IGameService {
         return true
     }
 
-    public addMainAccount(amount: number, reason?: string, notify: boolean = true): boolean {
-        this._saveService.getGameSave().player.mainAccount.balance += amount
-        if (notify) {
-            this._event.callEvent(EventNames.AddLogMessage, this, { msg: `Main: ${amount}€ ${reason !== undefined ? `Reason: ${reason}` : ''}`, key: 'income' })
-        }
-        this._event.callEvent(EventNames.moneyUpdate, this, { i: true, a: amount })
-        return true
-    }
-
     public addSavingAccount(amount: number, reason?: string): boolean {
         this._saveService.getGameSave().player.savingAccount.balance += amount
         this._event.callEvent(EventNames.AddLogMessage, this, { msg: `Savings: ${amount}€ ${reason !== undefined ? `Reason: ${reason}` : ''}`, key: 'income' })
         this._event.callEvent(EventNames.moneyUpdate, this, { i: true, a: amount })
+        this._stats.setStat(GameStats.HighestSavingAccount, this.getSavingBalance(), GameStatsMethod.OverwriteIfHigher)
         return true
     }
+    //#endregion
 
 }

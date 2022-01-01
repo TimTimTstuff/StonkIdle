@@ -1,15 +1,14 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
-import { GameServices, GlobalEvents } from "../logic/services";
-import { BusinessCalculator } from "../logic/services/businessCalculator/BusinessCalculator";
-import { EventNames, GameFlags } from "../logic/services/Config";
-import { MarketVolatility, Potential } from "../model/Business";
-import { faAngleUp, faAngleDown, faAngleDoubleUp, faAngleDoubleDown, faEquals, IconDefinition } from "@fortawesome/free-solid-svg-icons";
-import { TimeService } from "../logic/services/timeService/TimeService";
-import './GlobalInfo.css'
-import { GameCalculator } from "../logic/module/calculator/GameCalculator";
-import { FlagService } from "../logic/services/saveData/FlagService";
-import { UIHelper } from "../logic/module/calculator/UiHelper";
+import { GameCalculator } from "../../logic/module/calculator/GameCalculator";
+import { UIHelper } from "../../logic/module/calculator/UiHelper";
+import { GameServices, GlobalEvents } from "../../logic/services";
+import { BusinessCalculator } from "../../logic/services/businessCalculator/BusinessCalculator";
+import { EventNames, GameFlags } from "../../logic/services/Config";
+import { FlagService } from "../../logic/services/saveData/FlagService";
+import { TimeService } from "../../logic/services/timeService/TimeService";
+import { Potential, MarketVolatility } from "../../model/Business";
+
 
 type GlobalInfoState = {
     marketPotential: Potential,

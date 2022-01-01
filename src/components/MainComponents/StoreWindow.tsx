@@ -1,12 +1,12 @@
 import { faFileInvoice, faUserCog } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react"
-import { GameCalculator } from "../logic/module/calculator/GameCalculator";
-import { UIHelper } from "../logic/module/calculator/UiHelper";
-import { GameServices, GlobalEvents } from "../logic/services";
-import { AccountService } from "../logic/services/accounts/AccountService";
-import { EventNames } from "../logic/services/Config";
-import { TimeService } from "../logic/services/timeService/TimeService";
+import { GameCalculator } from "../../logic/module/calculator/GameCalculator";
+import { UIHelper } from "../../logic/module/calculator/UiHelper";
+import { GlobalEvents, GameServices } from "../../logic/services";
+import { AccountService } from "../../logic/services/accounts/AccountService";
+import { EventNames } from "../../logic/services/Config";
+import { TimeService } from "../../logic/services/timeService/TimeService";
 import './StoreWindow.css'
 
 type StoreStage = {

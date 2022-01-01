@@ -1,14 +1,13 @@
 import './App.css';
-import { AccountWindow } from './components/AccountWindow';
-import { BusinessChart } from './components/BusinessChart';
-import { DepotView } from './components/DepotView';
-import { GameLog } from './components/GameLog';
-import { GlobalInfo } from './components/GlobalInfo';
-import { Popup } from './components/Popup';
-import { StoreWindow } from './components/StoreWindow';
-import { TimeBox } from './components/TimeBox';
+import { Popup } from './components/GenericComponents/Popup';
+import { GameLog } from './components/InfoComponents/GameLog';
+import { GlobalInfo } from './components/InfoComponents/GlobalInfo';
+import { TimeBox } from './components/InfoComponents/TimeBox';
+import { AccountWindow } from './components/MainComponents/AccountWindow';
+import { BusinessChart } from './components/MainComponents/BusinessChart';
+import { DepotView } from './components/MainComponents/DepotView';
+import { StoreWindow } from './components/MainComponents/StoreWindow';
 import { Game } from './logic/Game';
-import { UIHelper } from './logic/module/calculator/UiHelper';
 
 function App() {
 
