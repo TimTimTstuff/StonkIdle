@@ -8,7 +8,7 @@ import { EventNames, GameFlags } from "../../logic/services/Config";
 import { FlagService } from "../../logic/services/saveData/FlagService";
 import { TimeService } from "../../logic/services/timeService/TimeService";
 import { Potential, MarketVolatility } from "../../model/Business";
-
+import './GlobalInfo.css'
 
 type GlobalInfoState = {
     marketPotential: Potential,

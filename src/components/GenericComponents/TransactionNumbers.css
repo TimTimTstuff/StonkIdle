@@ -8,12 +8,41 @@
     left: 410px;
 }
 
+.tnBoxBuyButton {
+    background-color: #285e34 !important;
+    width: 32px !important;
+    height: 32px !important;
+    margin:5px;
+}
+
+.tnBoxInputResetButton{
+    background-color: #acacac !important;
+    width: 32px !important;
+    height: 32px !important;
+    margin:5px;
+}
+
+.tnBoxBuyButton:hover {
+    background-color: #318343 !important;
+}
+
+.tnBoxCloseButton{
+    width: 24px !important;
+    height: 24px !important;
+    margin-left: 10px;
+}
+
+.tnBoxCloseButton path{
+    color:rgb(117, 30, 30);
+}
+
 #tnBox button {
     background-color: #21262d;
     border: solid thin #61666d;
     color: white;
     width: 64px;
     height: 32px;
+    cursor: pointer;
 }
 
 #tnBox button:hover {

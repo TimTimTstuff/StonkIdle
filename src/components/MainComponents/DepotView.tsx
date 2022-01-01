@@ -8,6 +8,7 @@ import { DepotService } from '../../logic/services/accounts/DepotService';
 import { BusinessCalculator } from '../../logic/services/businessCalculator/BusinessCalculator';
 import { EventNames, GameConfig } from '../../logic/services/Config';
 import { TimeService } from '../../logic/services/timeService/TimeService';
+import { TNState, TransfereType } from '../GenericComponents/TransactionNumbers';
 import './DepotView.css'
 
 type DepotViewState = {
@@ -130,11 +131,6 @@ export class DepotView extends React.Component<{}, DepotViewState> {
                             <tr>
                                 <td>Sell:</td><td>{last?.sellPrice}€</td><td>Buy:</td><td>{last?.buyPrice}€</td>
                             </tr>
-                            {/*}
-                            <tr>
-                                <td>f.Sell:</td><td>{first?.sellPrice}€</td><td>f. Buy:</td><td>{first?.buyPrice}€</td>
-                            </tr>
-                            {*/}
 
                             <tr>
                                 <td colSpan={4} className='tableSpacer'>This Cicle</td></tr>
@@ -156,14 +152,30 @@ export class DepotView extends React.Component<{}, DepotViewState> {
                             </tr>
                         </tbody>
                     </table>
-                    <button onClick={(e) => { cDepot.buyStock(this.state.currentBusiness, 1); this.updateStateWithCurrent() }}>Buy 1</button>
-                    <button onClick={(e) => { cDepot.buyStock(this.state.currentBusiness, 10); this.updateStateWithCurrent() }}>Buy 10</button>
-                    <button onClick={(e) => { cDepot.buyStock(this.state.currentBusiness, 100); this.updateStateWithCurrent() }}>Buy 100</button>
-                    <button onClick={(e) => { cDepot.buyStock(this.state.currentBusiness, 1000); this.updateStateWithCurrent() }}>Buy 1000</button>
-                    <button onClick={(e) => { cDepot.sellStock(this.state.currentBusiness, 1); this.updateStateWithCurrent() }}>Sell 1</button>
-                    <button onClick={(e) => { cDepot.sellStock(this.state.currentBusiness, 10); this.updateStateWithCurrent() }}>Sell 10</button>
-                    <button onClick={(e) => { cDepot.sellStock(this.state.currentBusiness, 100); this.updateStateWithCurrent() }}>Sell 100</button>
-                    <button onClick={(e) => { cDepot.sellStock(this.state.currentBusiness, 1000); this.updateStateWithCurrent() }}>Sell 1000</button>
+                    <button onClick={(e) => { 
+                        let tr: TNState = {
+                            display:true,
+                            pricePerShare:(last?.buyPrice??0),
+                            shortName:this.state.currentBusiness,
+                            type: TransfereType.BuyStock,
+                            value:0,
+                            buyCallback:(a)=>{cDepot.buyStock(this.state.currentBusiness, a); this.updateStateWithCurrent();}
+                        }
+                       
+                        GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).callEvent(EventNames.openTransfereWindow,this,tr)
+                    }}>Buy</button>
+                    <button onClick={(e) => { 
+                         let tr: TNState = {
+                            display:true,
+                            pricePerShare:(last?.sellPrice??0),
+                            shortName:this.state.currentBusiness,
+                            type: TransfereType.SellStock,
+                            value:0,
+                            buyCallback:(a)=>{cDepot.sellStock(this.state.currentBusiness, a); this.updateStateWithCurrent();}
+                        }
+                       
+                        GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).callEvent(EventNames.openTransfereWindow,this,tr)
+                    }}>Sell</button>
                 </div>
             </div>
         )

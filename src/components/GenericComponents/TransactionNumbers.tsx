@@ -7,7 +7,9 @@ import { EventNames } from "../../logic/services/Config";
 import './TransactionNumbers.css'
 import Draggable from 'react-draggable'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faExpandArrowsAlt } from "@fortawesome/free-solid-svg-icons";
+import { faBriefcase, faExpandArrowsAlt, faTimes, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { DepotService } from "../../logic/services/accounts/DepotService";
+import { GameCalculator } from "../../logic/module/calculator/GameCalculator";
 
 export enum TransfereType {
     StoreSaving,
@@ -19,9 +21,9 @@ export interface TNState {
     buyCallback: (amount: number) => void,
     type: TransfereType,
     display: boolean,
-    value:number,
-    shortName:string,
-    pricePerShare:number,
+    value: number,
+    shortName: string,
+    pricePerShare: number,
 }
 
 export class TransactionNumbers extends React.Component<{}, TNState>{
@@ -38,20 +40,20 @@ export class TransactionNumbers extends React.Component<{}, TNState>{
         }
     }
 
-    componentDidMount(){
+    componentDidMount() {
 
-        GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).subscribe(EventNames.openTransfereWindow,(caller, args)=>{
+        GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).subscribe(EventNames.openTransfereWindow, (caller, args) => {
             let s = args as TNState
             this.setState(s)
         })
 
-        GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).subscribe(EventNames.periodChange,(caller,args)=>{
-            if(this.state.type === TransfereType.BuyStock){
+        GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).subscribe(EventNames.periodChange, (caller, args) => {
+            if (this.state.type === TransfereType.BuyStock) {
                 let price = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getBusinessCurrentPrices(this.state.shortName)
                 this.setState({
                     pricePerShare: price.b
                 })
-            }else if(this.state.type === TransfereType.SellStock){
+            } else if (this.state.type === TransfereType.SellStock) {
                 let price = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getBusinessCurrentPrices(this.state.shortName)
                 this.setState({
                     pricePerShare: price.s
@@ -63,23 +65,18 @@ export class TransactionNumbers extends React.Component<{}, TNState>{
 
     //#region render
     render(): React.ReactNode {
-        
-        let subline = this.state.type == TransfereType.StoreSaving?'For Saving Account':this.getSubLineForBuySell()
-        
+
+        let subline = this.state.type == TransfereType.StoreSaving ? 'For Saving Account' : this.getSubLineForBuySell()
+
         return (<div> <Draggable><div style={UIHelper.isVisible(this.state.display)} id='tnBox' className="tnBoxContainer">
-             <div className="floatRight"><FontAwesomeIcon icon={faExpandArrowsAlt} /></div>
-            <span className="tnBoxHeader">Buy / Sell Calculator</span>
-            <br />
-           
-            <input className="tnBoxInput" type='number' readOnly={false} value={this.state.value} min='0' onChange={(e) => { this.setState({value: parseInt(e.target.value)}) }} />
-            <br/>
+            <button title="Close Window" className="floatRight tnBoxCloseButton" onClick={(e) => { this.setState({ display: false }) }}><FontAwesomeIcon icon={faTimes} /></button>
+            <div title="Dragg window" className="floatRight"><FontAwesomeIcon icon={faExpandArrowsAlt} /></div>
+            <div className="tnBoxHeader">Buy / Sell Calculator</div>
+            <input title="Amount to be used" className="tnBoxInput" type='number' readOnly={false} value={this.state.value} min='0' onChange={(e) => { this.setState({ value: parseInt(e.target.value) }) }} />
             {subline}
-            <br/>
-            <button onClick={(e)=>{this.state.buyCallback(this.state.value)}} style={UIHelper.isVisible(this.state.type == TransfereType.BuyStock)} className="tnBoxBuyButton">Buy</button>
-            <button onClick={(e)=>{this.state.buyCallback(this.state.value)}} style={UIHelper.isVisible(this.state.type == TransfereType.SellStock)} className="tnBoxSellButton">Sell</button>
-            <button onClick={(e)=>{this.state.buyCallback(this.state.value)}} style={UIHelper.isVisible(this.state.type == TransfereType.StoreSaving)} className="tnBoxStoreButton">Store</button>
-            <button className="tnBoxInputResetButton" onClick={(e)=>{this.setState({value:0})}}>Reset</button>
-            <button className="tnBoxCloseButton" onClick={(e)=>{this.setState({display:false})}}>Close</button>
+            <button title="Buy/Sell or Store" onClick={(e) => { this.state.buyCallback(this.state.value); this.setState({display:false}) }} className="tnBoxBuyButton"><FontAwesomeIcon icon={faBriefcase} /></button>
+            <button title="Reset Input" className="tnBoxInputResetButton" onClick={(e) => { this.setState({ value: 0 }) }}><FontAwesomeIcon icon={faTrash} /></button>
+
             <table>
                 <tbody>
                     {this.getBuyNumberPositive()}
@@ -90,57 +87,64 @@ export class TransactionNumbers extends React.Component<{}, TNState>{
         </div></Draggable></div>)
     }
 
-    private getSubLineForBuySell(){
-        return (<span>For: {this.state.shortName} | Mode: {this.state.type == TransfereType.SellStock?'Sell':'Buy'} | Share: {this.state.pricePerShare}€</span>)
+    private getSubLineForBuySell() {
+        return (<div>
+              <span>{this.state.type == TransfereType.SellStock ? 'Sell' : 'Buy'}</span>: <span>{this.state.shortName}</span> <span>{this.state.pricePerShare}€</span> <span>Total: {GameCalculator.roundValueToEuro(this.state.pricePerShare*this.state.value)}</span>
+            </div>)
 
     }
 
     private getBuyPercentagePositive() {
         return <tr>
-            <td><button onClick={(e)=>{this.addValuePercentMain(1)}}>+1%</button></td>
-            <td><button onClick={(e)=>{this.addValuePercentMain(10)}}>+10%</button></td>
-            <td><button onClick={(e)=>{this.addValuePercentMain(25)}}>+25%</button></td>
-            <td><button onClick={(e)=>{this.addValuePercentMain(75)}}>+75%</button></td>
-            <td><button onClick={(e)=>{this.addValuePercentMain(100)}}>+100%</button></td>
+            <td><button onClick={(e) => { this.addValuePercentMain(1) }}>+1%</button></td>
+            <td><button onClick={(e) => { this.addValuePercentMain(10) }}>+10%</button></td>
+            <td><button onClick={(e) => { this.addValuePercentMain(25) }}>+25%</button></td>
+            <td><button onClick={(e) => { this.addValuePercentMain(75) }}>+75%</button></td>
+            <td><button onClick={(e) => { this.addValuePercentMain(100) }}>+100%</button></td>
         </tr>;
     }
     addValuePercentMain(percent: number) {
         let currAmount = GameServices.getService<AccountService>(AccountService.serviceName).getMainAccountBalance();
-        let percMoney = Math.floor(currAmount/100*percent)
-        if(this.state.type == TransfereType.StoreSaving){
+        let percMoney = Math.floor(currAmount / 100 * percent)
+        if (this.state.type == TransfereType.StoreSaving) {
             this.addValue(percMoney)
-        }else if(this.state.type == TransfereType.BuyStock || this.state.type == TransfereType.SellStock){
-            let stocks = Math.floor(percMoney/this.state.pricePerShare)
+        } else if (this.state.type == TransfereType.BuyStock) {
+            let stocks = Math.floor(percMoney / this.state.pricePerShare)
             this.addValue(stocks)
+        } else if(this.state.type == TransfereType.SellStock){
+            let sAm = GameServices.getService<DepotService>(DepotService.serviceName).getDepotByCompanyName(this.state.shortName)
+            if((sAm?.shareAmount??0) <= 0) return;
+            let p = Math.floor((sAm?.shareAmount??0) / 100 * percent)
+            this.addValue(p)
         }
     }
 
     private getBuyNumberNegative() {
         return <tr>
-            <td><button onClick={(e)=>{this.addValue(-1)}}>-1</button></td>
-            <td><button onClick={(e)=>{this.addValue(-10)}}>-10</button></td>
-            <td><button onClick={(e)=>{this.addValue(-100)}}>-100</button></td>
-            <td><button onClick={(e)=>{this.addValue(-1000)}}>-1000</button></td>
-            <td><button onClick={(e)=>{this.addValue(-10000)}}>-10000</button></td>
+            <td><button onClick={(e) => { this.addValue(-1) }}>-1</button></td>
+            <td><button onClick={(e) => { this.addValue(-10) }}>-10</button></td>
+            <td><button onClick={(e) => { this.addValue(-100) }}>-100</button></td>
+            <td><button onClick={(e) => { this.addValue(-1000) }}>-1000</button></td>
+            <td><button onClick={(e) => { this.addValue(-10000) }}>-10000</button></td>
         </tr>;
     }
 
     private getBuyNumberPositive() {
         return <tr>
-            <td><button onClick={(e)=>{this.addValue(1)}}>+1</button></td>
-            <td><button onClick={(e)=>{this.addValue(10)}}>+10</button></td>
-            <td><button onClick={(e)=>{this.addValue(100)}}>+100</button></td>
-            <td><button onClick={(e)=>{this.addValue(1000)}}>+1000</button></td>
-            <td><button onClick={(e)=>{this.addValue(10000)}}>+10000</button></td>
+            <td><button onClick={(e) => { this.addValue(1) }}>+1</button></td>
+            <td><button onClick={(e) => { this.addValue(10) }}>+10</button></td>
+            <td><button onClick={(e) => { this.addValue(100) }}>+100</button></td>
+            <td><button onClick={(e) => { this.addValue(1000) }}>+1000</button></td>
+            <td><button onClick={(e) => { this.addValue(10000) }}>+10000</button></td>
         </tr>;
     }
 
-    private addValue(a:number){
-        let nVal = this.state.value+a
-        if(nVal < 0){
+    private addValue(a: number) {
+        let nVal = this.state.value + a
+        if (nVal < 0) {
             nVal = 0
         }
-        this.setState({value:nVal})
+        this.setState({ value: nVal })
     }
     //#endregion
 
