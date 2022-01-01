@@ -1,19 +1,26 @@
+import { stat } from "fs";
 import { LogService } from "..";
 import { IGameService } from "../IGameService";
 import { SaveDataService } from "../saveData/SaveDataService";
 import { TimeService } from "../timeService/TimeService";
 
-export enum GameStats{
-    BuyForShare,
-    SellForShare,
-    Interest,
-    HighestMainAcount,
-    PayedForTax
+
+
+
+export enum GameStats {
+    BuyedSharesTotal = 0,
+    SellForShare = 1,
+    Interest = 2,
+    HighestMainAcount = 3,
+    PayedForTax = 4,
+    SellPriceTotal = 5,
+    BuyPriceTotal = 6
 }
 
 export enum GameStatsMethod{
     Overwrite,
-    Add
+    Add,
+    OverwriteIfHigher,
 }
 
 export class StatsService implements IGameService{
@@ -44,6 +51,10 @@ export class StatsService implements IGameService{
                 break;
             case GameStatsMethod.Add:
                 this._save.getGameSave().stats[stat] += amount
+                break;
+            case GameStatsMethod.OverwriteIfHigher:
+                let statVal = this._save.getGameSave().stats[stat];
+                if(statVal < amount) this._save.getGameSave().stats[stat] = amount
                 break;
             default:
                 this._log.debug(StatsService.serviceName, `Can't find Method: ${method}`)

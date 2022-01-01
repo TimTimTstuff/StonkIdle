@@ -56,7 +56,7 @@ export class DepotView extends React.Component<{}, DepotViewState> {
         })
         return (
             <div id='depots' className='depotView'>
-                <div style={UIHelper.isVisible(UIHelper.hasTutorialCheck(7))} className='depotViewItem depotList'>
+                <div style={UIHelper.isVisible(UIHelper.hasTutorialCheck(6))} className='depotViewItem depotList'>
 
                     <div className='depotListItem noselect depotListItemHeader'>
                         <div className='depotViewData'>
@@ -112,7 +112,7 @@ export class DepotView extends React.Component<{}, DepotViewState> {
                     })}
                 </div>
 
-                <div className='depotViewItem depotDetails' style={UIHelper.isVisible(UIHelper.hasTutorialCheck(8))}>{this.state.currentBusiness}
+                <div className='depotViewItem depotDetails' style={UIHelper.isVisible(UIHelper.hasTutorialCheck(7))}>{this.state.currentBusiness}
                     <table>
                         <tbody>
 

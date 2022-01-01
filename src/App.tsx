@@ -4,6 +4,7 @@ import { BusinessChart } from './components/BusinessChart';
 import { DepotView } from './components/DepotView';
 import { GameLog } from './components/GameLog';
 import { GlobalInfo } from './components/GlobalInfo';
+import { Popup } from './components/Popup';
 import { StoreWindow } from './components/StoreWindow';
 import { TimeBox } from './components/TimeBox';
 import { Game } from './logic/Game';
@@ -36,6 +37,7 @@ function App() {
       <div className='gameBox' id='box4'>
         <GameLog />
       </div>
+      <Popup />
     </div>
   );
 }

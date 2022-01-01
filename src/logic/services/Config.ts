@@ -2,6 +2,7 @@ import { Potential, MarketVolatility } from "../../model/Business"
 import { MainSave } from "../../model/MainSave"
 
 export class GameConfig {
+    static saveVersion: string = '0.3'
     static getDefaultSave(): MainSave {
         return {
             name: 'unknown',
@@ -20,8 +21,9 @@ export class GameConfig {
                 tax:GameConfig.tax,
                 spread:GameConfig.getBaseSpread,
                 t_act:true,
-                t_s:0
-                
+                t_s:0,
+                g_tps:GameConfig.singleTimeTick,
+                g_gup:GameConfig.gameTickSpeedInMS           
             },
             stats:{
                 
@@ -31,7 +33,7 @@ export class GameConfig {
     }
     
     public static gameChartUpdate: number = 1500
-    public static gameTickSpeedInMS:number = 44
+    public static gameTickSpeedInMS:number = 100
     public static businessChartMaxPoints: number = 50
     public static maxLogMessages: number = 100
     public static defaultFloatingPercentage: number = 10
@@ -43,7 +45,7 @@ export class GameConfig {
     static maxShareStartPrice: number = 25
     static getBaseSpread: number = 1.012
     static marketVolatilityChange: number = 995
-    static singleTimeTick: number = 1
+    static singleTimeTick: number = 3
     static tax: number = 0.25
     static maxTaxLogs: number = 10
 }
@@ -56,6 +58,8 @@ export class GameFlags {
     static f_i_BusinessPotential: string = 'f_bpot'
     static t_i_level: string = 't_s'
     static t_b_active: string = 't_act'
+    static g_i_gameLoopTickSpeed: string = 'g_gup'
+    static g_i_ticksPerLoop: string = 'g_tps'
 }
 
 export class EventNames {
@@ -65,4 +69,5 @@ export class EventNames {
     static AddLogMessage: string = 'addLogMessage'
     static selectedBusiness: string = 'selectBusiness'
     static moneyUpdate: string = 'moneyUpdate'
+    static showPopup: string = 'showPopup'
 }

@@ -6,6 +6,7 @@ import { EventNames } from "../Config";
 import { IGameService } from "../IGameService";
 import { SaveDataService } from "../saveData/SaveDataService";
 import { AccountService } from "./AccountService";
+import { GameStats, GameStatsMethod, StatsService } from "./StatsService";
 
 export class DepotService implements IGameService {
     public static serviceName: string
@@ -13,12 +14,14 @@ export class DepotService implements IGameService {
     private _business: BusinessCalculator
     private _account: AccountService
     private _event: GlobalEvents
+    private _stats: StatsService
     
-    constructor(saveManager: SaveDataService, business: BusinessCalculator, accountService: AccountService, event: GlobalEvents) {
+    constructor(saveManager: SaveDataService, business: BusinessCalculator, accountService: AccountService, event: GlobalEvents, stats:StatsService) {
         this._save = saveManager
         this._business = business
         this._account = accountService
         this._event = event
+        this._stats = stats
     }
 
     getServiceName(): string {
@@ -53,6 +56,8 @@ export class DepotService implements IGameService {
         }
 
         business.floatingStock += amount
+        
+        this._stats.setStat(GameStats.SellForShare, amount, GameStatsMethod.Add)
         this._account.addMainAccount(sellPrice)
         this._account.addToTaxLogSellStock(sellPrice)
         this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Soled ${shortName} - ${amount}pc (${sellPrice}€ / ${b.b}€/pc)`, key:'buy'})
@@ -67,6 +72,8 @@ export class DepotService implements IGameService {
                 t.sA = 0
             }
         })
+        
+        this._stats.setStat(GameStats.SellPriceTotal, sellPrice, GameStatsMethod.Add)
         this.recalculateStockAmount(shortName)
         return true
 
@@ -98,6 +105,8 @@ export class DepotService implements IGameService {
         this._account.addToTaxLogBuyStock(buyPrice)
         depot.transactions.push({sN:shortName, sA:amount, iS:false, sP:b.b})
         this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Bought ${shortName} - ${amount}pc (${buyPrice}€ / ${b.b}€/pc)`, key:'buy'})
+        this._stats.setStat(GameStats.BuyedSharesTotal, amount, GameStatsMethod.Add)
+        this._stats.setStat(GameStats.BuyPriceTotal, buyPrice, GameStatsMethod.Add)
         this.recalculateStockAmount(shortName)
         return true
     }

@@ -1,4 +1,7 @@
 import LZString from 'lz-string';
+import { PopupState } from '../../../components/Popup';
+import { GameServices, GlobalEvents } from '../../services';
+import { EventNames, GameConfig } from '../../services/Config';
 import { GameSave } from './GameSave';
 
 export class SaveManager {
@@ -9,10 +12,10 @@ export class SaveManager {
     public saveCorrupted: (() => void) | undefined;
     public saveCreated: (() => void) | undefined;
     public saveLoaded: (() => void) | undefined;
-    
+
     constructor(saveName: string) {
         this._storageKey = saveName;
-        this._saveObject = {lastSave: 0, saveVersion: "0.1", saveData: {}};
+        this._saveObject = {lastSave: 0, saveVersion: GameConfig.saveVersion, saveData: {}};
     }
 
     public  getSaveFile(): unknown {
@@ -60,13 +63,23 @@ export class SaveManager {
             }
 
             this._saveObject = JSON.parse(decodedSave);
-            
+            if(this._saveObject.saveVersion != GameConfig.saveVersion){
+                this.resetSave()
+                
+            }
             if(this.saveLoaded != undefined)
                 this.saveLoaded();
 
         } catch (ex) {
             this.saveCorruptedEvent();
+            this.resetSave();
         }
+    }
+
+    private resetSave() {
+        localStorage.setItem('bak_save', localStorage.getItem(this._storageKey) as string);
+        alert(`Save corrupted! Create new Save. Backup of old save created! Please reload! \n-------- Old Save (or in Application)\n ${localStorage.getItem('bak_save')}`)
+        localStorage.removeItem(this._storageKey);
     }
 
     private saveCorruptedEvent() {

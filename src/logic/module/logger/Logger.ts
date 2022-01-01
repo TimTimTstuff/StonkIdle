@@ -53,7 +53,7 @@ export class ConsoleLogger implements ILogger {
     log(channel: string, msg: string, object?: unknown, level: LogLevel = LogLevel.Info): void {
         if (this._channelList[channel] === undefined)
             this._channelList[channel] = this._defaultActive;
-
+        if(this._channelList[channel] === false) return;
         if (level >= this._logLevel) {
             const logMsg = `${channel} - ${msg}`;
             if (this._useConsoleLevel) {

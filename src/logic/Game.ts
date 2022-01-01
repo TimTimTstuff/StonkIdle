@@ -30,11 +30,9 @@ export class Game {
         this.registerServices()
         this.registgerGameEvents()
         this.setupGameLoop()
-
         if(this._flagService?.getFlagBool(GameFlags.t_b_active)){
             TutorialModul.RunTutorial()
         }
-        
     }
 
     public static getInstance() {
@@ -56,11 +54,14 @@ export class Game {
             //calculate ticks in game speed
             this._timeService?.addTimeTick()
 
-        }, GameConfig.gameTickSpeedInMS) as unknown as number
+        }, this._flagService?.getFlagInt(GameFlags.g_i_gameLoopTickSpeed)) as unknown as number
     }
 
     registgerGameEvents() {
        this._gameEvent?.subscribe(EventNames.periodChange, (caller, args) => {
+            if(this._flagService?.getFlagBool(GameFlags.t_b_active)){
+                TutorialModul.RunTutorial()
+            }
            this._businessCalculator?.onPeriodChange()
            this._accountService?.onPeriodUpdate()
            this._saveManager?.save()
@@ -83,11 +84,11 @@ export class Game {
         this._gameEvent = new GlobalEvents()
         GameServices.registerService(this._gameEvent)
 
-        this._timeService = TimeService.getInstance()
-        GameServices.registerService(this._timeService)
-
         this._flagService = new FlagService(this._saveManager)
         GameServices.registerService(this._flagService)
+
+        this._timeService = TimeService.getInstance(this._flagService, this._saveManager)
+        GameServices.registerService(this._timeService)
 
         this._statService = new StatsService(this._timeService, this._saveManager, this._log)
         GameServices.registerService(this._statService)
@@ -98,7 +99,7 @@ export class Game {
         this._accountService = new AccountService(this._saveManager, this._gameEvent, this._timeService, this._flagService, this._statService)
         GameServices.registerService(this._accountService)
 
-        this._depotService = new DepotService(this._saveManager, this._businessCalculator,this._accountService, this._gameEvent)
+        this._depotService = new DepotService(this._saveManager, this._businessCalculator,this._accountService, this._gameEvent, this._statService)
         GameServices.registerService(this._depotService)
 
 

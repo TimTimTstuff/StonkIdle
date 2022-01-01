@@ -1,0 +1,59 @@
+#gamePopupWindow {
+    background-color: #21262d;
+    width: 400px;
+    border: solid thick #61666d;
+    position: fixed;
+    top: 100px;
+    left:340px;
+    box-shadow: 5px 5px 32px #111; 
+}
+
+.popupHeader{
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+    height: 25px;
+    border-bottom: solid thin #61666d;
+}
+
+.popupContent{
+    font-size: 11pt;
+    padding:12px;
+}
+
+.popupContent button {
+    margin-right: 5px;
+    background-color: #21262d;
+    border: solid thin #61666d;
+    color:white;
+    cursor:pointer;
+}
+
+.popupContent button:hover {
+    background-color: #61666d;
+}
+
+.popupFooter {
+    border-top: solid thin #61666d;
+    height: 25px;
+    padding-top: 5px; 
+    padding-left: 5px;
+}
+
+.popupFooterButton {
+    margin-right: 5px;
+    background-color: #21262d;
+    border: solid thin #61666d;
+    color:white;
+    cursor:pointer;
+}
+
+.buttonClose{
+    float:right;
+    margin-top: -23px;
+    background-color: #5c4343;
+}
+
+.popupFooterButton:hover{
+    background-color: #67778f;
+}

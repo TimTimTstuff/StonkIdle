@@ -1,6 +1,7 @@
 import { GameServices, GlobalEvents } from '..'
-import { EventNames, GameConfig } from '../Config'
+import { EventNames, GameFlags } from '../Config'
 import { IGameService } from '../IGameService'
+import { FlagService } from '../saveData/FlagService'
 import { SaveDataService } from '../saveData/SaveDataService'
 export class TimeService implements IGameService {
     
@@ -13,22 +14,24 @@ export class TimeService implements IGameService {
     private _saveData: SaveDataService
     private static _in: TimeService
     private _lastTb: TimeBox
+    private _flagService: FlagService
 
-    constructor() {
-        this._saveData = GameServices.getService<SaveDataService>(SaveDataService.serviceName);
+    constructor(flag:FlagService, save:SaveDataService) {
+        this._saveData = save
         if(TimeService._in !== undefined){
             throw new Error('Recreate TimeService!')
         }
+        this._flagService = flag
         TimeService._in = this
         this._lastTb = this.getCurrentTimeBox()
 
     }
 
-    public static getInstance(){
+    public static getInstance(flag:FlagService, save:SaveDataService){
         if(TimeService._in !== undefined){
             return TimeService._in
         }
-        return new TimeService()
+        return new TimeService(flag, save)
     }
 
     getServiceName(): string {
@@ -36,7 +39,7 @@ export class TimeService implements IGameService {
     }
 
     addTimeTick(): void {
-        this.addTicks(GameConfig.singleTimeTick);
+        this.addTicks(this._flagService.getFlagInt(GameFlags.g_i_ticksPerLoop));
     }
 
     getTicks(): number {

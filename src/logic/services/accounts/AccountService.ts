@@ -73,7 +73,7 @@ export class AccountService implements IGameService {
             if (keys.length > GameConfig.maxTaxLogs) {
                 delete save.taxLog[keys[0]]
             }
-            console.log([keys, save.taxLog])
+           
         }
         return save.taxLog[saveKey];
     }
