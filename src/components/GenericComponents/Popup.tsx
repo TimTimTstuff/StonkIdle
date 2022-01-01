@@ -1,7 +1,10 @@
+import { faExpandArrowsAlt } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { UIHelper } from "../../logic/module/calculator/UiHelper";
 import { GameServices, GlobalEvents } from "../../logic/services";
 import { EventNames } from "../../logic/services/Config";
+import Draggable from 'react-draggable'
 
 import './Popup.css'
 
@@ -39,7 +42,9 @@ export class Popup extends React.Component<{},PopupState> {
 
     render(): React.ReactNode {
         return (<div id="gamePopup">
+            <Draggable>
             <div id="gamePopupWindow" style={UIHelper.isVisible(this.state.display)}>
+            <div className="floatRight"><FontAwesomeIcon icon={faExpandArrowsAlt} /></div>
             <div className="popupHeader">{this.state.title}</div>
             <div className="popupContent">{this.state.content}</div>
             <div className="popupFooter">
@@ -47,6 +52,7 @@ export class Popup extends React.Component<{},PopupState> {
                 <button className="buttonClose popupFooterButton" onClick={(e)=>{this.close()}}>Close</button>
             </div>
             </div>
+            </Draggable>
         </div>)
     }
 

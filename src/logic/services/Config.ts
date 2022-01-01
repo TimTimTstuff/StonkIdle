@@ -70,4 +70,5 @@ export class EventNames {
     static selectedBusiness: string = 'selectBusiness'
     static moneyUpdate: string = 'moneyUpdate'
     static showPopup: string = 'showPopup'
+    static openTransfereWindow: string ='openTransfereWindow'
 }

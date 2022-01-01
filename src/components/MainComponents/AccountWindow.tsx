@@ -5,6 +5,7 @@ import { EventNames } from "../../logic/services/Config";
 import './AccountWindow.css'
 import { GameCalculator } from "../../logic/module/calculator/GameCalculator";
 import { UIHelper } from "../../logic/module/calculator/UiHelper";
+import { TNState, TransfereType } from "../GenericComponents/TransactionNumbers";
 
 type AccountWindowState = {
     balance: number
@@ -72,16 +73,17 @@ export class AccountWindow extends React.Component<{}, AccountWindowState> {
                 </tbody>
             </table>
             <div className="floatLeft" style={UIHelper.isVisible(UIHelper.hasTutorialCheck(2))}>
-                {/*}
-                <button onClick={(e) => {this._account.getSavingToMain(1); this.UpdateStateData()}}>Get 1</button>
-                <button onClick={(e) => {this._account.getSavingToMain(10); this.UpdateStateData()}}>Get 10</button>
-                <button onClick={(e) => {this._account.getSavingToMain(100); this.UpdateStateData()}}>Get 100</button>
-                <button onClick={(e) => {this._account.getSavingToMain(1000); this.UpdateStateData()}}>Get 1000</button>
-                {*/}
-                <button onClick={(e) => {this._account.transfereMainToSaving(1); this.UpdateStateData()}}>Store 1</button>
-                <button onClick={(e) => {this._account.transfereMainToSaving(10); this.UpdateStateData()}}>Store 10</button>
-                <button onClick={(e) => {this._account.transfereMainToSaving(100); this.UpdateStateData()}}>Store 100</button>
-                <button onClick={(e) => {this._account.transfereMainToSaving(1000); this.UpdateStateData()}}>Store 1000</button>
+               <button onClick={(e)=>{
+                   let tr: TNState = {
+                       display:true,
+                       pricePerShare:1,
+                       shortName:'',
+                       type: TransfereType.StoreSaving,
+                       value:0,
+                       buyCallback:(a)=>{this._account.transfereMainToSaving(a)}
+                   }
+                   GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).callEvent(EventNames.openTransfereWindow,this,tr)
+               }}>Store to Savings</button>
             </div>
         </div>)
     }

@@ -1,0 +1,37 @@
+.tnBoxContainer{
+    position:absolute;
+    padding: 5px;
+    box-shadow: 5px 5px 32px #111; 
+    border: solid thick #61666d;
+    background-color: #21262d;
+    top: 100px;
+    left: 410px;
+}
+
+#tnBox button {
+    background-color: #21262d;
+    border: solid thin #61666d;
+    color: white;
+    width: 64px;
+    height: 32px;
+}
+
+#tnBox button:hover {
+    background-color: #4c5664;
+}
+
+.tnBoxHeader{
+    font-weight: bold;
+}
+
+.tnBoxInput{
+    background-color: #21262d;
+    border: solid thin #61666d;
+    color:white;
+    width: 98%;
+    height: 32px;
+    font-size: 14pt;
+    margin-bottom: 4px;
+    margin-top: 4px;
+
+}

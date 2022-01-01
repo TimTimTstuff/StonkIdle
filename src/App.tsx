@@ -1,5 +1,6 @@
 import './App.css';
 import { Popup } from './components/GenericComponents/Popup';
+import { TransactionNumbers, TransfereType } from './components/GenericComponents/TransactionNumbers';
 import { GameLog } from './components/InfoComponents/GameLog';
 import { GlobalInfo } from './components/InfoComponents/GlobalInfo';
 import { TimeBox } from './components/InfoComponents/TimeBox';
@@ -37,6 +38,7 @@ function App() {
         <GameLog />
       </div>
       <Popup />
+      <TransactionNumbers />
     </div>
   );
 }
