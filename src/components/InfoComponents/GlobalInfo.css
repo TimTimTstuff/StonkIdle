@@ -1,19 +1,4 @@
-.marketVeryHigh > path{
-    color: rgb(55, 212, 34) !important;
-}
 
-.marketHigh > path{
-    color: rgb(36, 141, 22) !important;
-}
-.marketEqual > path{
-    color: rgb(29, 122, 158)!important;
-}
-.marketLow > path{
-    color: rgb(177, 122, 76)!important;
-}
-.marketVeryLow > path{
-    color: rgb(212, 34, 34)!important;
-}
 
 .sincePotientialTop{
     font-size: 6pt;

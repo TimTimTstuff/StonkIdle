@@ -1,4 +1,5 @@
 import './App.css';
+import './global.css'
 import { Popup } from './components/GenericComponents/Popup';
 import { TransactionNumbers, TransfereType } from './components/GenericComponents/TransactionNumbers';
 import { GameLog } from './components/InfoComponents/GameLog';

@@ -1,0 +1,61 @@
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+       -khtml-user-select: none; /* Konqueror HTML */
+         -moz-user-select: none; /* Old versions of Firefox */
+          -ms-user-select: none; /* Internet Explorer/Edge */
+              user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome, Edge, Opera and Firefox */
+  }
+
+.marketVeryHigh > path{
+    color: rgb(55, 212, 34) !important;
+}
+
+.marketHigh > path{
+    color: rgb(36, 141, 22) !important;
+}
+.marketEqual > path{
+    color: rgb(29, 122, 158)!important;
+}
+.marketLow > path{
+    color: rgb(177, 122, 76)!important;
+}
+.marketVeryLow > path{
+    color: rgb(212, 34, 34)!important;
+}
+
+.floatLeft {
+    float: left;
+}
+
+.floatRight {
+    float: right;
+}
+
+button {
+    background-color: #21262d;
+    border: solid thin #61666d;
+    color:white !important;
+    margin:3px;
+}
+
+button:hover {
+    background-color: #4c5664;
+}
+
+.dangerIcon path{
+    color:rgb(187, 45, 45);
+}
+
+.helpIcon path{
+    color:rgb(56, 162, 211);
+}
+
+table {
+    border-collapse: collapse;
+}
+
+tr{
+    border: solid thin #61666d
+}

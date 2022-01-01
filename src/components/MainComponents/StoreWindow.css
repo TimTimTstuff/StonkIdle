@@ -21,7 +21,7 @@
   }
 
   .tabBoxContent{
-      height: 500px;
+      height: 260px;
       overflow: auto;
       width: 600px;
   }
@@ -52,4 +52,12 @@
       width: 90px;
   }
 
+
+.setting table{
+  width: 500px;
+}
+
+.setting td {
+  padding:5px;
+}
 
