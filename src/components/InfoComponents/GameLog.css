@@ -24,6 +24,10 @@
     min-width: 220px;
 }
 
+.goal{
+    color: rgb(255, 203, 89)
+}
+
 .info {
     color: rgb(81, 172, 247)
 }

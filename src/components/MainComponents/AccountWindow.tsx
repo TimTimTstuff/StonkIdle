@@ -105,7 +105,7 @@ export class AccountWindow extends React.Component<{}, AccountWindowState> {
                        buyCallback:(a)=>{this._account.transfereMainToSaving(a)}
                    }
                    GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).callEvent(EventNames.openTransfereWindow,this,tr)
-               }}>Store to Savings</button>
+               }}>Savings</button>
 
                <button onClick={(e)=>{
                    let tr: TNState = {

@@ -1,5 +1,6 @@
 import { PlayerSave } from "../../model/AccountData";
-import { GameServices, GlobalEvents } from "../services";
+import { GameCalculator } from "../module/calculator/GameCalculator";
+import { GameServices, GlobalEvents, LogService } from "../services";
 import { AccountService } from "../services/accounts/AccountService";
 import { GameStats, StatsService } from "../services/accounts/StatsService";
 import { EventNames, GameFlags } from "../services/Config";
@@ -10,23 +11,24 @@ import { SaveDataService } from "../services/saveData/SaveDataService";
 //#region other classes
 export interface Goal {
     id: string
-    name:string
+    name: string
     flagName: string | undefined
     statName: GameStats | undefined
     operator: Operator
     level: LevelPrice[]
 }
 
-export interface LevelPrice{
+export interface LevelPrice {
     targetValue: number
     price: GoalPrice
 }
 
 export interface GoalDisplay {
-    name:string            
-    goal:number
-    price:GoalPrice
-    currValue:number
+    name: string
+    goal: number
+    price: GoalPrice
+    currValue: number
+    percentReached: number
 }
 
 export interface GoalPrice {
@@ -55,12 +57,21 @@ export class GoalsData implements IGameService {
     private _event: GlobalEvents
     private _flag: FlagService;
     private _stats: StatsService;
+    private _log: LogService
 
-    constructor(save: SaveDataService, stats:StatsService, flag: FlagService, event:GlobalEvents) {
+    //#region Service
+    public static serviceName = 'GoalService'
+    getServiceName(): string {
+        return GoalsData.serviceName
+    }
+    //#endregion
+
+    constructor(save: SaveDataService, stats: StatsService, flag: FlagService, event: GlobalEvents, log:LogService) {
         this._save = save
         this._stats = stats
         this._flag = flag
         this._event = event
+        this._log = log
         //check save
         if (this._save.getGameSave().player.goals == undefined) {
             this._save.getGameSave().player.goals = {}
@@ -69,95 +80,98 @@ export class GoalsData implements IGameService {
         this._goalData = this.setupGoals()
         this.cleanAndInitialize()
 
-        this._event.subscribe(EventNames.GoalDone,(caller, price) =>{
+        this._event.subscribe(EventNames.periodChange, (caller, period)=>{
+            this.checkIfGoalIsAchived()
+        })
+
+        this._event.subscribe(EventNames.GoalDone, (caller, price) => {
             let g = price as LevelPrice
-            switch(g.price.type){
+            switch (g.price.type) {
                 case GoalPriceType.incSavingInterest:
                     GameServices.getService<AccountService>(AccountService.serviceName).addSavingInterestRate(g.price.value)
+                    this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Goal reached! Get ${g.price.value} to your Saving Interest-rate`,key:'goal'})
                     break
                 case GoalPriceType.incSavingPeriod:
                     GameServices.getService<AccountService>(AccountService.serviceName).addSavingInterestPeriods(g.price.value)
+                    this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Goal reached! Get ${g.price.value} to your Saving Interest-period`,key:'goal'})
+
                     break
                 case GoalPriceType.lowCreditInterest:
                     GameServices.getService<AccountService>(AccountService.serviceName).addCreditInterestRate(g.price.value)
+                    this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Goal reached! Get ${g.price.value} to your Credit Interest-rate`,key:'goal'})
+
+                    break
+                default:
+                    this._log.warn(GoalsData.serviceName,`Cant find Price for ${g.price}`,g)
+            }
+        })
+    }
+
+
+    public checkIfGoalIsAchived() {
+        this._goalData.forEach(g => {
+            let pg = this._player.goals[g.id]
+            let cG = g.level[pg]
+            if (cG == undefined) return
+            let val = this.getGoalValue(g)
+
+            switch (g.operator) {
+                case Operator.equal:
+                    if (val == cG.targetValue) {
+                        this._player.goals[g.id]++
+                        this._event.callEvent(EventNames.GoalDone, this, cG)
+                    }
+                    break
+                case Operator.let:
+                    if (val <= cG.targetValue) {
+                        this._player.goals[g.id]++
+                        this._event.callEvent(EventNames.GoalDone, this, cG)
+                    }
+                    break
+                case Operator.get:
+                    if (val >= cG.targetValue) {
+                        this._player.goals[g.id]++
+                        this._event.callEvent(EventNames.GoalDone, this, cG)
+                    }
                     break
             }
         })
     }
-    private static serviceName = 'GoalService'
-    getServiceName(): string {
-        return GoalsData.serviceName
-    }
 
-    public checkIfGoalIsAchived(){
-        this._goalData.forEach(g =>{
-            let pg = this._player.goals[g.id]
-            let cG = g.level[pg]
-            if(cG == undefined) return
-            let val = this.getGoalValue(g)
 
-            switch(g.operator){
-                case Operator.equal:
-                    if(val == cG.targetValue){
-                        this._player.goals[g.id]++
-                        this._event.callEvent(EventNames.GoalDone,this,[g,cG])
-                    }
-                break
-                case Operator.let:
-                    if(val <= cG.targetValue){
-                        this._player.goals[g.id]++
-                        this._event.callEvent(EventNames.GoalDone,this,[g,cG])
-                    }
-                break    
-                case Operator.get:
-                    if(val >= cG.targetValue){
-                        this._player.goals[g.id]++
-                        this._event.callEvent(EventNames.GoalDone,this,[g,cG])
-                    }
-                break        
-            }
-        })
-    }
 
-    private cleanAndInitialize(){
-        this.getGoalIds().forEach(i => {
-            if(this._player.goals[i] == undefined){
-                this._player.goals[i] = 0
-            }
-        })
-    }
-
-    public getListCurrentGoals():GoalDisplay[]{
-        let goalResult:GoalDisplay[] = []
-        this._goalData.forEach(g =>{
+    public getListCurrentGoals(): GoalDisplay[] {
+        let goalResult: GoalDisplay[] = []
+        this._goalData.forEach(g => {
             let pg = this._player.goals[g.id]
             let eG = g.level[pg]
-            if(eG != undefined){
+            if (eG != undefined) {
                 goalResult.push({
-                    name:g.name,
-                    currValue:this.getGoalValue(g),
-                    goal:eG.targetValue,
-                    price:eG.price
+                    name: g.name,
+                    currValue: this.getGoalValue(g),
+                    goal: eG.targetValue,
+                    price: eG.price,
+                    percentReached: GameCalculator.roundValue(100 / eG.targetValue * this.getGoalValue(g))
                 })
             }
-            
+
         })
 
         return goalResult
     }
 
-    public getGoalValue(g: Goal):number {
-        if(g.statName != undefined)
+    public getGoalValue(g: Goal): number {
+        if (g.statName != undefined)
             return this._stats.getStat(g.statName)
-        if(g.flagName != undefined)
+        if (g.flagName != undefined)
             return this._flag.getFlagInt(g.flagName)
 
         return 0
     }
 
-    public getGoalIds(): string[]{
-        let ids:string[] = []
-        this._goalData.forEach((v,idv)=>{
+    public getGoalIds(): string[] {
+        let ids: string[] = []
+        this._goalData.forEach((v, idv) => {
             ids.push(v.id)
         })
 
@@ -169,7 +183,7 @@ export class GoalsData implements IGameService {
             {
                 statName: GameStats.HighestSavingAccount,
                 id: 'hs_1',
-                name:'Have in Saving Account',
+                name: 'Have in Saving Account',
                 operator: Operator.get,
                 level: [
                     {
@@ -177,25 +191,92 @@ export class GoalsData implements IGameService {
                         targetValue: 150000
                     },
                     {
-                        price: {type: GoalPriceType.incSavingPeriod, value:400},
+                        price: { type: GoalPriceType.incSavingPeriod, value: 400 },
                         targetValue: 200000
                     },
                     {
-                        price: {type: GoalPriceType.lowCreditInterest, value:0.1},
+                        price: { type: GoalPriceType.lowCreditInterest, value: 0.1 },
                         targetValue: 250000
                     },
                     {
-                        price: {type: GoalPriceType.lowCreditInterest, value:0.2},
+                        price: { type: GoalPriceType.lowCreditInterest, value: 0.2 },
                         targetValue: 300000
                     },
                     {
-                        price: {type: GoalPriceType.incSavingInterest, value:0.3},
+                        price: { type: GoalPriceType.incSavingInterest, value: 0.3 },
                         targetValue: 500000
                     },
-                    
+
                 ],
                 flagName: undefined
+            },
+            {
+                statName:GameStats.Interest,
+                id:'hi_1',
+                name:'Earn money with Interest',
+                operator:Operator.get,
+                level:[
+                    {
+                        targetValue: 10000,
+                        price:{
+                            type:GoalPriceType.incSavingInterest,
+                            value:0.1
+                        }
+                    },
+                    {
+                        targetValue: 25000,
+                        price:{
+                            type:GoalPriceType.incSavingInterest,
+                            value:0.2
+                        }
+                    },
+                    {
+                        targetValue: 50000,
+                        price:{
+                            type:GoalPriceType.incSavingInterest,
+                            value:0.3
+                        }
+                    },
+                    {
+                        targetValue: 75000,
+                        price:{
+                            type:GoalPriceType.incSavingPeriod,
+                            value:300
+                        }
+                    },
+                    {
+                        targetValue: 100000,
+                        price:{
+                            type:GoalPriceType.lowCreditInterest,
+                            value:0.4
+                        }
+                    },
+                    {
+                        targetValue: 150000,
+                        price:{
+                            type:GoalPriceType.incSavingInterest,
+                            value:0.4
+                        }
+                    },
+                    {
+                        targetValue: 200000,
+                        price:{
+                            type:GoalPriceType.incSavingPeriod,
+                            value:1000
+                        }
+                    }
+                ],
+                flagName:undefined
             }
+
         ]
+    }
+
+    private cleanAndInitialize() {
+        this.getGoalIds().forEach(i => {
+            if (this._player.goals[i] == undefined) {
+                this._player.goals[i] = 0
+            }
+        })
     }
 }

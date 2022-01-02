@@ -1,6 +1,7 @@
 import { faAward, faBriefcase, faDumpsterFire, faFileInvoice, faInfo, faStore, faUserCog } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react"
+import { GoalsData } from "../../logic/data/GoalsData";
 import { GameCalculator } from "../../logic/module/calculator/GameCalculator";
 import { UIHelper } from "../../logic/module/calculator/UiHelper";
 import { SaveManager } from "../../logic/module/saveManager/SaveManager";
@@ -28,7 +29,7 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
     constructor(prop: {}) {
         super(prop);
         this.state = {
-            window: 'tab0'
+            window: 'tab1'
         }
         this._flag = GameServices.getService<FlagService>(FlagService.serviceName)
         this._accountService = GameServices.getService<AccountService>(AccountService.serviceName)
@@ -50,8 +51,8 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
             case 'tab1':
                 content = this.getTab1Content()
                 break
-            case 'tab2':
-                content = this.getTab2Content()
+            case 'goal':
+                content = this.getGoalContent()
                 break
             case 'setting':
                 content = this.getTabSettings()
@@ -64,7 +65,7 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
 
             <div style={UIHelper.isVisible(UIHelper.hasTutorialCheck(8))} className='tabBoxHeader'>
                 <div onClick={(e) => { this.setState({ window: 'tab1' }) }} className='tabBoxHeaderItem noselect' title="Account Information" ><FontAwesomeIcon icon={faFileInvoice} /></div>
-                <div onClick={(e) => { this.setState({ window: 'tab2' }) }} className='tabBoxHeaderItem noselect' title="Goals" ><FontAwesomeIcon icon={faAward} /></div>
+                <div onClick={(e) => { this.setState({ window: 'goal' }) }} className='tabBoxHeaderItem noselect' title="Goals" ><FontAwesomeIcon icon={faAward} /></div>
                 <div onClick={(e) => { this.setState({ window: 'store' }) }} className='tabBoxHeaderItem noselect' title="Store" ><FontAwesomeIcon icon={faStore} /></div>
                 <div onClick={(e) => { this.setState({ window: 'setting' }) }} className='tabBoxHeaderItem noselect' title="Game Settings"><FontAwesomeIcon icon={faUserCog} /></div>
             </div>
@@ -154,7 +155,25 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
         </table></div>)
     }
 
-    getTab2Content(): React.ReactNode {
-        return (<div className='tabBoxContentItem tab2'><span>Your Goals!</span></div>)
+    getGoalContent(): React.ReactNode {
+        let gs = GameServices.getService<GoalsData>(GoalsData.serviceName)
+
+        return (<div className='tabBoxContentItem goal'>
+            {gs.getListCurrentGoals().map((g,gId)=>{
+                return (
+                <div key={gId} className="goalItem floatLeft">
+                    <div className="goalItemHeader">{g.name}</div>
+                    <div className="goalItemInfo">
+                        <div className="goalItemProgress" style={{width:g.percentReached+'%'}}>
+                            {g.percentReached}%
+                        </div>
+                    </div>
+                    <div className="goalItemInfo">
+                       {GameCalculator.roundValueToEuro(g.currValue)}/{GameCalculator.roundValueToEuro(g.goal)}
+                    </div>
+                    <div className="goalItemPrice">{UIHelper.getGoalPriceName(g.price)}</div>
+                </div>)
+            })}
+        </div>)
     }
 }

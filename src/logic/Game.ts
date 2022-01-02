@@ -109,7 +109,7 @@ export class Game {
         this._store = new StoreManager(this._log, this._accountService, this._flagService, this._statService, this._saveManager, this._gameEvent)
         GameServices.registerService(this._store)
 
-        this._goal = new GoalsData(this._saveManager, this._statService, this._flagService, this._gameEvent)
+        this._goal = new GoalsData(this._saveManager, this._statService, this._flagService, this._gameEvent, this._log)
         GameServices.registerService(this._goal)
 
 

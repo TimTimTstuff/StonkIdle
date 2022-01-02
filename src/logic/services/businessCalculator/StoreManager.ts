@@ -59,7 +59,7 @@ export class StoreManager implements IGameService {
         switch(item.itemType){
             case ItemType.ChangeInterestRuntime:
                 this._account.addSavingInterestPeriods(item.effect.value)
-                this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Interest Period was extended by ${item.effect.value} Periods`})
+                this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Interest Period was extended by ${item.effect.value} Periods`, key:'info'})
                 break;
             default:
                 this._log.warn(StoreManager.serviceName, `Item whitout processing Logic!`,item)
