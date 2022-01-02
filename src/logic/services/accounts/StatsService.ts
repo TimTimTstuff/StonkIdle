@@ -11,6 +11,30 @@ import { TimeService } from "../timeService/TimeService";
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export enum GameStats {
     BuyedSharesTotal = 0,
     SellForShare = 1,
@@ -19,7 +43,9 @@ export enum GameStats {
     PayedForTax = 4,
     SellPriceTotal = 5,
     BuyPriceTotal = 6,
-    HighestSavingAccount = 7
+    HighestSavingAccount = 7,
+    ItemsBought = 8,
+    SpendOnItems = 9
 }
 
 export enum GameStatsMethod{

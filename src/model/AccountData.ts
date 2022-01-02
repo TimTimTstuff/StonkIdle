@@ -6,6 +6,7 @@ export interface PlayerSave {
 }
 
 export interface Taxlog {
+    buyItem: number;
     cost: number;
     sellShare:number
     buyShare:number

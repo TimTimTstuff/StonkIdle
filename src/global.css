@@ -34,10 +34,11 @@
 }
 
 button {
-    background-color: #21262d;
+    background-color: #2c323b;
     border: solid thin #61666d;
     color:white !important;
     margin:3px;
+    cursor: pointer;
 }
 
 button:hover {

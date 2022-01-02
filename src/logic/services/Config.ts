@@ -3,6 +3,24 @@ import { MainSave } from "../../model/MainSave"
 
 export class GameConfig {
     static saveVersion: string = '0.3'
+    static storeItemChance: number = 150
+    static storeMaxItems: number = 5
+    public static gameChartUpdate: number = 1500
+    public static gameTickSpeedInMS:number = 100
+    public static businessChartMaxPoints: number = 50
+    public static maxLogMessages: number = 100
+    public static defaultFloatingPercentage: number = 10
+    public static maxPotential: number = 1000
+    static CicleHistoryDateFormat: string = 'A_C'
+    static AgeHistoryDateFormat: string = 'ageA'
+    static businessChangesPotential: number = 995
+    static MarketChangePotential: number = 975
+    static maxShareStartPrice: number = 25
+    static getBaseSpread: number = 1.012
+    static marketVolatilityChange: number = 995
+    static singleTimeTick: number = 3
+    static tax: number = 0.25
+    static maxTaxLogs: number = 10 
     static getDefaultSave(): MainSave {
         return {
             name: 'unknown',
@@ -23,31 +41,17 @@ export class GameConfig {
                 t_act:true,
                 t_s:0,
                 g_tps:GameConfig.singleTimeTick,
-                g_gup:GameConfig.gameTickSpeedInMS           
+                g_gup:GameConfig.gameTickSpeedInMS,
+                s_ic:GameConfig.storeItemChance,
+                s_mi:GameConfig.storeMaxItems           
             },
             stats:{
                 
-            }
+            },
+            store:[]
         
         }
     }
-    
-    public static gameChartUpdate: number = 1500
-    public static gameTickSpeedInMS:number = 100
-    public static businessChartMaxPoints: number = 50
-    public static maxLogMessages: number = 100
-    public static defaultFloatingPercentage: number = 10
-    public static maxPotential: number = 1000
-    static CicleHistoryDateFormat: string = 'A_C'
-    static AgeHistoryDateFormat: string = 'ageA'
-    static businessChangesPotential: number = 995
-    static MarketChangePotential: number = 975
-    static maxShareStartPrice: number = 25
-    static getBaseSpread: number = 1.012
-    static marketVolatilityChange: number = 995
-    static singleTimeTick: number = 3
-    static tax: number = 0.25
-    static maxTaxLogs: number = 10
 }
 
 export class GameFlags {
@@ -60,6 +64,8 @@ export class GameFlags {
     static t_b_active: string = 't_act'
     static g_i_gameLoopTickSpeed: string = 'g_gup'
     static g_i_ticksPerLoop: string = 'g_tps'
+    static s_i_itemChance: string = 's_ic'
+    static s_i_maxItems: string = 's_mi'
 }
 
 export class EventNames {

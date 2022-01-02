@@ -82,4 +82,9 @@ export class GameCalculator {
     public static roundValueToEuro(value:number, precision:number = 2){
         return GameCalculator.roundValue(value,precision)+'€'
     }
+
+    public static checkChance(chance:number, max:number = 1000) {
+        return chance > Math.random()*max
+    }
+    
 }

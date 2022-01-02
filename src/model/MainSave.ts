@@ -1,5 +1,6 @@
 import { PlayerSave } from './AccountData'
 import { Business, MarketVolatility, Potential } from './Business'
+import { StoreItem } from './StoreItem'
 export interface MainSave {
     ticks: number
     name: string
@@ -10,4 +11,5 @@ export interface MainSave {
     marketVolatility:MarketVolatility,
     flags:{[index:string]:string|number|boolean}
     stats:{[index:string]:number}
+    store:StoreItem[]
 }

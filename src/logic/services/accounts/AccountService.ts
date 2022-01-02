@@ -9,6 +9,7 @@ import { TimeService } from "../timeService/TimeService";
 import { GameStats, GameStatsMethod, StatsService } from "./StatsService";
 
 export class AccountService implements IGameService {
+    
 
     //#region Service
     public static serviceName = 'Account'
@@ -64,8 +65,14 @@ export class AccountService implements IGameService {
         this.recalculateTax(sk)
     }
 
+    public addToTaxLogBuyItem(amount: number){
+        let sk = this.getCurrentTaxLog()
+        sk.buyItem += amount
+        this.recalculateTax(sk)
+    }
+
     private recalculateTax(log: Taxlog) {
-        log.totalIncome = GameCalculator.roundValue((log.sellShare + log.interest) - log.buyShare)
+        log.totalIncome = GameCalculator.roundValue((log.sellShare + log.interest) - (log.buyShare + log.buyItem))
         log.cost = GameCalculator.roundValue((log.totalIncome * this._flag.getFlagFloat(GameFlags.g_f_taxPercentage)) * -1)
     }
 
@@ -73,7 +80,7 @@ export class AccountService implements IGameService {
         let save = this._saveService.getGameSave().player;
         let saveKey = this._time.getFormated('A_C', this._time.getTicks());
         if (save.taxLog[saveKey] == undefined) {
-            save.taxLog[saveKey] = { buyShare: 0, sellShare: 0, interest: 0, totalIncome: 0, time: this._time.getTicks(), cost: 0 };
+            save.taxLog[saveKey] = { buyShare: 0, sellShare: 0, interest: 0, totalIncome: 0, time: this._time.getTicks(), cost: 0, buyItem:0 };
             let keys = Object.keys(save.taxLog)
             if (keys.length > GameConfig.maxTaxLogs) {
                 delete save.taxLog[keys[0]]
@@ -162,6 +169,9 @@ export class AccountService implements IGameService {
     //#endregion
     
     //#region Saving Account
+    public addSavingInterestPeriods(value: number) {
+        this._saveService.getGameSave().player.savingAccount.interestForPeriods += value
+    }
     public hasSavingsAmount(amount: number): boolean {
         return this._saveService.getGameSave().player.savingAccount.balance > amount
     }

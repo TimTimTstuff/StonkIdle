@@ -61,3 +61,46 @@
   padding:5px;
 }
 
+/*
+  Store
+*/
+.storeItem{
+  margin:2px;
+  float:left;
+  border: solid thin #61666d;
+  height: 165px;
+  width: 110px;
+  background-color: #47505f;
+}
+
+.storeItemHeader{
+  width: 104px;
+  padding:3px;
+  text-align: center;
+  font-size: 9pt;
+  font-weight: bold;
+}
+
+.storeItemPrice{
+  text-align: center;
+  padding:3px;
+  font-size: 11pt;
+}
+
+.storeItemDescription{
+  font-size: 8pt;
+  padding: 3px;
+  text-align: center;
+}
+
+.storeItemBuy{
+ text-align: center;  
+}
+
+.storeItemBuy button{
+  background-color: #318343;
+}
+
+.itemType_1{
+  background-color: rgb(190, 138, 238);
+}
