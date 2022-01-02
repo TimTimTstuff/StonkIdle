@@ -1,8 +1,10 @@
 export interface PlayerSave {
     mainAccount:AccountData
     savingAccount:AccountData
+    creditAccount:AccountData
     depots:DepotData[]
     taxLog:{[index:string]:Taxlog}
+    goals:{[index:string]:number}
 }
 
 export interface Taxlog {

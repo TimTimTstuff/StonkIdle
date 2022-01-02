@@ -51,6 +51,7 @@ export class StoreManager implements IGameService {
             this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Store: Item ${item.title} was bought for ${GameCalculator.roundValueToEuro(item.price)}`})
             this.processItem(item)
             item.avaliableTicks = 0
+            this._event.callEvent(EventNames.periodChange,this,{})
         }
         
     }

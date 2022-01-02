@@ -1,6 +1,8 @@
 import LZString from 'lz-string';
+import { MainSave } from '../../../model/MainSave';
 import { GameConfig } from '../../services/Config';
 import { GameSave } from './GameSave';
+import { SaveFileCleaner } from './SaveFileCleaner';
 
 
 export class SaveManager {
@@ -63,7 +65,10 @@ export class SaveManager {
 
             this._saveObject = JSON.parse(decodedSave);
             if(this._saveObject.saveVersion != GameConfig.saveVersion){
-                this.resetSave()
+                alert('Game has new Save Version. Try to migrate Save. ')
+                SaveFileCleaner.update_04(this.getSaveObject('mainsave') as MainSave)
+                //this.resetSave()
+                this._saveObject.saveVersion = GameConfig.saveVersion
                 
             }
             if(this.saveLoaded != undefined)
@@ -77,7 +82,7 @@ export class SaveManager {
 
     private resetSave() {
         localStorage.setItem('bak_save', localStorage.getItem(this._storageKey) as string);
-        alert(`Save corrupted! Create new Save. Backup of old save created! Please reload! \n-------- Old Save (or in Application)\n ${localStorage.getItem('bak_save')}`)
+        alert(`Save not Compatible with the current build. Created backup. New save started \n-------- Old Save (or in Application)\n ${localStorage.getItem('bak_save')}`)
         localStorage.removeItem(this._storageKey);
     }
 

@@ -13,7 +13,6 @@ export class SaveDataService implements IGameService {
 
     private _saveManager: SaveManager;
     private _autosaveSeconds = 30;
-    //private _saveLoopId: number;
     public static serviceName = 'SaveDataService';
     private static instance: SaveDataService;
 

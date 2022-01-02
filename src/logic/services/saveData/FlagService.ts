@@ -13,6 +13,10 @@ export class FlagService implements IGameService{
         this._save.getGameSave().flags[flag] = value
     }
 
+    public addToFlag(flag:string, value:string|number){
+        (this._save.getGameSave().flags[flag] as any) += value
+    }
+
     public getFlagString(flag:string):string{
         let v = this._save.getGameSave().flags[flag]
         if(v == undefined) return ''

@@ -1,8 +1,9 @@
 import { Potential, MarketVolatility } from "../../model/Business"
 import { MainSave } from "../../model/MainSave"
+import { Goal } from "../data/GoalsData"
 
 export class GameConfig {
-    static saveVersion: string = '0.3'
+    static saveVersion: string = '0.4'
     static storeItemChance: number = 150
     static storeMaxItems: number = 5
     public static gameChartUpdate: number = 1500
@@ -21,6 +22,7 @@ export class GameConfig {
     static singleTimeTick: number = 3
     static tax: number = 0.25
     static maxTaxLogs: number = 10 
+    static maxSavingAsCreditPercentage: number = 25
     static getDefaultSave(): MainSave {
         return {
             name: 'unknown',
@@ -33,7 +35,9 @@ export class GameConfig {
                 depots:[],
                 mainAccount:{balance: 1000, id:'main', interest:0,interestForPeriods:0,isSaving:false,name:'Bank Account'},
                 savingAccount:{balance: 100000, id:'saving', interest:2.4, interestForPeriods:200, name:'Saving Account', isSaving:true},
-                taxLog:{}
+                creditAccount:{balance: 0, id:'credit',interest:9.8, interestForPeriods:101, name:'Credit Account', isSaving:true},
+                taxLog:{},
+                goals:{}
             },
             flags:{
                 tax:GameConfig.tax,
@@ -69,6 +73,7 @@ export class GameFlags {
 }
 
 export class EventNames {
+    
     public static periodChange:string = 'periodChange'
     public static circleChange:string = 'circleChange'
     public static ageChange:string = 'ageChange'
@@ -77,4 +82,5 @@ export class EventNames {
     static moneyUpdate: string = 'moneyUpdate'
     static showPopup: string = 'showPopup'
     static openTransfereWindow: string ='openTransfereWindow'
+    static GoalDone: string = 'goalDone'
 }

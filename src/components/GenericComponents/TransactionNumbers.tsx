@@ -11,10 +11,15 @@ import { faBriefcase, faExpandArrowsAlt, faTimes, faTrash } from "@fortawesome/f
 import { DepotService } from "../../logic/services/accounts/DepotService";
 import { GameCalculator } from "../../logic/module/calculator/GameCalculator";
 
+
+
+
 export enum TransfereType {
     StoreSaving,
     BuyStock,
-    SellStock
+    SellStock,
+    TransfToCredit,
+    TransfFromCredit
 }
 
 export interface TNState {
@@ -116,6 +121,20 @@ export class TransactionNumbers extends React.Component<{}, TNState>{
             if((sAm?.shareAmount??0) <= 0) return;
             let p = Math.floor((sAm?.shareAmount??0) / 100 * percent)
             this.addValue(p)
+        } else if(this.state.type == TransfereType.TransfFromCredit){
+            let sam = GameServices.getService<AccountService>(AccountService.serviceName).creditAccountLeft()
+            let borrow = sam / 100 * percent
+            this.addValue(Math.floor(borrow))
+        } else if(this.state.type == TransfereType.TransfToCredit){
+            let sac = GameServices.getService<AccountService>(AccountService.serviceName)
+            let money = sac.getMainAccountBalance()
+            let cred = sac.getCreditBalance() / 100 * percent
+            let max = cred*-1
+            if(money > max){
+                this.addValue(Math.floor(max))
+            }else{
+                this.addValue(Math.floor(money))
+            }
         }
     }
 

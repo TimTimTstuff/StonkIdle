@@ -12,6 +12,9 @@ type AccountWindowState = {
     savingBalance: number
     savingInterest: number
     periodsLeft: number
+    creditBalance: number
+    creditInterest: number
+    creditPeriodsLeft: number
 }
 
 export class AccountWindow extends React.Component<{}, AccountWindowState> {
@@ -26,7 +29,10 @@ export class AccountWindow extends React.Component<{}, AccountWindowState> {
             balance: this._account.getMainAccountBalance(),
             savingBalance: this._account.getSavingBalance(),
             periodsLeft: this._account.getSavingInterestLeft(),
-            savingInterest: this._account.getSavingInterest()
+            savingInterest: this._account.getSavingInterest(),
+            creditBalance: this._account.getCreditBalance(),
+            creditInterest: this._account.getCreditInterest(),
+            creditPeriodsLeft: this._account.getCreditInterestLeft()
         }
     }
 
@@ -45,7 +51,10 @@ export class AccountWindow extends React.Component<{}, AccountWindowState> {
             balance: this._account.getMainAccountBalance(),
             savingBalance: this._account.getSavingBalance(),
             periodsLeft: this._account.getSavingInterestLeft(),
-            savingInterest: this._account.getSavingInterest()
+            savingInterest: this._account.getSavingInterest(),
+            creditBalance: this._account.getCreditBalance(),
+            creditInterest: this._account.getCreditInterest(),
+            creditPeriodsLeft: this._account.getCreditInterestLeft()
         });
     }
 
@@ -54,25 +63,38 @@ export class AccountWindow extends React.Component<{}, AccountWindowState> {
 
             <table style={UIHelper.isVisible(UIHelper.hasTutorialCheck(1))}>
                 <thead>
-                    <tr><th>#</th><th>Main Account</th><th>Savings Account</th><td ></td></tr>
+                    <tr>
+                        <th>#</th>
+                        <th>Main Account</th>
+                        <th>Savings Account</th>
+                        <th>Credit Account</th>
+                        </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Balance</td><td className="balance">{GameCalculator.roundValueToEuro(this.state.balance)}</td>
+                        <td>Balance</td>
+                        <td className="balance">{GameCalculator.roundValueToEuro(this.state.balance)}</td>
                         <td className="balance">{GameCalculator.roundValueToEuro(this.state.savingBalance)}</td>
+                        <td className="balance">{GameCalculator.roundValueToEuro(this.state.creditBalance)}</td>
 
                     </tr>
                     <tr>
-                        <td>Interst</td><td>0%</td><td>{this.state.savingInterest}%</td>
-                        <td></td>
+                        <td>Interst</td>
+                        <td>0%</td>
+                        <td>{this.state.savingInterest}%</td>
+                        <td>{this.state.creditInterest}%</td>
                     </tr>
                     <tr>
-                        <td>Periods</td><td>0</td><td>{this.state.periodsLeft}</td><td></td>
+                        <td>Periods</td>
+                        <td>0</td>
+                        <td>{this.state.periodsLeft}</td>
+                        <td>{this.state.creditPeriodsLeft}</td>
                     </tr>
 
                 </tbody>
             </table>
             <div className="floatLeft" style={UIHelper.isVisible(UIHelper.hasTutorialCheck(2))}>
+              
                <button onClick={(e)=>{
                    let tr: TNState = {
                        display:true,
@@ -84,6 +106,30 @@ export class AccountWindow extends React.Component<{}, AccountWindowState> {
                    }
                    GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).callEvent(EventNames.openTransfereWindow,this,tr)
                }}>Store to Savings</button>
+
+               <button onClick={(e)=>{
+                   let tr: TNState = {
+                       display:true,
+                       pricePerShare:1,
+                       shortName:'',
+                       type: TransfereType.TransfToCredit,
+                       value:0,
+                       buyCallback:(a)=>{this._account.transfereMainToCredit(a)}
+                   }
+                   GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).callEvent(EventNames.openTransfereWindow,this,tr)
+               }}>Pay Credit</button>
+
+               <button onClick={(e)=>{
+                   let tr: TNState = {
+                       display:true,
+                       pricePerShare:1,
+                       shortName:'',
+                       type: TransfereType.TransfFromCredit,
+                       value:0,
+                       buyCallback:(a)=>{this._account.transfereCreditToMain(a)}
+                   }
+                   GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).callEvent(EventNames.openTransfereWindow,this,tr)
+               }}>Get Credit</button>
             </div>
         </div>)
     }
