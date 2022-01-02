@@ -3,6 +3,7 @@ import { GameServices, GlobalEvents } from "../services";
 import { AccountService } from "../services/accounts/AccountService";
 import { GameStats, StatsService } from "../services/accounts/StatsService";
 import { EventNames, GameFlags } from "../services/Config";
+import { IGameService } from "../services/IGameService";
 import { FlagService } from "../services/saveData/FlagService";
 import { SaveDataService } from "../services/saveData/SaveDataService";
 
@@ -47,7 +48,7 @@ export enum Operator {
 
 //#endregion
 
-export class GoalsData {
+export class GoalsData implements IGameService {
     private _save: SaveDataService;
     private _goalData: Goal[]
     private _player: PlayerSave
@@ -82,6 +83,10 @@ export class GoalsData {
                     break
             }
         })
+    }
+    private static serviceName = 'GoalService'
+    getServiceName(): string {
+        return GoalsData.serviceName
     }
 
     public checkIfGoalIsAchived(){

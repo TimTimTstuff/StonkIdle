@@ -10,6 +10,7 @@ import { FlagService } from './services/saveData/FlagService'
 import { StatsService } from './services/accounts/StatsService'
 import { TutorialModul } from './data/TutorialData'
 import { StoreManager } from './services/businessCalculator/StoreManager'
+import { GoalsData } from './data/GoalsData'
 
 export class Game {
 
@@ -26,6 +27,7 @@ export class Game {
     private _flagService: FlagService | undefined
     private _statService: StatsService | undefined
     private _store: StoreManager | undefined
+    private _goal: GoalsData | undefined
 
     constructor() {
         if(Game.instance !== undefined) throw new Error('Dublicate Game')
@@ -106,6 +108,9 @@ export class Game {
 
         this._store = new StoreManager(this._log, this._accountService, this._flagService, this._statService, this._saveManager, this._gameEvent)
         GameServices.registerService(this._store)
+
+        this._goal = new GoalsData(this._saveManager, this._statService, this._flagService, this._gameEvent)
+        GameServices.registerService(this._goal)
 
 
     }
