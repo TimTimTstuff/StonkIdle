@@ -15,12 +15,8 @@ export interface PopupState  {
     okButtonCallback:undefined|(()=>void)
 }
 
-
 export class Popup extends React.Component<{},PopupState> {
 
-    /**
-     *
-     */
     constructor(prop:{}) {
         super(prop);
         this.state  = {
@@ -39,7 +35,6 @@ export class Popup extends React.Component<{},PopupState> {
         })
     }
     
-
     render(): React.ReactNode {
         return (<div id="gamePopup">
             <Draggable>
@@ -48,15 +43,15 @@ export class Popup extends React.Component<{},PopupState> {
             <div className="popupHeader">{this.state.title}</div>
             <div className="popupContent">{this.state.content}</div>
             <div className="popupFooter">
-                <button className="popupFooterButton" onClick={(e)=>{ (this.state.okButtonCallback??(()=>{}))();this.close() }} style={UIHelper.isVisible(this.state.okButtonCallback != undefined)}>Ok</button>
-                <button className="buttonClose popupFooterButton" onClick={(e)=>{this.close()}}>Close</button>
+                <button className="popupFooterButton" onClick={(e)=>{ (this.state.okButtonCallback??(()=>{}))();this.closePopup() }} style={UIHelper.isVisible(this.state.okButtonCallback !== undefined)}>Ok</button>
+                <button className="buttonClose popupFooterButton" onClick={(e)=>{this.closePopup()}}>Close</button>
             </div>
             </div>
             </Draggable>
         </div>)
     }
 
-    close() {
+    private closePopup() {
         this.setState({display:false})
     }
 }

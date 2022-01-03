@@ -1,6 +1,5 @@
 import { faAngleDoubleDown, faAngleDoubleUp, faAngleDown, faAngleUp, faEquals, IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { MarketVolatility, Potential } from "../../../model/Business";
-import { Game } from "../../Game";
 
 export class GameCalculator {
     

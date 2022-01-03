@@ -19,9 +19,7 @@ type AccountWindowState = {
 
 export class AccountWindow extends React.Component<{}, AccountWindowState> {
     private _account: AccountService;
-    /**
-     *
-     */
+
     constructor(prop: {}) {
         super(prop);
         this._account = GameServices.getService<AccountService>(AccountService.serviceName)
@@ -43,7 +41,6 @@ export class AccountWindow extends React.Component<{}, AccountWindowState> {
         GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).subscribe(EventNames.moneyUpdate, (caller, args) => {
             this.UpdateStateData();
         })
-
     }
 
     private UpdateStateData() {
@@ -60,7 +57,6 @@ export class AccountWindow extends React.Component<{}, AccountWindowState> {
 
     render(): React.ReactNode {
         return (<div  id='accountWindow'> 
-
             <table style={UIHelper.isVisible(UIHelper.hasTutorialCheck(1))}>
                 <thead>
                     <tr>
@@ -76,7 +72,6 @@ export class AccountWindow extends React.Component<{}, AccountWindowState> {
                         <td className="balance">{GameCalculator.roundValueToEuro(this.state.balance)}</td>
                         <td className="balance">{GameCalculator.roundValueToEuro(this.state.savingBalance)}</td>
                         <td className="balance">{GameCalculator.roundValueToEuro(this.state.creditBalance)}</td>
-
                     </tr>
                     <tr>
                         <td>Interst</td>
@@ -90,13 +85,9 @@ export class AccountWindow extends React.Component<{}, AccountWindowState> {
                         <td>{this.state.periodsLeft}</td>
                         <td>{this.state.creditPeriodsLeft}</td>
                     </tr>
-
                 </tbody>
             </table>
-            <div className="floatLeft" style={UIHelper.isVisible(UIHelper.hasTutorialCheck(2))}>
-              
-              
-
+            <div className="floatLeft" style={UIHelper.isVisible(UIHelper.hasTutorialCheck(2))}>            
                <button onClick={(e)=>{
                    let tr: TNState = {
                        display:true,
@@ -109,7 +100,7 @@ export class AccountWindow extends React.Component<{}, AccountWindowState> {
                    GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).callEvent(EventNames.openTransfereWindow,this,tr)
                }}>Pay Credit</button>
 
-<button onClick={(e)=>{
+                <button onClick={(e)=>{
                    let tr: TNState = {
                        display:true,
                        pricePerShare:1,
@@ -131,9 +122,7 @@ export class AccountWindow extends React.Component<{}, AccountWindowState> {
                        buyCallback:(a)=>{this._account.transfereCreditToMain(a)}
                    }
                    GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).callEvent(EventNames.openTransfereWindow,this,tr)
-               }}>Get Credit</button> 
-               
-             
+               }}>Get Credit</button>               
             </div>
         </div>)
     }

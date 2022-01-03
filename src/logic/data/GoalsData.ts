@@ -36,13 +36,6 @@ export interface GoalPrice {
     value: number
 }
 
-
-
-
-
-
-
-
 export enum GoalPriceType {
     incSavingInterest,
     incSavingPeriod,
@@ -57,9 +50,7 @@ export enum Operator {
     let,
     equal,
 }
-
 //#endregion
-
 export class GoalsData implements IGameService {
     private _save: SaveDataService;
     private _goalData: Goal[]
@@ -83,7 +74,7 @@ export class GoalsData implements IGameService {
         this._event = event
         this._log = log
         //check save
-        if (this._save.getGameSave().player.goals == undefined) {
+        if (this._save.getGameSave().player.goals === undefined) {
             this._save.getGameSave().player.goals = {}
         }
         this._player = this._save.getGameSave().player
@@ -127,17 +118,16 @@ export class GoalsData implements IGameService {
         })
     }
 
-
     public checkIfGoalIsAchived() {
         this._goalData.forEach(g => {
             let pg = this._player.goals[g.id]
             let cG = g.level[pg]
-            if (cG == undefined) return
+            if (cG === undefined) return
             let val = this.getGoalValue(g)
 
             switch (g.operator) {
                 case Operator.equal:
-                    if (val == cG.targetValue) {
+                    if (val === cG.targetValue) {
                         this._player.goals[g.id]++
                         this._event.callEvent(EventNames.GoalDone, this, cG)
                     }
@@ -158,14 +148,12 @@ export class GoalsData implements IGameService {
         })
     }
 
-
-
     public getListCurrentGoals(): GoalDisplay[] {
         let goalResult: GoalDisplay[] = []
         this._goalData.forEach(g => {
             let pg = this._player.goals[g.id]
             let eG = g.level[pg]
-            if (eG != undefined) {
+            if (eG !== undefined) {
                 goalResult.push({
                     name: g.name,
                     currValue: this.getGoalValue(g),
@@ -181,9 +169,9 @@ export class GoalsData implements IGameService {
     }
 
     public getGoalValue(g: Goal): number {
-        if (g.statName != undefined)
+        if (g.statName !== undefined)
             return this._stats.getStat(g.statName)
-        if (g.flagName != undefined)
+        if (g.flagName !== undefined)
             return this._flag.getFlagFloat(g.flagName)
 
         return 0
@@ -331,7 +319,7 @@ export class GoalsData implements IGameService {
 
     private cleanAndInitialize() {
         this.getGoalIds().forEach(i => {
-            if (this._player.goals[i] == undefined) {
+            if (this._player.goals[i] === undefined) {
                 this._player.goals[i] = 0
             }
         })

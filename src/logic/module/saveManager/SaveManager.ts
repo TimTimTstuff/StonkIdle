@@ -17,7 +17,7 @@ export class SaveManager {
     constructor(saveName: string) {
         this._storageKey = saveName;
         this._saveObject = {lastSave: 0, saveVersion: GameConfig.saveVersion, saveData: {}};
-        (<any>window)['sig'] = ()=>{return this._saveObject}
+        (window as any)['sig'] = ()=>{return this._saveObject}
     }
 
     public  getSaveFile(): unknown {
@@ -65,14 +65,14 @@ export class SaveManager {
             }
 
             this._saveObject = JSON.parse(decodedSave);
-            if(this._saveObject.saveVersion != GameConfig.saveVersion){
+            if(this._saveObject.saveVersion !== GameConfig.saveVersion){
                 alert('Game has new Save Version. Try to migrate Save. ')
                 SaveFileCleaner.update_04(this.getSaveObject('mainsave') as MainSave)
                 //this.resetSave()
                 this._saveObject.saveVersion = GameConfig.saveVersion
                 
             }
-            if(this.saveLoaded != undefined)
+            if(this.saveLoaded !== undefined)
                 this.saveLoaded();
 
         } catch (ex) {
@@ -88,12 +88,12 @@ export class SaveManager {
     }
 
     private saveCorruptedEvent() {
-        if (this.saveCorrupted != undefined)
+        if (this.saveCorrupted !== undefined)
             this.saveCorrupted();
     }
 
     private saveNotFoundEvent() {
-        if (this.saveNotFound != undefined)
+        if (this.saveNotFound !== undefined)
             this.saveNotFound();
     }
 

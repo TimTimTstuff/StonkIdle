@@ -38,8 +38,6 @@ export class GlobalInfo extends React.Component<{}, GlobalInfoState> {
         this._preVol = this.state.marketVolatility
         this._preMarket = this.state.marketPotential
         this._tickChange = this._timeService.getTicks()
-
-
     }
 
     componentDidMount() {
@@ -47,12 +45,12 @@ export class GlobalInfo extends React.Component<{}, GlobalInfoState> {
             let newMarket = this._businessService.getMarketPerformance()
             let newVol = this._businessService.getMarketVolatility()
 
-            if (newMarket != this._preMarket) {
+            if (newMarket !== this._preMarket) {
                 this._tickChange = this._timeService.getTicks()
                 this._preMarket = newMarket
             }
 
-            if (newVol != this._preVol) {
+            if (newVol !== this._preVol) {
                 this._volChanged = this._timeService.getTicks()
                 this._preVol = newVol
             }

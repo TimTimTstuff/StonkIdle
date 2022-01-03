@@ -1,10 +1,9 @@
-import { faAtlas, faAward, faBriefcase, faDumpsterFire, faFileInvoice, faInfo, faSchool, faStore, faUserCog } from "@fortawesome/free-solid-svg-icons";
+import { faAtlas, faAward, faBriefcase, faDumpsterFire, faFileInvoice, faInfo, faStore, faUserCog } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react"
 import { GoalsData } from "../../logic/data/GoalsData";
 import { GameCalculator } from "../../logic/module/calculator/GameCalculator";
 import { UIHelper } from "../../logic/module/calculator/UiHelper";
-import { SaveManager } from "../../logic/module/saveManager/SaveManager";
 import { GlobalEvents, GameServices } from "../../logic/services";
 import { AccountService } from "../../logic/services/accounts/AccountService";
 import { StoreManager } from "../../logic/services/businessCalculator/StoreManager";
@@ -60,7 +59,7 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
             case 'store':
                 content = this.getTabStoreContent()
                 break
-                case 'numbers':
+            case 'numbers':
                 content = this.getTabNumbersContent()
                 break
         }
@@ -78,43 +77,43 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
             </div>
         </div>)
     }
-  
     
     /**
      * Template Line
           <div className='tabBoxContentItem tab1'>Tab 2</div> 
-     */  
-    
+     */
     getTabNumbersContent(): React.ReactNode {
         let flag = GameServices.getService<FlagService>(FlagService.serviceName)
         return (<div className='tabBoxContentItem numbers'>
             <table className="numbersTable">
-                <tr>
-                    <th className="numTableSpacer" colSpan={6}>Shares</th>
-                </tr>
-                <tr>
-                    <th>Buy/Sell Spread:</th>
-                    <td>{GameCalculator.roundValue((flag.getFlagFloat(GameFlags.g_f_shareSpread)/10),3)}%</td>
-                   
-                </tr>
-                <tr>
-                    <th className="numTableSpacer" colSpan={6}>Store</th>
-                </tr>
-                <tr>
-                    <th>Store Item Chance <small>(per Period)</small>:</th>
-                    <td>{flag.getFlagInt(GameFlags.s_i_itemChance)/10}%</td>
-                    <th>Max store Items:</th>
-                    <td>{flag.getFlagInt(GameFlags.s_i_maxItems)}</td>
-                    <th>Store Discount:</th>
-                    <td>{flag.getFlagInt(GameFlags.s_i_discount)/10}%</td>
-                </tr>
-                <tr>
-                    <th className="numTableSpacer" colSpan={6}>Living</th>
-                </tr>
-                <tr>
-                    <th>Tax:</th>
-                    <td>{flag.getFlagInt(GameFlags.g_f_taxPercentage)}%</td>
-                </tr>
+                <tbody>
+                    <tr>
+                        <th className="numTableSpacer" colSpan={6}>Shares</th>
+                    </tr>
+                    <tr>
+                        <th>Buy/Sell Spread:</th>
+                        <td>{GameCalculator.roundValue((flag.getFlagFloat(GameFlags.g_f_shareSpread) / 10), 3)}%</td>
+
+                    </tr>
+                    <tr>
+                        <th className="numTableSpacer" colSpan={6}>Store</th>
+                    </tr>
+                    <tr>
+                        <th>Store Item Chance <small>(per Period)</small>:</th>
+                        <td>{flag.getFlagInt(GameFlags.s_i_itemChance) / 10}%</td>
+                        <th>Max store Items:</th>
+                        <td>{flag.getFlagInt(GameFlags.s_i_maxItems)}</td>
+                        <th>Store Discount:</th>
+                        <td>{flag.getFlagInt(GameFlags.s_i_discount) / 10}%</td>
+                    </tr>
+                    <tr>
+                        <th className="numTableSpacer" colSpan={6}>Living</th>
+                    </tr>
+                    <tr>
+                        <th>Tax:</th>
+                        <td>{flag.getFlagInt(GameFlags.g_f_taxPercentage)}%</td>
+                    </tr>
+                </tbody>
             </table>
         </div>)
     }
@@ -145,20 +144,21 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
             </table>
         </div>)
     }
- 
+
     getTabStoreContent(): React.ReactNode {
         return (<div className='tabBoxContentItem store'>
-            {this._store.getItems().length == 0?'Nothing to buy right now. Wait for more stock to come!':''}
-            {this._store.getItems().map((i,idx)=>{
-            return (<div className="storeItem" key={idx}>
-                <div className={`storeItemHeader itemType_${i.itemType}`}>{i.title}</div>
-                <div className="storeItemPrice">{GameCalculator.roundValueToEuro(i.price)}</div>
-                <div className="storeItemDescription">Time left: {this._timeService.getFormated('C/P',i.avaliableTicks)}</div>
-                <div className="storeItemDescription">{i.description}</div>
-                <div className="storeItemBuy"><button onClick={(e)=>{
-                    this._store.buyItem(i.id)
-                }}><FontAwesomeIcon icon={faBriefcase} /></button></div>
-            </div>) })}
+            {this._store.getItems().length === 0 ? 'Nothing to buy right now. Wait for more stock to come!' : ''}
+            {this._store.getItems().map((i, idx) => {
+                return (<div className="storeItem" key={idx}>
+                    <div className={`storeItemHeader itemType_${i.itemType}`}>{i.title}</div>
+                    <div className="storeItemPrice">{GameCalculator.roundValueToEuro(i.price)}</div>
+                    <div className="storeItemDescription">Time left: {this._timeService.getFormated('C/P', i.avaliableTicks)}</div>
+                    <div className="storeItemDescription">{i.description}</div>
+                    <div className="storeItemBuy"><button onClick={(e) => {
+                        this._store.buyItem(i.id)
+                    }}><FontAwesomeIcon icon={faBriefcase} /></button></div>
+                </div>)
+            })}
         </div>)
     }
 
@@ -168,9 +168,9 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
             <thead>
                 <tr>
                     <th className="taxTableTime">Time</th>
-                   
+
                     <th>Sell</th>
-                    <th>Interest</th> 
+                    <th>Interest</th>
                     <th>Buy</th>
                     <th>Store</th>
                     <th>Total</th>
@@ -182,7 +182,7 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
                     return (
                         <tr key={idx}>
                             <td className="taxTableTime">{this._timeService.getFormated('A/C', i.time)}</td>
-                            
+
                             <td className="uptrend">+{GameCalculator.roundValueToEuro(i.sellShare)}</td>
                             <td className="uptrend">+{GameCalculator.roundValueToEuro(i.interest)}</td>
                             <td className="downtrend">-{GameCalculator.roundValueToEuro(i.buyShare)}</td>
@@ -200,20 +200,20 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
         let gs = GameServices.getService<GoalsData>(GoalsData.serviceName)
 
         return (<div className='tabBoxContentItem goal'>
-            {gs.getListCurrentGoals().map((g,gId)=>{
+            {gs.getListCurrentGoals().map((g, gId) => {
                 return (
-                <div key={gId} className="goalItem floatLeft">
-                    <div className="goalItemHeader">{g.name}</div>
-                    <div className="goalItemInfo">
-                        <div className="goalItemProgress" style={{width:g.percentReached+'%'}}>
-                            {g.percentReached}%
+                    <div key={gId} className="goalItem floatLeft">
+                        <div className="goalItemHeader">{g.name}</div>
+                        <div className="goalItemInfo">
+                            <div className="goalItemProgress" style={{ width: g.percentReached + '%' }}>
+                                {g.percentReached}%
+                            </div>
                         </div>
-                    </div>
-                    <div className="goalItemInfo">
-                       {GameCalculator.roundValueToEuro(g.currValue)}/{GameCalculator.roundValueToEuro(g.goal)}
-                    </div>
-                    <div className="goalItemPrice">{UIHelper.getGoalPriceName(g.price)}</div>
-                </div>)
+                        <div className="goalItemInfo">
+                            {GameCalculator.roundValueToEuro(g.currValue)}/{GameCalculator.roundValueToEuro(g.goal)}
+                        </div>
+                        <div className="goalItemPrice">{UIHelper.getGoalPriceName(g.price)}</div>
+                    </div>)
             })}
         </div>)
     }

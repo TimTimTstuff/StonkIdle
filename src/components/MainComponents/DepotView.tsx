@@ -25,7 +25,7 @@ export class DepotView extends React.Component<{}, DepotViewState> {
     }
 
     componentDidMount() {
-        GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).subscribe(EventNames.periodChange, (caller, args) => {
+        GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).subscribe(EventNames.periodChange, () => {
             this.updateStateWithCurrent();
         })
     }
@@ -40,11 +40,9 @@ export class DepotView extends React.Component<{}, DepotViewState> {
         let time = GameServices.getService<TimeService>(TimeService.serviceName)
         let depot = cDepot.getDepotByCompanyName(this.state.currentBusiness)
         let business = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getBusiness(this.state.currentBusiness)
-        let businessService = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName)
         let last = business?.stockPriceHistory[business.stockPriceHistory.length - 1]
         let thisCirlce = business?.historyCicle[time.getFormated(GameConfig.CicleHistoryDateFormat, time.getTicks())]
         let thisAge = business?.historyAge[time.getFormated(GameConfig.AgeHistoryDateFormat, time.getTicks())]
-        let iconClass = GameCalculator.getPotentialClassIcon(businessService.getMarketPerformance())
         let iconClassStock = GameCalculator.getPotentialClassIcon(business?.potential ?? 0)
 
         let buySellDiff = GameCalculator.roundValue((last?.sellPrice ?? 0) - (depot?.buyIn ?? 0))
@@ -89,7 +87,7 @@ export class DepotView extends React.Component<{}, DepotViewState> {
                         let diff = GameCalculator.roundValue(sellPrice - buyPrice)
                         let icon = price.s > prePrice.s ? faAngleUp : faAngleDown
 
-                        return <div key={idx} data-shortname={a.shortName} className='depotListItem noselect' onClick={(e) => {
+                        return <div key={idx} data-shortname={a.shortName} className='depotListItem noselect' onClick={() => {
                             this.selectCompany(a.shortName)
                         }}>
                             <div className='depotViewData'>
@@ -152,7 +150,7 @@ export class DepotView extends React.Component<{}, DepotViewState> {
                             </tr>
                         </tbody>
                     </table>
-                    <button onClick={(e) => { 
+                    <button onClick={() => { 
                         let tr: TNState = {
                             display:true,
                             pricePerShare:(last?.buyPrice??0),
@@ -164,7 +162,7 @@ export class DepotView extends React.Component<{}, DepotViewState> {
                        
                         GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).callEvent(EventNames.openTransfereWindow,this,tr)
                     }}>Buy</button>
-                    <button onClick={(e) => { 
+                    <button onClick={() => { 
                          let tr: TNState = {
                             display:true,
                             pricePerShare:(last?.sellPrice??0),

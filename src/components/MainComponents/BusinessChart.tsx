@@ -30,9 +30,6 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
     public static cartRef: ChartJSOrUndefined | null = undefined;
     private _businessToIndex: { [index: string]: number } = {}
 
-    /**
-     *
-     */
     constructor(props: bcProps) {
         super(props);
         this.state = {
@@ -145,7 +142,6 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
     }
 
     render(): React.ReactNode {
-
         let data = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getBusiness(this.state.shortName)
         let firstPrice = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getBusinessFirstPrice(this.state.shortName)
         let changeChart = 100 / this.state.value.sellPrice * (this.state.value.sellPrice - firstPrice.s)

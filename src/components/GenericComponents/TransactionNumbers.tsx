@@ -11,9 +11,6 @@ import { faBriefcase, faExpandArrowsAlt, faTimes, faTrash } from "@fortawesome/f
 import { DepotService } from "../../logic/services/accounts/DepotService";
 import { GameCalculator } from "../../logic/module/calculator/GameCalculator";
 
-
-
-
 export enum TransfereType {
     StoreSaving,
     BuyStock,
@@ -46,7 +43,6 @@ export class TransactionNumbers extends React.Component<{}, TNState>{
     }
 
     componentDidMount() {
-
         GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).subscribe(EventNames.openTransfereWindow, (caller, args) => {
             let s = args as TNState
             this.setState(s)
@@ -65,13 +61,11 @@ export class TransactionNumbers extends React.Component<{}, TNState>{
                 })
             }
         })
-
     }
 
     //#region render
     render(): React.ReactNode {
-
-        let subline = this.state.type == TransfereType.StoreSaving ? 'For Saving Account' : this.getSubLineForBuySell()
+        let subline = this.state.type === TransfereType.StoreSaving ? 'For Saving Account' : this.getSubLineForBuySell()
 
         return (<div> <Draggable><div style={UIHelper.isVisible(this.state.display)} id='tnBox' className="tnBoxContainer">
             <button title="Close Window" className="floatRight tnBoxCloseButton" onClick={(e) => { this.setState({ display: false }) }}><FontAwesomeIcon icon={faTimes} /></button>
@@ -81,7 +75,6 @@ export class TransactionNumbers extends React.Component<{}, TNState>{
             {subline}
             <button title="Buy/Sell or Store" onClick={(e) => { this.state.buyCallback(this.state.value); this.setState({display:false}) }} className="tnBoxBuyButton"><FontAwesomeIcon icon={faBriefcase} /></button>
             <button title="Reset Input" className="tnBoxInputResetButton" onClick={(e) => { this.setState({ value: 0 }) }}><FontAwesomeIcon icon={faTrash} /></button>
-
             <table>
                 <tbody>
                     {this.getBuyNumberPositive()}
@@ -94,9 +87,8 @@ export class TransactionNumbers extends React.Component<{}, TNState>{
 
     private getSubLineForBuySell() {
         return (<div>
-              <span>{this.state.type == TransfereType.SellStock ? 'Sell' : 'Buy'}</span>: <span>{this.state.shortName}</span> <span>{this.state.pricePerShare}€</span> <span>Total: {GameCalculator.roundValueToEuro(this.state.pricePerShare*this.state.value)}</span>
+              <span>{this.state.type === TransfereType.SellStock ? 'Sell' : 'Buy'}</span>: <span>{this.state.shortName}</span> <span>{this.state.pricePerShare}€</span> <span>Total: {GameCalculator.roundValueToEuro(this.state.pricePerShare*this.state.value)}</span>
             </div>)
-
     }
 
     private getBuyPercentagePositive() {
@@ -108,24 +100,25 @@ export class TransactionNumbers extends React.Component<{}, TNState>{
             <td><button onClick={(e) => { this.addValuePercentMain(100) }}>+100%</button></td>
         </tr>;
     }
+
     addValuePercentMain(percent: number) {
         let currAmount = GameServices.getService<AccountService>(AccountService.serviceName).getMainAccountBalance();
         let percMoney = Math.floor(currAmount / 100 * percent)
-        if (this.state.type == TransfereType.StoreSaving) {
+        if (this.state.type === TransfereType.StoreSaving) {
             this.addValue(percMoney)
-        } else if (this.state.type == TransfereType.BuyStock) {
+        } else if (this.state.type === TransfereType.BuyStock) {
             let stocks = Math.floor(percMoney / this.state.pricePerShare)
             this.addValue(stocks)
-        } else if(this.state.type == TransfereType.SellStock){
+        } else if(this.state.type === TransfereType.SellStock){
             let sAm = GameServices.getService<DepotService>(DepotService.serviceName).getDepotByCompanyName(this.state.shortName)
             if((sAm?.shareAmount??0) <= 0) return;
             let p = Math.floor((sAm?.shareAmount??0) / 100 * percent)
             this.addValue(p)
-        } else if(this.state.type == TransfereType.TransfFromCredit){
+        } else if(this.state.type === TransfereType.TransfFromCredit){
             let sam = GameServices.getService<AccountService>(AccountService.serviceName).creditAccountLeft()
             let borrow = sam / 100 * percent
             this.addValue(Math.floor(borrow))
-        } else if(this.state.type == TransfereType.TransfToCredit){
+        } else if(this.state.type === TransfereType.TransfToCredit){
             let sac = GameServices.getService<AccountService>(AccountService.serviceName)
             let money = sac.getMainAccountBalance()
             let cred = sac.getCreditBalance() / 100 * percent

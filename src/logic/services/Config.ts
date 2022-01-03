@@ -1,7 +1,5 @@
 import { Potential, MarketVolatility } from "../../model/Business"
 import { MainSave } from "../../model/MainSave"
-import { Goal } from "../data/GoalsData"
-
 export class GameConfig {
     static saveVersion: string = '0.4'
     static storeItemChance: number = 150
@@ -20,7 +18,7 @@ export class GameConfig {
     static getBaseSpread: number = 12
     static marketVolatilityChange: number = 995
     static singleTimeTick: number = 3
-    static tax: number = 0.25
+    static tax: number = 25
     static maxTaxLogs: number = 10 
     static maxSavingAsCreditPercentage: number = 25
     static getDefaultSave(): MainSave {
@@ -57,9 +55,7 @@ export class GameConfig {
         }
     }
 }
-
 export class GameFlags {
-    
     static g_f_taxPercentage: string = 'tax'
     static g_f_shareSpread: string = 'spread'
     static f_i_MarketPotential: string = 'f_mpot'
@@ -73,9 +69,7 @@ export class GameFlags {
     static s_i_maxItems: string = 's_mi'
     static s_i_discount: string ='s_di'
 }
-
 export class EventNames {
-    
     public static periodChange:string = 'periodChange'
     public static circleChange:string = 'circleChange'
     public static ageChange:string = 'ageChange'

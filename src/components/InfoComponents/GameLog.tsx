@@ -20,22 +20,19 @@ export class GameLog extends React.Component<{}, GameLogState> {
         this.state = {
             messages: []
         }
-
-     
-
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this._eventService.subscribe(EventNames.AddLogMessage, (caller, message) => {
             let messages = this.state.messages
             if (messages.length > GameConfig.maxLogMessages) {
                 messages.pop()
             }
-            if(typeof message == 'string'){
-                messages.unshift({ msg: message, ticks: this._timeService.getTicks(), key:'msg' } as GameLogMessage)
-            }else{
+            if (typeof message == 'string') {
+                messages.unshift({ msg: message, ticks: this._timeService.getTicks(), key: 'msg' } as GameLogMessage)
+            } else {
                 let m = message as GameLogMessage
-                m.ticks = m.ticks!==undefined?m.ticks:this._timeService.getTicks()
+                m.ticks = m.ticks !== undefined ? m.ticks : this._timeService.getTicks()
                 messages.unshift(m)
             }
             this.setState({ messages: messages })
@@ -43,17 +40,16 @@ export class GameLog extends React.Component<{}, GameLogState> {
     }
 
     render(): React.ReactNode {
-
         return (
-            <div  id="reactLog">
+            <div id="reactLog">
                 <h2>Logs</h2>
-                <div  className="reactLog">
+                <div className="reactLog">
                     {this.state.messages.map((d, idx) => {
                         return (
-                        <div className={"logmessage"} key={idx}>
-                             <span className="logTimeStamp">[{this._timeService.getFormated('A/C/P', d.ticks)}]</span>
-                             &nbsp;<span className={d.key}>{d.msg}</span>
-                             </div>)
+                            <div className={"logmessage"} key={idx}>
+                                <span className="logTimeStamp">[{this._timeService.getFormated('A/C/P', d.ticks)}]</span>
+                                &nbsp;<span className={d.key}>{d.msg}</span>
+                            </div>)
                     })}
                 </div>
             </div>)
