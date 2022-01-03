@@ -35,11 +35,22 @@ export class StoreManager implements IGameService {
         this._event = event
         
         this._event.subscribe(EventNames.periodChange,(caller, args)=>{
-            this.cleanupShop()
-            this.addNewItem()
+            let info = args as {o:number, n:number} 
+            if(info == null || info.o == undefined || info.n == undefined)
+                return
+
+            this.onPeriodUpdate();
         })
     }
     
+    private onPeriodUpdate() {
+        this.getItems().forEach(i => {
+            i.avaliableTicks -= 100;
+        });
+
+        this.addNewItem();
+    }
+
     buyItem(id:string){
         let item = this.getItems().find(a => a.id === id)
         if(item === undefined || !this._account.hasMainAmount(item.price)) return
@@ -48,9 +59,10 @@ export class StoreManager implements IGameService {
         this._stats.setStat(GameStats.SpendOnItems,item.price,GameStatsMethod.Add)
         if(this._account.removeMainAccount(item.price)){
             this._account.addToTaxLogBuyItem(item.price)
-            this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Store: Item ${item.title} was bought for ${GameCalculator.roundValueToEuro(item.price)}`})
+            this._event.callEvent(EventNames.AddLogMessage,this,{key:'info',msg:`Store: Item ${item.title} was bought for ${GameCalculator.roundValueToEuro(item.price)}`})
             this.processItem(item)
             item.avaliableTicks = 0
+            this._save.getGameSave().store.splice(this._save.getGameSave().store.indexOf(item),1)
             this._event.callEvent(EventNames.periodChange,this,{})
         }
         
@@ -61,6 +73,17 @@ export class StoreManager implements IGameService {
                 this._account.addSavingInterestPeriods(item.effect.value)
                 this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Interest Period was extended by ${item.effect.value} Periods`, key:'info'})
                 break;
+            case ItemType.LotteryTicket:
+                let chance = GameCalculator.roundValue(Math.random()*1000,0)
+                let win = chance > 970
+                let msg = `You got a ${chance}. Beat 970 to win!`
+                let price = GameCalculator.roundValue(this._account.getSavingBalance()/8)
+                if(win){
+                    msg = `Booom. You got a ${chance} which is a Win. You gain: ${price}€`
+                    this._account.addMainAccount(price,'Lottery Win')
+                }
+                this._event.callEvent(EventNames.AddLogMessage,this,{key:win?'goal':'info', msg:msg})
+                break;
             default:
                 this._log.warn(StoreManager.serviceName, `Item whitout processing Logic!`,item)
                 break;
@@ -68,23 +91,18 @@ export class StoreManager implements IGameService {
     }
 
     addNewItem() {
+
        if(GameCalculator.checkChance(this._flag.getFlagInt(GameFlags.s_i_itemChance)) && this._flag.getFlagInt(GameFlags.s_i_maxItems) > this.getItems().length){
-          this.addItem(StoreItemGenerator.generateInterestPeriodExtension())
+          
+            let chance = Math.random()*1000
+
+            if(chance > 500){
+                this.addItem(StoreItemGenerator.generateInterestPeriodExtension())
+            }else{
+                this.addItem(StoreItemGenerator.generateJackpot())
+            }
+            
        }
-    }
-
-    cleanupShop() {
-        this.getItems().forEach(i => {
-            i.avaliableTicks -= 100
-        })
-
-       this.getItems().filter(a => a.avaliableTicks <= 0).forEach((v,i,a) =>{
-           this.removeItem(i)
-       })
-    }
-
-    removeItem(index:number){
-        this._save.getGameSave().store.splice(index,1)
     }
 
     addItem(item:StoreItem):void {

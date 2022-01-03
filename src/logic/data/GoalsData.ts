@@ -97,7 +97,7 @@ export class GoalsData implements IGameService {
 
                     break
                 case GoalPriceType.lowCreditInterest:
-                    GameServices.getService<AccountService>(AccountService.serviceName).addCreditInterestRate(g.price.value)
+                    GameServices.getService<AccountService>(AccountService.serviceName).removeCreditInterestRate(g.price.value)
                     this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Goal reached! Get ${g.price.value} to your Credit Interest-rate`,key:'goal'})
 
                     break
@@ -164,7 +164,7 @@ export class GoalsData implements IGameService {
         if (g.statName != undefined)
             return this._stats.getStat(g.statName)
         if (g.flagName != undefined)
-            return this._flag.getFlagInt(g.flagName)
+            return this._flag.getFlagFloat(g.flagName)
 
         return 0
     }
@@ -267,6 +267,24 @@ export class GoalsData implements IGameService {
                     }
                 ],
                 flagName:undefined
+            },
+            {
+                flagName:undefined,
+                statName:GameStats.SellPriceTotal,
+                id:'sfs_1',
+                level:[
+                    {targetValue:10000,price:{value:190,type:GoalPriceType.incSavingPeriod}},
+                    {targetValue:25000,price:{value:500,type:GoalPriceType.incSavingPeriod}},
+                    {targetValue:50000,price:{value:0.1,type:GoalPriceType.incSavingInterest}},
+                    {targetValue:75000,price:{value:0.1,type:GoalPriceType.lowCreditInterest}},
+                    {targetValue:100000,price:{value:0.2,type:GoalPriceType.incSavingInterest}},
+                    {targetValue:250000,price:{value:0.2,type:GoalPriceType.lowCreditInterest}},
+                    {targetValue:500000,price:{value:0.3,type:GoalPriceType.incSavingInterest}},
+                    {targetValue:750000,price:{value:0.4,type:GoalPriceType.incSavingInterest}},
+                    {targetValue:1000000,price:{value:1000,type:GoalPriceType.incSavingPeriod}},
+                ],
+                name:'Sell the Shares!',
+                operator:Operator.get
             }
 
         ]

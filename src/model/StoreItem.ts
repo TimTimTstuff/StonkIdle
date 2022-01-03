@@ -8,7 +8,8 @@ export interface StoreItem{
     id:string
 }
 
-export enum ItemType{
+
+export enum ItemType {
     NewSavingsContract,
     ChangeInterestRuntime,
     ChangeInterestRate,
@@ -16,7 +17,7 @@ export enum ItemType{
     PushBusiness,
     PushMarket,
     Learn,
-
+    LotteryTicket
 }
 
 export interface ItemEffect {

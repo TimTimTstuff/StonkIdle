@@ -201,6 +201,10 @@ export class AccountService implements IGameService {
     addCreditInterestRate(value: number) {
         this._saveService.getGameSave().player.creditAccount.interest += value
     }
+
+    removeCreditInterestRate(value: number) {
+        this._saveService.getGameSave().player.creditAccount.interest -= value
+    }
     public getCreditBalance(): number {
         return this._saveService.getGameSave().player.creditAccount.balance
     }

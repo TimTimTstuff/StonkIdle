@@ -24,6 +24,9 @@
     font-size: 7pt;
     padding: 1px;
     text-transform: uppercase;
+    height: 23px;
+    width: 64px;
+    float: left;
 }
 
 #accountWindow table{
@@ -32,5 +35,6 @@
 
 #accountWindow div.floatLeft {
     float: left;
-    width: 90px;
+    width: 150px;
 }
+

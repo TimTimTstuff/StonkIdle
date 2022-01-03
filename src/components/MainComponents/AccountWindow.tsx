@@ -81,8 +81,8 @@ export class AccountWindow extends React.Component<{}, AccountWindowState> {
                     <tr>
                         <td>Interst</td>
                         <td>0%</td>
-                        <td>{this.state.savingInterest}%</td>
-                        <td>{this.state.creditInterest}%</td>
+                        <td>{GameCalculator.roundValue(this.state.savingInterest)}%</td>
+                        <td>{GameCalculator.roundValue(this.state.creditInterest)}%</td>
                     </tr>
                     <tr>
                         <td>Periods</td>
@@ -95,7 +95,21 @@ export class AccountWindow extends React.Component<{}, AccountWindowState> {
             </table>
             <div className="floatLeft" style={UIHelper.isVisible(UIHelper.hasTutorialCheck(2))}>
               
+              
+
                <button onClick={(e)=>{
+                   let tr: TNState = {
+                       display:true,
+                       pricePerShare:1,
+                       shortName:'',
+                       type: TransfereType.TransfToCredit,
+                       value:0,
+                       buyCallback:(a)=>{this._account.transfereMainToCredit(a)}
+                   }
+                   GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).callEvent(EventNames.openTransfereWindow,this,tr)
+               }}>Pay Credit</button>
+
+<button onClick={(e)=>{
                    let tr: TNState = {
                        display:true,
                        pricePerShare:1,
@@ -112,24 +126,14 @@ export class AccountWindow extends React.Component<{}, AccountWindowState> {
                        display:true,
                        pricePerShare:1,
                        shortName:'',
-                       type: TransfereType.TransfToCredit,
-                       value:0,
-                       buyCallback:(a)=>{this._account.transfereMainToCredit(a)}
-                   }
-                   GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).callEvent(EventNames.openTransfereWindow,this,tr)
-               }}>Pay Credit</button>
-
-               <button onClick={(e)=>{
-                   let tr: TNState = {
-                       display:true,
-                       pricePerShare:1,
-                       shortName:'',
                        type: TransfereType.TransfFromCredit,
                        value:0,
                        buyCallback:(a)=>{this._account.transfereCreditToMain(a)}
                    }
                    GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).callEvent(EventNames.openTransfereWindow,this,tr)
-               }}>Get Credit</button>
+               }}>Get Credit</button> 
+               
+             
             </div>
         </div>)
     }

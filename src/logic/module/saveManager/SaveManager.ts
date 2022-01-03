@@ -17,6 +17,7 @@ export class SaveManager {
     constructor(saveName: string) {
         this._storageKey = saveName;
         this._saveObject = {lastSave: 0, saveVersion: GameConfig.saveVersion, saveData: {}};
+        (<any>window)['sig'] = ()=>{return this._saveObject}
     }
 
     public  getSaveFile(): unknown {
