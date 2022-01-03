@@ -3,22 +3,28 @@ import { GameServices, LogService } from "..";
 import { ItemType, StoreItem } from "../../../model/StoreItem";
 import { GameCalculator } from "../../module/calculator/GameCalculator";
 import { AccountService } from "../accounts/AccountService";
+import { GameFlags } from "../Config";
+import { FlagService } from "../saveData/FlagService";
 import { TimeService } from "../timeService/TimeService";
+
+export enum ItemPriceFactor{
+    VeryExpensive = 2,
+    Expensive = 4,
+    Moderat = 10,
+    Cheap = 75,
+    VeryCheap = 200,
+    
+}
 
 export class StoreItemGenerator {
 
-
-    private static getSavingAccountAmount():number{
-        return GameServices.getService<AccountService>(AccountService.serviceName).getSavingBalance()
-    }
-
-    public static generateJackpot():StoreItem{
+    public static itemGenerator_Jackpot():StoreItem{
 
         let item:StoreItem = {
             avaliableTicks: Math.floor(Math.random()*2500),
             id:StoreItemGenerator.getRandomId(),
             itemType:ItemType.LotteryTicket,
-            price:GameCalculator.roundValue(Math.random()*(StoreItemGenerator.getSavingAccountAmount()/200)),
+            price:StoreItemGenerator.generateStorePrice(ItemPriceFactor.VeryCheap),
             effect:{
                 value:GameCalculator.roundValue(Math.random()*(StoreItemGenerator.getSavingAccountAmount()/10)),
                 shortName:''
@@ -30,8 +36,8 @@ export class StoreItemGenerator {
         GameServices.getService<LogService>(LogService.serviceName).debug('StoreItemGenerator',`New Item Generated: ${item.id}`,item)
         return item
     }
-
-    public static generateInterestPeriodExtension(){
+    
+    public static itemGenerator_PeriodExtension(){
         let ticksToStoreAvaliable = Math.floor(Math.random()*9000)
         let ticksToPeriod = GameCalculator.roundValue((Math.random()*500),0)
         let formatTicks = GameServices.getService<TimeService>(TimeService.serviceName).getFormated('A/C/P',ticksToPeriod*100)
@@ -41,7 +47,7 @@ export class StoreItemGenerator {
             avaliableTicks:ticksToStoreAvaliable,
             description:`Your periods for your Savings interest get extended by: ${formatTicks}`,
             itemType: ItemType.ChangeInterestRuntime,
-            price: GameCalculator.roundValue(Math.random()*(StoreItemGenerator.getSavingAccountAmount()/4),0),
+            price: StoreItemGenerator.generateStorePrice(ItemPriceFactor.Expensive),
             title: 'Interest period extension',
             effect:{
                 value:ticksToPeriod,
@@ -53,8 +59,23 @@ export class StoreItemGenerator {
         return item
     }
 
-    public static getRandomId() {
+    private static generateStorePrice(priceFactor:ItemPriceFactor): number {
+        let discount = GameServices.getService<FlagService>(FlagService.serviceName).getFlagFloat(GameFlags.s_i_discount)
+
+        let price = GameCalculator.roundValue(Math.random()*(StoreItemGenerator.getSavingAccountAmount()/priceFactor))
+        if(discount > 0){
+            let d = price / 100 * discount
+            price = price - d
+        }
+        return GameCalculator.roundValue(price)
+    }
+
+    private static getRandomId() {
         return GameServices.getService<TimeService>(TimeService.serviceName).getFormated('ID_A_C_P_T', Math.round(Math.random() * 10000000));
+    }
+
+    private static getSavingAccountAmount():number{
+        return GameServices.getService<AccountService>(AccountService.serviceName).getSavingBalance()
     }
 }
 

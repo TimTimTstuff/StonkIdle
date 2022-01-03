@@ -46,6 +46,9 @@ export class StoreManager implements IGameService {
     private onPeriodUpdate() {
         this.getItems().forEach(i => {
             i.avaliableTicks -= 100;
+            if(i.avaliableTicks <= 0){
+                this._save.getGameSave().store.splice(this._save.getGameSave().store.indexOf(i))
+            }
         });
 
         this.addNewItem();
@@ -97,9 +100,9 @@ export class StoreManager implements IGameService {
             let chance = Math.random()*1000
 
             if(chance > 500){
-                this.addItem(StoreItemGenerator.generateInterestPeriodExtension())
+                this.addItem(StoreItemGenerator.itemGenerator_PeriodExtension())
             }else{
-                this.addItem(StoreItemGenerator.generateJackpot())
+                this.addItem(StoreItemGenerator.itemGenerator_Jackpot())
             }
             
        }

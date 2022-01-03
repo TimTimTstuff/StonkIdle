@@ -59,6 +59,7 @@ export class GameConfig {
 }
 
 export class GameFlags {
+    
     static g_f_taxPercentage: string = 'tax'
     static g_f_shareSpread: string = 'spread'
     static f_i_MarketPotential: string = 'f_mpot'
@@ -70,6 +71,7 @@ export class GameFlags {
     static g_i_ticksPerLoop: string = 'g_tps'
     static s_i_itemChance: string = 's_ic'
     static s_i_maxItems: string = 's_mi'
+    static s_i_discount: string ='s_di'
 }
 
 export class EventNames {

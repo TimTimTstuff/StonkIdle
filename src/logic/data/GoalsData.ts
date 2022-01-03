@@ -36,10 +36,20 @@ export interface GoalPrice {
     value: number
 }
 
+
+
+
+
+
+
+
 export enum GoalPriceType {
     incSavingInterest,
     incSavingPeriod,
-    lowCreditInterest
+    lowCreditInterest,
+    lowShopPrices,
+    maxItemInShop,
+    chanceForItem
 }
 
 export enum Operator {
@@ -94,12 +104,22 @@ export class GoalsData implements IGameService {
                 case GoalPriceType.incSavingPeriod:
                     GameServices.getService<AccountService>(AccountService.serviceName).addSavingInterestPeriods(g.price.value)
                     this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Goal reached! Get ${g.price.value} to your Saving Interest-period`,key:'goal'})
-
                     break
                 case GoalPriceType.lowCreditInterest:
                     GameServices.getService<AccountService>(AccountService.serviceName).removeCreditInterestRate(g.price.value)
                     this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Goal reached! Get ${g.price.value} to your Credit Interest-rate`,key:'goal'})
-
+                    break
+                case GoalPriceType.lowShopPrices:
+                    this._flag.addToFlag(GameFlags.s_i_discount,g.price.value)
+                    this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Goal reached! Get ${g.price.value}% discount on Store Items`,key:'goal'})
+                    break
+                case GoalPriceType.maxItemInShop:
+                    this._flag.addToFlag(GameFlags.s_i_maxItems, g.price.value)
+                    this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Goal reached! Get ${g.price.value} more items Slots in the Store`,key:'goal'})
+                    break
+                case GoalPriceType.chanceForItem:
+                    this._flag.addToFlag(GameFlags.s_i_itemChance,GameCalculator.roundValue(g.price.value*10,0))
+                    this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Goal reached! Get ${g.price.value}% to Shop Item Chance`,key:'goal'})
                     break
                 default:
                     this._log.warn(GoalsData.serviceName,`Cant find Price for ${g.price}`,g)
@@ -285,8 +305,27 @@ export class GoalsData implements IGameService {
                 ],
                 name:'Sell the Shares!',
                 operator:Operator.get
+            },
+            {
+                statName: GameStats.SpendOnItems,
+                flagName:undefined,
+                id:'sib_1',
+                name:'Buy in the Store',
+                operator:Operator.get,
+                level:[
+                    {targetValue:1000, price:{value:1,type:GoalPriceType.lowShopPrices}},
+                    {targetValue:5000, price:{value:1,type:GoalPriceType.maxItemInShop}},
+                    {targetValue:10000, price:{value:1,type:GoalPriceType.chanceForItem}},
+                    {targetValue:20000, price:{value:2,type:GoalPriceType.lowShopPrices}},
+                    {targetValue:50000, price:{value:2,type:GoalPriceType.maxItemInShop}},
+                    {targetValue:75000, price:{value:2,type:GoalPriceType.chanceForItem}},
+                    {targetValue:100000, price:{value:3,type:GoalPriceType.lowShopPrices}},
+                    {targetValue:250000, price:{value:3,type:GoalPriceType.maxItemInShop}},
+                    {targetValue:400000, price:{value:2,type:GoalPriceType.lowShopPrices}},
+                    {targetValue:700000, price:{value:2,type:GoalPriceType.lowShopPrices}},
+                    {targetValue:1000000, price:{value:2,type:GoalPriceType.lowShopPrices}},
+                ]
             }
-
         ]
     }
 

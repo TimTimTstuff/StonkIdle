@@ -13,6 +13,12 @@ export class UIHelper{
                 return `Credit Account Interest-Rate -${p.value}%`
             case GoalPriceType.incSavingPeriod:
                 return `Saving Account Interest Periods +${p.value}`
+            case GoalPriceType.chanceForItem:
+                return `Chance for Items added to the Shop: +${p.value}%`
+            case GoalPriceType.lowShopPrices:
+                return `Lower Shop prices by: ${p.value}%`
+            case GoalPriceType.maxItemInShop:
+                return `Increase max Items in the Shop by: ${p.value}`
             default:
                 return 'Unknown Price'
         }
