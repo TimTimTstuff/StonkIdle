@@ -7,7 +7,7 @@ export class GameConfig {
     static storeItemChance: number = 150
     static storeMaxItems: number = 5
     public static gameChartUpdate: number = 1500
-    public static gameTickSpeedInMS:number = 100
+    public static gameTickSpeedInMS:number = 150
     public static businessChartMaxPoints: number = 50
     public static maxLogMessages: number = 100
     public static defaultFloatingPercentage: number = 10
@@ -17,7 +17,7 @@ export class GameConfig {
     static businessChangesPotential: number = 995
     static MarketChangePotential: number = 975
     static maxShareStartPrice: number = 25
-    static getBaseSpread: number = 1.012
+    static getBaseSpread: number = 12
     static marketVolatilityChange: number = 995
     static singleTimeTick: number = 3
     static tax: number = 0.25

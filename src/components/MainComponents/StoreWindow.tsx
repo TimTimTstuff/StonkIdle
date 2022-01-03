@@ -1,4 +1,4 @@
-import { faAward, faBriefcase, faDumpsterFire, faFileInvoice, faInfo, faStore, faUserCog } from "@fortawesome/free-solid-svg-icons";
+import { faAtlas, faAward, faBriefcase, faDumpsterFire, faFileInvoice, faInfo, faSchool, faStore, faUserCog } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react"
 import { GoalsData } from "../../logic/data/GoalsData";
@@ -60,6 +60,9 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
             case 'store':
                 content = this.getTabStoreContent()
                 break
+                case 'numbers':
+                content = this.getTabNumbersContent()
+                break
         }
         return (<div className='tabBox'>
 
@@ -67,11 +70,52 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
                 <div onClick={(e) => { this.setState({ window: 'tab1' }) }} className='tabBoxHeaderItem noselect' title="Account Information" ><FontAwesomeIcon icon={faFileInvoice} /></div>
                 <div onClick={(e) => { this.setState({ window: 'goal' }) }} className='tabBoxHeaderItem noselect' title="Goals" ><FontAwesomeIcon icon={faAward} /></div>
                 <div onClick={(e) => { this.setState({ window: 'store' }) }} className='tabBoxHeaderItem noselect' title="Store" ><FontAwesomeIcon icon={faStore} /></div>
+                <div onClick={(e) => { this.setState({ window: 'numbers' }) }} className='tabBoxHeaderItem noselect' title="All numbers" ><FontAwesomeIcon icon={faAtlas} /></div>
                 <div onClick={(e) => { this.setState({ window: 'setting' }) }} className='tabBoxHeaderItem noselect' title="Game Settings"><FontAwesomeIcon icon={faUserCog} /></div>
             </div>
             <div className='tabBoxContent'>
                 {content}
             </div>
+        </div>)
+    }
+  
+    
+    /**
+     * Template Line
+          <div className='tabBoxContentItem tab1'>Tab 2</div> 
+     */  
+    
+    getTabNumbersContent(): React.ReactNode {
+        let flag = GameServices.getService<FlagService>(FlagService.serviceName)
+        return (<div className='tabBoxContentItem numbers'>
+            <table className="numbersTable">
+                <tr>
+                    <th className="numTableSpacer" colSpan={6}>Shares</th>
+                </tr>
+                <tr>
+                    <th>Buy/Sell Spread:</th>
+                    <td>{GameCalculator.roundValue((flag.getFlagFloat(GameFlags.g_f_shareSpread)/10),3)}%</td>
+                   
+                </tr>
+                <tr>
+                    <th className="numTableSpacer" colSpan={6}>Store</th>
+                </tr>
+                <tr>
+                    <th>Store Item Chance <small>(per Period)</small>:</th>
+                    <td>{flag.getFlagInt(GameFlags.s_i_itemChance)/10}%</td>
+                    <th>Max store Items:</th>
+                    <td>{flag.getFlagInt(GameFlags.s_i_maxItems)}</td>
+                    <th>Store Discount:</th>
+                    <td>{flag.getFlagInt(GameFlags.s_i_discount)/10}%</td>
+                </tr>
+                <tr>
+                    <th className="numTableSpacer" colSpan={6}>Living</th>
+                </tr>
+                <tr>
+                    <th>Tax:</th>
+                    <td>{flag.getFlagInt(GameFlags.g_f_taxPercentage)}%</td>
+                </tr>
+            </table>
         </div>)
     }
 
@@ -101,11 +145,7 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
             </table>
         </div>)
     }
-
-    /**
-     * Template Line
-          <div className='tabBoxContentItem tab1'>Tab 2</div> 
-     */
+ 
     getTabStoreContent(): React.ReactNode {
         return (<div className='tabBoxContentItem store'>
             {this._store.getItems().length == 0?'Nothing to buy right now. Wait for more stock to come!':''}
@@ -121,6 +161,7 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
             </div>) })}
         </div>)
     }
+
     getTab1Content(): React.ReactNode {
         let taxData = this._accountService.getLastTaxInfo(10)
         return (<div className='tabBoxContentItem tab1'><table className="taxTable">
