@@ -1,0 +1,14 @@
+.infoBubbleButton path{
+    color: rgb(43, 158, 253) !important;
+    font-size: 8pt;
+}
+
+.infoBubbleButton{
+    font-size: 8pt;
+    padding:0px;
+    margin:0;
+    float:right;
+    display: flex;
+    border:none;
+    background-color: transparent;
+}

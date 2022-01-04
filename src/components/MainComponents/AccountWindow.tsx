@@ -6,6 +6,8 @@ import './AccountWindow.css'
 import { GameCalculator } from "../../logic/module/calculator/GameCalculator";
 import { UIHelper } from "../../logic/module/calculator/UiHelper";
 import { TNState, TransfereType } from "../GenericComponents/TransactionNumbers";
+import { InfoBubble } from "../GenericComponents/InfoBubble";
+import { GS } from "../../logic/services/GS";
 
 type AccountWindowState = {
     balance: number
@@ -122,7 +124,9 @@ export class AccountWindow extends React.Component<{}, AccountWindowState> {
                        buyCallback:(a)=>{this._account.transfereCreditToMain(a)}
                    }
                    GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).callEvent(EventNames.openTransfereWindow,this,tr)
-               }}>Get Credit</button>               
+               }}>Get Credit</button>     
+
+               <InfoBubble title="Your Accounts" content={GS.getInfoData().getInfoBubble_AccountWindow()} />          
             </div>
         </div>)
     }

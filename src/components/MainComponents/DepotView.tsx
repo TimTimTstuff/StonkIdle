@@ -7,7 +7,9 @@ import { GameServices, GlobalEvents } from '../../logic/services';
 import { DepotService } from '../../logic/services/accounts/DepotService';
 import { BusinessCalculator } from '../../logic/services/businessCalculator/BusinessCalculator';
 import { EventNames, GameConfig } from '../../logic/services/Config';
+import { GS } from '../../logic/services/GS';
 import { TimeService } from '../../logic/services/timeService/TimeService';
+import { InfoBubble } from '../GenericComponents/InfoBubble';
 import { TNState, TransfereType } from '../GenericComponents/TransactionNumbers';
 import './DepotView.css'
 
@@ -62,9 +64,8 @@ export class DepotView extends React.Component<{}, DepotViewState> {
                                 <span className='shortName'>Depot:</span>
                             </div>
                             <div className='floatRight price'>
-                                <span className='uptrend'>{GameCalculator.roundValueToEuro(totalInStock)}
-
-                                </span>
+                                <span className='uptrend'>{GameCalculator.roundValueToEuro(totalInStock)}</span>
+                                <InfoBubble title="Stock Chart" content={GS.getInfoData().getInfoBubble_Depot()} />
                             </div>
                         </div>
                     </div>

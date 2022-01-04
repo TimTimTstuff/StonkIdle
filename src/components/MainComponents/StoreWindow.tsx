@@ -6,6 +6,7 @@ import { GameCalculator } from "../../logic/module/calculator/GameCalculator";
 import { UIHelper } from "../../logic/module/calculator/UiHelper";
 import { GlobalEvents, GameServices } from "../../logic/services";
 import { AccountService } from "../../logic/services/accounts/AccountService";
+import { GameStats, StatsService } from "../../logic/services/accounts/StatsService";
 import { StoreManager } from "../../logic/services/businessCalculator/StoreManager";
 import { EventNames, GameFlags } from "../../logic/services/Config";
 import { FlagService } from "../../logic/services/saveData/FlagService";
@@ -71,6 +72,7 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
                 <div onClick={(e) => { this.setState({ window: 'store' }) }} className='tabBoxHeaderItem noselect' title="Store" ><FontAwesomeIcon icon={faStore} /></div>
                 <div onClick={(e) => { this.setState({ window: 'numbers' }) }} className='tabBoxHeaderItem noselect' title="All numbers" ><FontAwesomeIcon icon={faAtlas} /></div>
                 <div onClick={(e) => { this.setState({ window: 'setting' }) }} className='tabBoxHeaderItem noselect' title="Game Settings"><FontAwesomeIcon icon={faUserCog} /></div>
+
             </div>
             <div className='tabBoxContent'>
                 {content}
@@ -84,6 +86,7 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
      */
     getTabNumbersContent(): React.ReactNode {
         let flag = GameServices.getService<FlagService>(FlagService.serviceName)
+        let stat = GameServices.getService<StatsService>(StatsService.serviceName)
         return (<div className='tabBoxContentItem numbers'>
             <table className="numbersTable">
                 <tbody>
@@ -104,7 +107,7 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
                         <th>Max store Items:</th>
                         <td>{flag.getFlagInt(GameFlags.s_i_maxItems)}</td>
                         <th>Store Discount:</th>
-                        <td>{flag.getFlagInt(GameFlags.s_i_discount) / 10}%</td>
+                        <td>{flag.getFlagInt(GameFlags.s_i_discount)}%</td>
                     </tr>
                     <tr>
                         <th className="numTableSpacer" colSpan={6}>Living</th>
@@ -112,6 +115,35 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
                     <tr>
                         <th>Tax:</th>
                         <td>{flag.getFlagInt(GameFlags.g_f_taxPercentage)}%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <span>Statistics</span>
+            <table className="numbersTable">
+                <tbody>
+                    <tr>
+                        <th className="numTableSpacer" colSpan={8}>Shares</th>
+                    </tr>
+                    <tr>
+                        <th>Buy</th>
+                        <th>Buy €</th>
+                        <th>Sell</th>
+                        <th>Sell €</th>
+                    </tr>
+                    <tr>
+                        <td>{stat.getStat(GameStats.BuyedSharesTotal)}</td>
+                        <td>{GameCalculator.roundValueToEuro(stat.getStat(GameStats.BuyPriceTotal))}</td>
+                        <td>{stat.getStat(GameStats.SellForShare)}</td>
+                        <td>{GameCalculator.roundValueToEuro(stat.getStat(GameStats.SellPriceTotal))}</td>
+                    </tr>
+                    <tr>
+                        <th className="numTableSpacer" colSpan={8}>Store</th>
+                    </tr>
+                    <tr>
+                        <th>Spend on Items</th>
+                        <td>{stat.getStat(GameStats.SpendOnItems)}</td>
+                        <th>Total Tax</th>
+                        <td>{stat.getStat(GameStats.PayedForTax)}</td>
                     </tr>
                 </tbody>
             </table>

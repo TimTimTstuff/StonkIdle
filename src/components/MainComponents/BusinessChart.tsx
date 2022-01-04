@@ -7,7 +7,9 @@ import { UIHelper } from "../../logic/module/calculator/UiHelper";
 import { GameServices, GlobalEvents } from "../../logic/services";
 import { BusinessCalculator } from "../../logic/services/businessCalculator/BusinessCalculator";
 import { EventNames, GameConfig } from "../../logic/services/Config";
+import { GS } from "../../logic/services/GS";
 import { TimeService } from "../../logic/services/timeService/TimeService";
+import { InfoBubble } from "../GenericComponents/InfoBubble";
 import './BusinessChart.css'
 
 type bcProps = {
@@ -161,10 +163,10 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
                         <td className={this.state.value.changePercent > 0.0001 ? 'uptrend' : 'downtrend'}>{GameCalculator.roundValueToEuro(this.state.value.buyPrice)} </td>
                         <td className={this.state.value.changePercent > 0.0001 ? 'uptrend' : 'downtrend'}>{GameCalculator.roundValue(this.state.value.changePercent)}%</td>
                         <td className={changeChart > 0.0001 ? 'uptrend' : 'downtrend'}>{GameCalculator.roundValue(changeChart)}%</td>
-
                     </tr>
                 </tbody>
             </table>
+            <InfoBubble title="Stock Chart" content={GS.getInfoData().getInfoBubble_Chart()} />
             <div className="floatLeft chartCompanyInfo">
                 <span className="chartCompanyName">{data?.name}</span>
                 <span className="chartCompanyNameShort">{data?.shortName}</span>

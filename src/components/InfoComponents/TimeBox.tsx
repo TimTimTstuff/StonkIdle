@@ -1,7 +1,9 @@
 import React from "react";
 import { LogService, GameServices } from "../../logic/services";
 import { GameConfig } from "../../logic/services/Config";
+import { GS } from "../../logic/services/GS";
 import { TimeService } from "../../logic/services/timeService/TimeService";
+import { InfoBubble } from "../GenericComponents/InfoBubble";
 import './TimeBox.css'
 
 type TimeData = {
@@ -45,6 +47,7 @@ export class TimeBox extends React.Component<TimeData, TimeData>{
                             <th>Cicle</th>
                             <th>Period</th>
                             <th>Ticks</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -53,11 +56,11 @@ export class TimeBox extends React.Component<TimeData, TimeData>{
                             <td>{timeBox.circle}</td>
                             <td>{timeBox.period}</td>
                             <td>{timeBox.ticks}</td>
+                            <td>     <InfoBubble title="Time in this Game" content={GS.getInfoData().getInfoBubble_TimeWindow()} /></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <span style={{ display: 'none' }}>{this.state.ticks}</span>
             <div className="timeload"><div className="timeloadinner" style={{ width: currTicks + '%' }}></div></div>
         </div>)
     }

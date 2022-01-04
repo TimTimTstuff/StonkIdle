@@ -76,7 +76,7 @@ Numbers
 }
 .numbersTable td{
   padding:4px;
-  text-align: left;
+  text-align: right;
 }
 .numbersTable th{
   text-align: left;
