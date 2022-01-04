@@ -1,10 +1,20 @@
 # Features Ideas
 
+# Buffs / Penalties
+- Saving Account Interes
+- Credit Account Interest
+- Saving Account Periods
+- BuySellSpread
+- ItemChance
+- Max store items
+- StoreDiscount
+- TAX
+- 
+
 # News
     - On Market Potential/Volati change
     - On Business Potential Change
     - On new Item in Store
-
 
 # Money Chart
     - Chart shows: Savings + Depot + (Main - Credit)
@@ -19,7 +29,6 @@
     - PushBusiness, Sabotage business, 
     - Exchange for Money 
 
-
 # Life Standards
     - Basement - 25€ per Period TAX 10%
     - Flat - 100€ per Period TAX 15%
@@ -32,12 +41,3 @@
 # Info Buttons with explanation PopUp
     - Info icon 
     - Text
-
-# Flags
-- Store Price Discount
-
-
-# Goals
-- Shares Buyed
-- Shares Profit
-- Items Bought

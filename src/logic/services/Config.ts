@@ -2,7 +2,7 @@ import { Potential, MarketVolatility } from "../../model/Business"
 import { MainSave } from "../../model/MainSave"
 export class GameConfig {
     static saveVersion: string = '0.4'
-    static storeItemChance: number = 150
+    static storeItemChance: number = 250
     static storeMaxItems: number = 5
     public static gameChartUpdate: number = 1500
     public static gameTickSpeedInMS:number = 150

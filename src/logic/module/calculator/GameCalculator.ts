@@ -6,14 +6,18 @@ export class GameCalculator {
     
     public static getRangeWitWeight(base:number, potential:Potential, marketPotential:Potential) {
         
-        let chance = Math.round(Math.random()*(1000-marketPotential))
+        let chance = Math.round(Math.random()*(1100-marketPotential))
         let potent = Math.round(Math.random()*potential)
         let isPotent = chance < potent
-        let maxChange = isPotent ? (potent-chance):(chance-potent)
-        let factor = GameCalculator.roundValue((Math.random()*(potential+maxChange))/(1000+base/100),3)
-        let value =  GameCalculator.roundValue((base/(base/10))*(factor/100),3)
+        let maxChange = isPotent ? ((potent+potent)-chance):((chance+chance)-potent)
+        let factor = GameCalculator.roundValue((Math.random()*((potential*1.9)+maxChange))/(1000+base/80),3)
+        let value =  GameCalculator.roundValue((base/(base/10))*(factor/((1000-marketPotential)/10)),3)
+        let change = maxChange/(1200-marketPotential)
+        value = (base*change/100)
         let result = base + (isPotent||base<=0.2?value:value*-1)
         if(result < 0) result = GameCalculator.roundValue(Math.random()*0.5,2)
+        console.log([isPotent, change, result])
+
         return result
     }
 

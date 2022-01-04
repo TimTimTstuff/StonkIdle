@@ -214,6 +214,34 @@ export class GoalsData implements IGameService {
                         price: { type: GoalPriceType.incSavingInterest, value: 0.3 },
                         targetValue: 500000
                     },
+                    {
+                        price: { type: GoalPriceType.incSavingPeriod, value: 500 },
+                        targetValue: 700000
+                    },
+                    {
+                        price: { type: GoalPriceType.incSavingInterest, value: 0.2 },
+                        targetValue: 900000
+                    },
+                    {
+                        price: { type: GoalPriceType.incSavingPeriod, value: 500 },
+                        targetValue: 1000000
+                    },
+                    {
+                        price: { type: GoalPriceType.incSavingPeriod, value: 1000 },
+                        targetValue: 120000
+                    },
+                    {
+                        price: { type: GoalPriceType.incSavingInterest, value: 0.1 },
+                        targetValue: 1500000
+                    },
+                    {
+                        price: { type: GoalPriceType.incSavingInterest, value: 0.1 },
+                        targetValue: 1750000
+                    },
+                    {
+                        price: { type: GoalPriceType.incSavingInterest, value: 0.3 },
+                        targetValue: 2500000
+                    },
 
                 ],
                 flagName: undefined
@@ -272,6 +300,41 @@ export class GoalsData implements IGameService {
                             type:GoalPriceType.incSavingPeriod,
                             value:1000
                         }
+                    },
+                    {
+                        targetValue: 500000,
+                        price:{
+                            type:GoalPriceType.incSavingPeriod,
+                            value:1000
+                        }
+                    },
+                    {
+                        targetValue: 750000,
+                        price:{
+                            type:GoalPriceType.incSavingInterest,
+                            value:0.1
+                        }
+                    },
+                    {
+                        targetValue: 1000000,
+                        price:{
+                            type:GoalPriceType.incSavingPeriod,
+                            value:1000
+                        }
+                    },
+                    {
+                        targetValue: 1200000,
+                        price:{
+                            type:GoalPriceType.lowCreditInterest,
+                            value:0.1
+                        }
+                    },
+                    {
+                        targetValue: 1500000,
+                        price:{
+                            type:GoalPriceType.lowCreditInterest,
+                            value:0.2
+                        }
                     }
                 ],
                 flagName:undefined
@@ -290,6 +353,11 @@ export class GoalsData implements IGameService {
                     {targetValue:500000,price:{value:0.3,type:GoalPriceType.incSavingInterest}},
                     {targetValue:750000,price:{value:0.4,type:GoalPriceType.incSavingInterest}},
                     {targetValue:1000000,price:{value:1000,type:GoalPriceType.incSavingPeriod}},
+                    {targetValue:1200000,price:{value:1,type:GoalPriceType.lowShopPrices}},
+                    {targetValue:1500000,price:{value:2,type:GoalPriceType.chanceForItem}},
+                    {targetValue:1700000,price:{value:0.1,type:GoalPriceType.incSavingInterest}},
+                    {targetValue:2000000,price:{value:1100,type:GoalPriceType.incSavingPeriod}},
+                    {targetValue:2500000,price:{value:3,type:GoalPriceType.lowShopPrices}},
                 ],
                 name:'Sell the Shares!',
                 operator:Operator.get

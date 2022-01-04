@@ -11,7 +11,7 @@ export enum Potential{
     Low = 350,
     Medium = 550,
     High = 700,
-    VeryHigh = 950
+    VeryHigh = 900
 }
 
 export enum MarketVolatility {
