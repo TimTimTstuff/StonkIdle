@@ -108,7 +108,7 @@ export class AccountService implements IGameService {
         }
 
         let creditAccount = this._saveService.getGameSave().player.creditAccount
-        if (creditAccount.interestForPeriods > 0) {
+        if (creditAccount.interestForPeriods > 0 && creditAccount.balance < 0) {
             creditAccount.interestForPeriods--
             let interest = GameCalculator.roundValue((creditAccount.interest / 100 / 100) * creditAccount.balance)
             this.addToTaxLogInterest(interest)
