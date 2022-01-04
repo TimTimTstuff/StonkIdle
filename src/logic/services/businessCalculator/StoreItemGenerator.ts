@@ -8,11 +8,11 @@ import { FlagService } from "../saveData/FlagService";
 import { TimeService } from "../timeService/TimeService";
 
 export enum ItemPriceFactor{
-    VeryExpensive = 2,
-    Expensive = 4,
-    Moderat = 10,
-    Cheap = 75,
-    VeryCheap = 200,
+    VeryExpensive = 4,
+    Expensive = 8,
+    Moderat = 20,
+    Cheap = 150,
+    VeryCheap = 300,
     
 }
 

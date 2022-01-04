@@ -1,9 +1,27 @@
 import { faAngleDoubleDown, faAngleDoubleUp, faAngleDown, faAngleUp, faEquals, IconDefinition } from "@fortawesome/free-solid-svg-icons";
-import { MarketVolatility, Potential } from "../../../model/Business";
+import { Business, MarketVolatility, Potential } from "../../../model/Business";
+import { GameRandom } from "./GameRandom";
 
 export class GameCalculator {
     
     
+    public static calculateBusinessSellPrice(business:Business, currentValue:number, marketPotential:Potential){
+        let marketChance = GameRandom.GetRandom(0,1100-marketPotential)
+        let businessChance = GameRandom.GetRandom(0,(business.potential+business.basePotential)/2)
+        let isUp = businessChance > marketChance
+
+        let maxChangeInStock = isUp? ((businessChance*2)-marketChance) : ((marketChance*2)-businessChance)
+
+        let change = maxChangeInStock/(1200-marketPotential)
+
+        let priceChange = currentValue*(change/100)
+        let newPrice = currentValue + (isUp ? priceChange : priceChange*-1)
+        
+        if(newPrice <= 0) newPrice = GameCalculator.roundValue(Math.random(),2)
+
+        return newPrice
+    }
+
     public static getRangeWitWeight(base:number, potential:Potential, marketPotential:Potential) {
         
         let chance = Math.round(Math.random()*(1100-marketPotential))

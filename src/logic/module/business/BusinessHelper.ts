@@ -1,15 +1,21 @@
-import { Business, MarketVolatility, Potential } from "../../../model/Business";
+import { Business, BusinessIndustry, MarketVolatility, Potential } from "../../../model/Business";
 import { GameServices } from "../../services";
 import { GameConfig } from "../../services/Config";
 import { TimeService } from "../../services/timeService/TimeService";
 import { GameCalculator } from "../calculator/GameCalculator";
+import { GameRandom } from "../calculator/GameRandom";
 
 const demoName = [
     {n: "World Idle Platform", s: "WIP"},
     {n: "Little Lama Loft", s:'LOL'},
     {n: "Ultra Waifu United", s:'UWU'},
     {n: "Alter Reconstruction", s:'ARE'},
-    {n: "Riddle with me", s:'RWM'}
+    {n: "Riddle with me", s:'RWM'},
+    {n: "Nerd Errors Games", s:'NEG'},
+    {n: "Dkpure Exports", s:'DEX'},
+    {n: "Air fleet Kings", s:'AFK'},
+    {n: 'Power Organization Peng', s:'POP'},
+    
 ]
 
 export class BusinessHelper {
@@ -17,7 +23,7 @@ export class BusinessHelper {
     private static curIN:number =  0;
 
     public static generateBusiness():Business{
-        let maxStock = Math.floor((Math.random()*100000)+10000)
+        let maxStock = Math.floor((Math.random()*1000000)+10000)
         let floatingStock = Math.floor(maxStock/100*GameConfig.defaultFloatingPercentage)
         let demoBus = demoName[BusinessHelper.curIN]
         BusinessHelper.curIN++ 
@@ -27,7 +33,8 @@ export class BusinessHelper {
             createTick: GameServices.getService<TimeService>(TimeService.serviceName).getTicks(),
             floatingStock:floatingStock,
             name: demoBus.n,
-            potential: Potential.High,
+            potential: GameRandom.randomEnum(Potential),
+            basePotential: GameRandom.randomEnum(Potential),
             shortName: demoBus.s,
             stockPriceHistory: [
                 {sellPrice: startPrice, buyPrice: startPrice+0.5, date: 100 },
@@ -35,7 +42,8 @@ export class BusinessHelper {
             ],
             totalStock: maxStock,
             historyAge:{},
-            historyCicle:{}
+            historyCicle:{},
+            industry: GameRandom.randomEnum(BusinessIndustry)
         }
 
         return business

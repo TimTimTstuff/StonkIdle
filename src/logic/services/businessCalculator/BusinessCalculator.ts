@@ -4,6 +4,7 @@ import { MainSave } from "../../../model/MainSave";
 import { StockPrice } from "../../../model/StockPrice";
 import { BusinessHelper } from "../../module/business/BusinessHelper";
 import { GameCalculator } from "../../module/calculator/GameCalculator";
+import { GameRandom } from "../../module/calculator/GameRandom";
 import { GameConfig, GameFlags } from "../Config";
 import { IGameService } from "../IGameService";
 import { FlagService } from "../saveData/FlagService";
@@ -27,7 +28,15 @@ export class BusinessCalculator implements IGameService {
         this._save = GameServices.getService<SaveDataService>(SaveDataService.serviceName).getGameSave()
         this._flag = flag
         if (this._save.business === undefined || this._save.business.length === 0) {
-            this._save.business = [BusinessHelper.generateBusiness(), BusinessHelper.generateBusiness(), BusinessHelper.generateBusiness(), BusinessHelper.generateBusiness()]
+            this._save.business = [
+                BusinessHelper.generateBusiness(), 
+                BusinessHelper.generateBusiness(), 
+                BusinessHelper.generateBusiness(), 
+                BusinessHelper.generateBusiness(),
+                BusinessHelper.generateBusiness(),
+                BusinessHelper.generateBusiness(),
+                BusinessHelper.generateBusiness(),
+            ]
         }
     }
     //#endregion
@@ -57,6 +66,13 @@ export class BusinessCalculator implements IGameService {
     //#endregion
 
     //#region gameUpdate
+    onCicleChange() {
+
+        this._save.business.forEach(b =>{
+            b.basePotential = GameRandom.randomEnum(Potential)
+        })
+    }
+
     onPeriodChange() {
         this._save.business.forEach(b => {
             this.updateBusiness(b.shortName)
@@ -87,8 +103,8 @@ export class BusinessCalculator implements IGameService {
         }
         let current = this.getBusinessCurrentPrices(shortName)
         if (current.s == 0) { current.s += 1; current.s += 1 }
-
-        let sellPrice = GameCalculator.roundValue(GameCalculator.getRangeWitWeight(current.s, cB.potential, this._save.marketPotential), 3)
+        let sellPrice = GameCalculator.roundValue(GameCalculator.calculateBusinessSellPrice(cB,current.s,this.getMarketPerformance()))
+        //let sellPrice = GameCalculator.roundValue(GameCalculator.getRangeWitWeight(current.s, cB.potential, this._save.marketPotential), 3)
         let buyPrice = GameCalculator.roundValue(sellPrice * (1+(this._flag.getFlagFloat(GameFlags.g_f_shareSpread)/1000)), 3)
         this.addStockPriceHistory(cB, {
             buyPrice: buyPrice,
