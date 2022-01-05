@@ -39,6 +39,26 @@ export class DepotService implements IGameService {
         return depot;
     }
 
+    getDepotValueByCompanyName(shortName:string):number{
+        return ((this.getDepotByCompanyName(shortName)?.shareAmount??0) * this._business.getBusinessCurrentPrices(shortName).s)
+    }
+
+    getDepotBuySellDiff(shortName: string):number{
+        let price = this._business.getBusinessCurrentPrices(shortName).s
+        let depot = this.getDepotByCompanyName(shortName)?.buyIn??0
+        
+        return depot - price
+    }
+
+    getDepotTotalValue(): number{
+        let totalValue = 0
+        this._business.getAllBusiness().forEach(b=>{
+            totalValue += this.getDepotValueByCompanyName(b.shortName)
+        })
+
+        return totalValue
+    }
+
     sellStock(shortName:string, amount:number){
         let b = this._business.getBusinessCurrentPrices(shortName)
         let depot = this.getDepotByCompanyName(shortName)

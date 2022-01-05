@@ -1,3 +1,8 @@
+.depotList{
+    overflow: auto;
+    height: 280px;
+}
+
 .depotViewItem{
     float: left;
     border: solid thin #61666d;
@@ -5,22 +10,11 @@
     padding:5px;
 }
 
-.depotList{
-    overflow: auto;
-    height: 280px;
-}
-
-.depotListItem {
-    border: solid thin #61666d;
-    margin-bottom: 4px;
-    cursor: pointer;
-    background-color: #353c47;
-    height: 50px;
-}
-
-.shortName{
-    font-weight: bold;
-    padding-right: 5px;
+.depotView table{
+    width: 300px;
+    font-size: 8pt;
+    text-transform: uppercase;
+    border-collapse: collapse;
 }
 
 .depotViewData div{
@@ -31,17 +25,41 @@
     width: 220px;
 }
 
-.price {
-    padding:0;
-    margin:0;
-    line-height: 1.3em;
+.depotListItem {
+    border: solid thin #61666d;
+    margin-bottom: 4px;
+    cursor: pointer;
+    background-color: #353c47;
+    height: 50px;
+}
+
+
+.depotListItem:hover{
+    background-color: #47505f;
+}
+
+.depotDetails{
+    width: 355px;
+    height: 280px;
+    overflow: auto;
+}
+
+.shortName{
+    font-weight: bold;
+    padding-right: 5px;
 }
 
 .price{
-    font-size: 11pt;
+    font-size: 9pt;
     text-align: right;
     padding-top: 5px;
-    padding-right: 5px;
+    padding-right: 5px;  
+    line-height: 1.3em;
+}
+
+.priceInfo{
+    font-size: 11pt;
+    margin-right: 6px;
 }
 
 .smallNote{
@@ -55,24 +73,28 @@
     margin-left: 2pt;
     vertical-align: middle;
     text-transform: uppercase;
+    font-weight: bold;
 }
 
-.depotListItem:hover{
-    background-color: #47505f;
-}
-
-.depotDetails{
-    width: 355px;
-    height: 280px;
-    overflow: auto;
-}
-
-.depotView table{
-    width: 300px;
+.sharesAmount{
     font-size: 8pt;
-    text-transform: uppercase;
-    border-collapse: collapse;
+    border: solid thin #61666d;
+    background-color: #1b1e24;
+    padding: 0px 3px;
+    font-weight: bold;
+    color: #61666d !important;
+    border-radius: 5px;
 }
+
+.depotViewDataHeader{
+    width: 100%;
+}
+
+.depotViewDataBody{
+    width: 100%;
+    margin-top: 5px;
+}
+
 .depotView td:nth-child(2){
     border-right: solid 1px #61666d;
 }

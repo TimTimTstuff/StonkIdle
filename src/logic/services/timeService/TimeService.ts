@@ -5,6 +5,7 @@ import { FlagService } from '../saveData/FlagService'
 import { SaveDataService } from '../saveData/SaveDataService'
 export class TimeService implements IGameService {
     
+    
     public static serviceName = 'TimeService'
 
     public static readonly age: number = 100 * 100 * 100
@@ -68,6 +69,15 @@ export class TimeService implements IGameService {
 
     getCurrentTimeBox(): TimeBox{
         return this.getTimeBox(this.getTicks())
+    }
+
+    getCurrentAge() {
+        return this.getTimeBox(this.getTicks()).age
+    }
+
+    
+    getCurrentCicle() {
+        return this.getTimeBox(this.getTicks()).circle
     }
 
     getTimeBox(ticks: number): TimeBox {

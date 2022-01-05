@@ -50,10 +50,19 @@
 
 .buttonClose{
     float:right;
-    margin-top: -23px;
+    margin-top: 0px;
     background-color: #5c4343;
 }
 
 .popupFooterButton:hover{
     background-color: #67778f;
+}
+
+.dragInfo {
+    padding-right: 5px;
+    padding-top: 1px;
+}
+
+.dragInfo path{
+    color: #61666d;
 }

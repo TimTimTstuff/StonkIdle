@@ -1,5 +1,5 @@
 import { GameServices, LogService } from "..";
-import { Business, MarketVolatility, Potential } from "../../../model/Business";
+import { Business, HistorySlice, MarketVolatility, Potential } from "../../../model/Business";
 import { MainSave } from "../../../model/MainSave";
 import { StockPrice } from "../../../model/StockPrice";
 import { BusinessHelper } from "../../module/business/BusinessHelper";
@@ -156,6 +156,17 @@ export class BusinessCalculator implements IGameService {
         let lastRecord = cB.stockPriceHistory[cB.stockPriceHistory.length - 2]
         if (lastRecord == undefined) return { b: 0, s: 0 }
         return { b: lastRecord.buyPrice, s: lastRecord.sellPrice }
+    }
+    //#endregion
+
+    //#region history
+    getCurrentAgeForBusiness(currentBusiness: string):HistorySlice {
+        let cA = this._timeService.getCurrentAge()
+        return (this.getBusiness(currentBusiness) as Business).historyAge[cA]
+    }
+    getCurrentCicleForBusiness(currentBusiness: string) {
+        let cC = this._timeService.getCurrentCicle()
+        return (this.getBusiness(currentBusiness) as Business).historyCicle[cC]
     }
     //#endregion
 
