@@ -104,6 +104,7 @@ export class BusinessCalculator implements IGameService {
         let current = this.getBusinessCurrentPrices(shortName)
         if (current.s == 0) { current.s += 1; current.s += 1 }
         let sellPrice = GameCalculator.roundValue(GameCalculator.calculateBusinessSellPrice(cB,current.s,this.getMarketPerformance()))
+        this.tweakPotential(sellPrice, cB);
         //let sellPrice = GameCalculator.roundValue(GameCalculator.getRangeWitWeight(current.s, cB.potential, this._save.marketPotential), 3)
         let buyPrice = GameCalculator.roundValue(sellPrice * (1+(this._flag.getFlagFloat(GameFlags.g_f_shareSpread)/1000)), 3)
         this.addStockPriceHistory(cB, {
@@ -114,6 +115,19 @@ export class BusinessCalculator implements IGameService {
 
         this.cleanBusinessHistory(cB);
     }
+    private tweakPotential(sellPrice: number, cB: Business) {
+        
+        if(sellPrice > 800){
+            cB.basePotential = Potential.VeryLow
+        }else if (sellPrice > 500) {
+            cB.basePotential = Potential.Low;
+        }else if (cB.basePotential < Potential.Medium && sellPrice < 10) {
+            cB.basePotential = Potential.High;
+        }else if(sellPrice < 1){
+            cB.basePotential = Potential.VeryHigh
+        }
+    }
+
     //#endregion
 
     //#region Prices

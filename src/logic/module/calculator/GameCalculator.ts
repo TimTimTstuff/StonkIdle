@@ -4,7 +4,6 @@ import { GameRandom } from "./GameRandom";
 
 export class GameCalculator {
     
-    
     public static calculateBusinessSellPrice(business:Business, currentValue:number, marketPotential:Potential){
         let marketChance = GameRandom.GetRandom(0,1100-marketPotential)
         let businessChance = GameRandom.GetRandom(0,(business.potential+business.basePotential)/2)
@@ -14,29 +13,16 @@ export class GameCalculator {
 
         let change = maxChangeInStock/(1200-marketPotential)
 
-        let priceChange = currentValue*(change/100)
+        let priceChange = GameCalculator.roundValue(currentValue*(change/100),3)
         let newPrice = currentValue + (isUp ? priceChange : priceChange*-1)
-        
+        if(priceChange <= 0.001) {
+            console.log(priceChange)
+            priceChange = 0.01
+        }
+
         if(newPrice <= 0) newPrice = GameCalculator.roundValue(Math.random(),2)
 
         return newPrice
-    }
-
-    public static getRangeWitWeight(base:number, potential:Potential, marketPotential:Potential) {
-        
-        let chance = Math.round(Math.random()*(1100-marketPotential))
-        let potent = Math.round(Math.random()*potential)
-        let isPotent = chance < potent
-        let maxChange = isPotent ? ((potent+potent)-chance):((chance+chance)-potent)
-        let factor = GameCalculator.roundValue((Math.random()*((potential*1.9)+maxChange))/(1000+base/80),3)
-        let value =  GameCalculator.roundValue((base/(base/10))*(factor/((1000-marketPotential)/10)),3)
-        let change = maxChange/(1200-marketPotential)
-        value = (base*change/100)
-        let result = base + (isPotent||base<=0.2?value:value*-1)
-        if(result < 0) result = GameCalculator.roundValue(Math.random()*0.5,2)
-        console.log([isPotent, change, result])
-
-        return result
     }
 
     public static getVolatilityClassIcon(volatility: MarketVolatility):{i:IconDefinition, c:string} {
@@ -63,28 +49,26 @@ export class GameCalculator {
     public static getPotentialClassIcon(potential:Potential):{i:IconDefinition, c:string}{
         let icon = faAngleDoubleDown
         let cClass = 'marketVeryLow'
-        switch (potential) {
-            case Potential.VeryHigh:
-                icon = faAngleDoubleUp
-                cClass = 'marketVeryHigh'
-                break
-            case Potential.High:
-                icon = faAngleUp
-                cClass = 'marketHigh'
-                break
-            case Potential.Medium:
-                icon = faEquals
-                cClass = 'marketEqual'
-                break
-            case Potential.Low:
-                icon = faAngleDown
-                cClass = 'marketLow'
 
-                break
-            case Potential.VeryLow:
-                icon = faAngleDoubleDown
-                cClass = 'marketVeryLow'
-                break
+        if(potential >= Potential.VeryHigh){
+            icon = faAngleDoubleUp
+            cClass = 'marketVeryHigh'
+        }else if(potential >= Potential.High)
+        {
+            icon = faAngleUp
+            cClass = 'marketHigh'
+        }else if(potential >= Potential.Medium)
+        {
+            icon = faEquals
+            cClass = 'marketEqual'
+        }else if(potential >= Potential.Low)
+        {
+            icon = faAngleDown
+            cClass = 'marketLow'
+        }else if(potential >= Potential.VeryLow)
+        {
+            icon = faAngleDoubleDown
+            cClass = 'marketVeryLow'
         }
 
         return {c:cClass, i:icon}

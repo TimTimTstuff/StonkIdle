@@ -1,4 +1,4 @@
-import { BarController, BarElement, CategoryScale, Chart, ChartData, LinearScale, LineController, LineElement, PointElement } from "chart.js";
+import { BarController, BarElement, CategoryScale, Chart, ChartData, LinearScale, LineController, LineElement, PointElement, Tooltip } from "chart.js";
 import React from "react";
 import { Line } from "react-chartjs-2";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
@@ -83,25 +83,27 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
     }
 
     initializeChart() {
-        Chart.register(BarController, LineController, CategoryScale, LinearScale, BarController, BarElement, PointElement, LineElement)
+        Chart.register(BarController, LineController, CategoryScale, LinearScale, BarController, BarElement, PointElement, LineElement, Tooltip)
         let counter = 0;
         GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getAllBusiness().forEach(b => {
             this._businessToIndex[b.shortName] = counter;
             this._chartData.datasets[counter] = {
                 data: [],
-                label: 'Stonk: ' + b.shortName,
+                label: b.shortName,
                 business: b,
-                borderWidth: 3,
-                fill: false,
+                borderWidth: 2,
+                fill: true,
                 backgroundColor: '#39d353',
                 borderColor: '#39d353',
                 fontColor: '#ffffff',
                 spanGaps: true,
                 radius: false,
+                stepped:false,
+                cubicInterpolationMode: 'monotone',
                 segment: {
                     borderColor: (ctx: any) => down(ctx, '#b00b69') || up(ctx, '#39d353'),
                 },
-
+                
             }
             counter++;
             this.changeCompany(b.shortName)
@@ -173,11 +175,8 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
             </div>
             <Line style={UIHelper.isVisible(UIHelper.hasTutorialCheck(4))} className="chartPullLeft" ref={(reference) => { BusinessChart.cartRef = reference }} height={270} width={620} data={this._chartData} options={
                 {
+
                     responsive: true,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false
-                    },
                     plugins: {
                         legend: {
                             position: 'top'
@@ -185,6 +184,13 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
                         title: {
                             display: true,
                             text: 'Stonks'
+                        },
+                        tooltip:{
+                            enabled:true,
+                            mode:'nearest',
+                            intersect:false,
+                            
+
                         }
                     },
                     color: '#ffffff',
@@ -200,20 +206,20 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
                                 display: false,
                             },
                             grid: {
-                                drawBorder: false,
-                                drawOnChartArea: false,
-                                color: '#ffffff'
+                                drawBorder: true,
+                                drawOnChartArea: true,
+                                color: '#61666d'
                             }
                         },
                         y: {
                             title: {
                                 color: '#ffffff',
-                                display: true,
+                                display: false,
                             },
                             grid: {
-                                drawBorder: false,
-                                drawOnChartArea: false,
-                                color: '#ffffff'
+                                drawBorder: true,
+                                drawOnChartArea: true,
+                                color: '#61666d'
                             },
                             ticks: {
                                 color: '#ffffff'
