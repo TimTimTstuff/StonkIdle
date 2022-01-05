@@ -10,6 +10,7 @@ import { BusinessChart } from './components/MainComponents/BusinessChart';
 import { DepotView } from './components/MainComponents/DepotView';
 import { StoreWindow } from './components/MainComponents/StoreWindow';
 import { Game } from './logic/Game';
+import { NewsWindow } from './components/InfoComponents/NewsWindow';
 
 function App() {
 
@@ -36,6 +37,7 @@ function App() {
       </div>
 
       <div className='gameBox' id='box4'>
+        <NewsWindow />
         <GameLog />
       </div>
       <Popup />

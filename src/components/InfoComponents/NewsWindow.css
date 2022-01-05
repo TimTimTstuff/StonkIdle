@@ -1,0 +1,10 @@
+.newsWindow{
+    float: left;
+    margin-top: -15px;
+    margin-left: -10px;
+}
+
+.newsWindow h2{
+    margin: 0;
+    padding:0%;
+}
