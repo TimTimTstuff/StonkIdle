@@ -144,7 +144,7 @@ export class DepotView extends React.Component<{}, DepotViewState> {
             </div>
             <div className='detailBox'>
                 <div className='detailBoxTitle'>Diff</div>
-                <div className={'detailBoxContent ' + (buySellDiff > 0 ? 'uptrend' : 'downtrend')}>{GameFormating.formatToRoundPostfix(buySellDiff*price.s)}</div>
+                <div className={'detailBoxContent ' + (buySellDiff > 0 ? 'uptrend' : 'downtrend')}>{GameFormating.formatToRoundPostfix(buySellDiff*depot.shareAmount)}</div>
             </div>
             <div className='clearFloat'></div>
 
