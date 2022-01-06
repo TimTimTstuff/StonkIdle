@@ -1,4 +1,5 @@
 import React from "react";
+import { GameFormating } from "../../logic/module/calculator/GameFormating";
 import { LogService, GameServices } from "../../logic/services";
 import { GameConfig } from "../../logic/services/Config";
 import { GS } from "../../logic/services/GS";
@@ -47,7 +48,7 @@ export class TimeBox extends React.Component<TimeData, TimeData>{
                             <th>Cicle</th>
                             <th>Period</th>
                             <th>Ticks</th>
-                            <th></th>
+                            
                         </tr>
                     </thead>
                     <tbody>
@@ -55,9 +56,8 @@ export class TimeBox extends React.Component<TimeData, TimeData>{
                             <td>{timeBox.age}</td>
                             <td>{timeBox.circle}</td>
                             <td>{timeBox.period}</td>
-                            <td>{timeBox.ticks}</td>
-                            <td>     <InfoBubble title="Time in this Game" content={GS.getInfoData().getInfoBubble_TimeWindow()} /></td>
-                        </tr>
+                            <td>{GameFormating.formatToRound(timeBox.ticks,0)}</td>
+                           </tr>
                     </tbody>
                 </table>
             </div>

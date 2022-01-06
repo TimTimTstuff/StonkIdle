@@ -26,8 +26,9 @@
       width: 600px;
   }
 
+  /* TAX TABLE */
   .taxTableTime{
-      text-align: left !important;
+      text-align: left;
       width: 30px !important;
   }
 
@@ -35,7 +36,7 @@
       width: 600px;
       border-collapse: collapse;
       margin-top: 5px;
-      font-size: 10pt;
+      font-size: 9pt;
       text-transform: uppercase;
   }
 
@@ -43,14 +44,24 @@
       border: solid thin #61666d
   }
 
-  table.taxTable tr:nth-child(even){
-    background-color: #353c47;
-}
-
   table.taxTable th, table.taxTable td{
       text-align: right;
       width: 90px;
   }
+
+  table.taxTable tbody th{
+    text-align: left !important;
+  }
+
+  table.taxTable tbody tr:nth-child(odd){
+    background-color: #353c47;
+  }
+
+  table.taxTable tbody tr:last-child{
+    background-color: rgb(55, 58, 63);
+  }
+
+
 
 
 .setting table{
@@ -135,6 +146,8 @@ Numbers
 
 .storeItemHeader{
   width: 104px;
+  height: 36px;
+  vertical-align: middle;
   padding:3px;
   text-align: center;
   font-size: 9pt;
@@ -151,14 +164,20 @@ Numbers
   font-size: 8pt;
   padding: 3px;
   text-align: center;
+  height: 46px;
 }
-
+.storeItemTime{
+  font-size: 8pt;
+  padding: 3px;
+  text-align: center;
+}
 .storeItemBuy{
  text-align: center;  
 }
 
 .storeItemBuy button{
   background-color: #318343;
+  width: 104px;
 }
 
 .itemType_1{

@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react"
 import { GoalsData } from "../../logic/data/GoalsData";
 import { GameCalculator } from "../../logic/module/calculator/GameCalculator";
+import { GameFormating } from "../../logic/module/calculator/GameFormating";
 import { UIHelper } from "../../logic/module/calculator/UiHelper";
 import { GlobalEvents, GameServices } from "../../logic/services";
 import { AccountService } from "../../logic/services/accounts/AccountService";
@@ -84,7 +85,7 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
      * Template Line
           <div className='tabBoxContentItem tab1'>Tab 2</div> 
      */
-    getTabNumbersContent(): React.ReactNode {
+    getTabNumbersContent1(): React.ReactNode {
         let flag = GameServices.getService<FlagService>(FlagService.serviceName)
         let stat = GameServices.getService<StatsService>(StatsService.serviceName)
         return (<div className='tabBoxContentItem numbers'>
@@ -150,6 +151,42 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
         </div>)
     }
 
+    getTabNumbersContent(): React.ReactNode {
+        let flag = GameServices.getService<FlagService>(FlagService.serviceName)
+        let stat = GameServices.getService<StatsService>(StatsService.serviceName)
+
+        return (<div className='tabBoxContentItem numbers'>
+            <div className='depotDetailInfoHeader'>Meta</div>
+            <div className='detailBox'>
+                <div className='detailBoxTitle'>Buy/Sell Spread</div>
+                <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix((flag.getFlagFloat(GameFlags.g_f_shareSpread) / 10),2,'%')}</div>
+            </div>
+
+            <div className='detailBox'>
+                <div className='detailBoxTitle'>Chance Item in Store</div>
+                <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(flag.getFlagInt(GameFlags.s_i_itemChance) / 10,0,'%')}</div>
+            </div>
+
+            <div className='detailBox'>
+                <div className='detailBoxTitle'>Max Item in Store</div>
+                <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(flag.getFlagInt(GameFlags.s_i_maxItems),0,'')}</div>
+            </div>
+
+            <div className='detailBox'>
+                <div className='detailBoxTitle'>Discount in Store</div>
+                <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(flag.getFlagInt(GameFlags.s_i_discount),0,'%')}</div>
+            </div>
+
+            <div className='detailBox'>
+                <div className='detailBoxTitle'>TAX Percentage</div>
+                <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(flag.getFlagInt(GameFlags.g_f_taxPercentage),0,'%')}</div>
+            </div>
+            <div className='clearFloat'></div>
+            <div className='depotDetailInfoHeader'>Game Stats</div>
+            
+        </div>)
+    }
+
     getTabSettings(): React.ReactNode {
         return (<div className='tabBoxContentItem setting'>
             <table>
@@ -184,7 +221,7 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
                 return (<div className="storeItem" key={idx}>
                     <div className={`storeItemHeader itemType_${i.itemType}`}>{i.title}</div>
                     <div className="storeItemPrice">{GameCalculator.roundValueToEuro(i.price)}</div>
-                    <div className="storeItemDescription">Time left: {this._timeService.getFormated('C/P', i.avaliableTicks)}</div>
+                    <div className="storeItemTime">Time left: {this._timeService.getFormated('C/P', i.avaliableTicks)}</div>
                     <div className="storeItemDescription">{i.description}</div>
                     <div className="storeItemBuy"><button onClick={(e) => {
                         this._store.buyItem(i.id)
@@ -195,34 +232,50 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
     }
 
     getTab1Content(): React.ReactNode {
-        let taxData = this._accountService.getLastTaxInfo(10)
-        return (<div className='tabBoxContentItem tab1'><table className="taxTable">
+        let taxData = this._accountService.getLastTaxInfo(6)
+        let header:string[] = ['Time']
+        let content:string[][] = [
+            ['Interest'],
+            ['Sell Shares'],
+            ['Buy Shares'],
+            ['Buy Store'],
+            ['EBT'],
+            ['Tax'],
+            ['Total']]
+        taxData.forEach((i,id) =>{
+            header.push(this._timeService.getFormated('A/C',i.time))
+            content[0].push(GameFormating.formatToRoundPostfix(i.interest,0,'€',true))
+            content[1].push(GameFormating.formatToRoundPostfix(i.sellShare,0,'€',true))
+            content[2].push(GameFormating.formatToRoundPostfix(i.buyShare*-1,0,'€',true))
+            content[3].push(GameFormating.formatToRoundPostfix(i.buyItem*-1,0,'€',true))
+            content[4].push(GameFormating.formatToRoundPostfix(i.totalIncome,0,'€',true))
+            content[5].push(GameFormating.formatToRoundPostfix(i.cost,0,'€',true))
+            content[6].push(GameFormating.formatToRoundPostfix(i.totalIncome+i.cost,0,'€',true))
+        })
+
+        return (<div className='tabBoxContentItem tab1'>
+            
+            <table className="taxTable">
             <thead>
                 <tr>
-                    <th className="taxTableTime">Time</th>
-
-                    <th>Sell</th>
-                    <th>Interest</th>
-                    <th>Buy</th>
-                    <th>Store</th>
-                    <th>Total</th>
-                    <th>Tax</th>
+                    {header.map((i,idx)=>(<th key={idx}>{i}</th>))}
                 </tr>
             </thead>
             <tbody>
-                {taxData.map((i, idx) => {
-                    return (
-                        <tr key={idx}>
-                            <td className="taxTableTime">{this._timeService.getFormated('A/C', i.time)}</td>
-
-                            <td className="uptrend">+{GameCalculator.roundValueToEuro(i.sellShare)}</td>
-                            <td className="uptrend">+{GameCalculator.roundValueToEuro(i.interest)}</td>
-                            <td className="downtrend">-{GameCalculator.roundValueToEuro(i.buyShare)}</td>
-                            <td className="downtrend">-{GameCalculator.roundValueToEuro(i.buyItem)}</td>
-                            <td className={(i.totalIncome > 0 ? 'uptrend' : 'downtrend')}>{GameCalculator.roundValueToEuro(i.totalIncome)}</td>
-                            <td className={(i.cost > 0 ? 'uptrend' : 'downtrend')}>{GameCalculator.roundValueToEuro(i.cost)}</td>
-
-                        </tr>)
+                {content.map((cBox,idx)=>{
+                    return (<tr key={idx}>
+                        {
+                        cBox.map((c, idc)=>{
+                            if(idc === 0){
+                                return (<th key={idc}>{c}</th>)
+                            }else{
+                                return (<td key={idc} className={c.indexOf('-')===0?'downtrend':'uptrend'}>{c}</td>)
+                            }
+                            
+                        }) 
+                        }
+                    </tr>)
+                   
                 })}
             </tbody>
         </table></div>)
@@ -235,7 +288,7 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
             {gs.getListCurrentGoals().map((g, gId) => {
                 return (
                     <div key={gId} className="goalItem floatLeft">
-                        <div className="goalItemHeader">{g.name}</div>
+                        <div className="goalItemHeader">{g.name} <small>({g.level}/{g.maxLevel})</small></div>
                         <div className="goalItemInfo">
                             <div className="goalItemProgress" style={{ width: g.percentReached + '%' }}>
                                 {g.percentReached}%

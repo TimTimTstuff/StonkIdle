@@ -5,7 +5,7 @@ export class GameConfig {
     static storeItemChance: number = 250
     static storeMaxItems: number = 5
     public static gameChartUpdate: number = 1500
-    public static gameTickSpeedInMS:number = 150
+    public static gameTickSpeedInMS:number = 200
     public static businessChartMaxPoints: number = 50
     public static maxLogMessages: number = 100
     public static defaultFloatingPercentage: number = 10
@@ -45,7 +45,8 @@ export class GameConfig {
                 g_tps:GameConfig.singleTimeTick,
                 g_gup:GameConfig.gameTickSpeedInMS,
                 s_ic:GameConfig.storeItemChance,
-                s_mi:GameConfig.storeMaxItems           
+                s_mi:GameConfig.storeMaxItems,
+                s_di:0           
             },
             stats:{
                 

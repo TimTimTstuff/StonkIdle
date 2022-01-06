@@ -28,7 +28,9 @@ export interface GoalDisplay {
     goal: number
     price: GoalPrice
     currValue: number
-    percentReached: number
+    percentReached: number,
+    level:number,
+    maxLevel:number
 }
 
 export interface GoalPrice {
@@ -159,7 +161,9 @@ export class GoalsData implements IGameService {
                     currValue: this.getGoalValue(g),
                     goal: eG.targetValue,
                     price: eG.price,
-                    percentReached: GameCalculator.roundValue(100 / eG.targetValue * this.getGoalValue(g))
+                    percentReached: GameCalculator.roundValue(100 / eG.targetValue * this.getGoalValue(g)),
+                    level: pg+1,
+                    maxLevel: g.level.length
                 })
             }
 

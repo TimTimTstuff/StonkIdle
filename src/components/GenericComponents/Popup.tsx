@@ -37,7 +37,10 @@ export class Popup extends React.Component<{}, PopupState> {
 
     render(): React.ReactNode {
         return (<div id="gamePopup">
-            <Draggable>
+            <Draggable onStart={(e,data)=>{
+            let target = e.target as HTMLElement      
+            return target.tagName.toUpperCase() === 'DIV' || target.tagName.toUpperCase() === 'SVG' || target.tagName.toUpperCase() === 'PATH'?undefined:false
+        }} >
                 <div id="gamePopupWindow" style={UIHelper.isVisible(this.state.display)}>
                     <div className="floatRight dragInfo"><FontAwesomeIcon icon={faExpandArrowsAlt} /></div>
                     <div className="popupHeader">{this.state.title}</div>

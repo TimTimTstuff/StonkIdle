@@ -3,13 +3,12 @@ import React from "react";
 import { Line } from "react-chartjs-2";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 import { GameCalculator } from "../../logic/module/calculator/GameCalculator";
+import { GameFormating } from "../../logic/module/calculator/GameFormating";
 import { UIHelper } from "../../logic/module/calculator/UiHelper";
 import { GameServices, GlobalEvents } from "../../logic/services";
 import { BusinessCalculator } from "../../logic/services/businessCalculator/BusinessCalculator";
 import { EventNames, GameConfig } from "../../logic/services/Config";
-import { GS } from "../../logic/services/GS";
 import { TimeService } from "../../logic/services/timeService/TimeService";
-import { InfoBubble } from "../GenericComponents/InfoBubble";
 import './BusinessChart.css'
 
 type bcProps = {
@@ -20,7 +19,8 @@ type bcState = {
     value: {
         changePercent: number,
         sellPrice: number,
-        buyPrice: number
+        buyPrice: number,
+        changePrice:number
     },
     shortName: string
 }
@@ -38,7 +38,8 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
             value: {
                 changePercent: 0,
                 sellPrice: 0,
-                buyPrice: 0
+                buyPrice: 0,
+                changePrice:0
             },
             shortName: props.shortName
         }
@@ -63,7 +64,8 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
                         value: {
                             sellPrice: s?.sellPrice ?? 0,
                             changePercent: (100 / pre.sellPrice * s.sellPrice) - 100,
-                            buyPrice: s?.buyPrice ?? 0
+                            buyPrice: s?.buyPrice ?? 0,
+                            changePrice: (s.sellPrice-pre.sellPrice)
                         },
                         shortName: this._currentComp
                     })
@@ -141,6 +143,7 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
                 buyPrice: price.b,
                 sellPrice: price.s,
                 changePercent: (100 / pre?.sellPrice * price.s) - 100,
+                changePrice: price.s-(pre?.sellPrice??0)
             }
         })
     }
@@ -155,15 +158,17 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
                     <tr>
                         <th>Sell</th>
                         <th>Buy</th>
+                        <th>Change</th>
                         <th>%</th>
                         <th>% Chart</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td className={this.state.value.changePercent > 0.0001 ? 'uptrend' : 'downtrend'}>{GameCalculator.roundValueToEuro(this.state.value.sellPrice)}</td>
-                        <td className={this.state.value.changePercent > 0.0001 ? 'uptrend' : 'downtrend'}>{GameCalculator.roundValueToEuro(this.state.value.buyPrice)} </td>
-                        <td className={this.state.value.changePercent > 0.0001 ? 'uptrend' : 'downtrend'}>{GameCalculator.roundValue(this.state.value.changePercent)}%</td>
+                        <td className={this.state.value.changePercent > 0.0001 ? 'uptrend' : 'downtrend'}>{GameFormating.formatToRoundPostfix(this.state.value.sellPrice)}</td>
+                        <td className={this.state.value.changePercent > 0.0001 ? 'uptrend' : 'downtrend'}>{GameFormating.formatToRoundPostfix(this.state.value.buyPrice)} </td>
+                        <td className={this.state.value.changePercent > 0.0001 ? 'uptrend' : 'downtrend'}>{GameFormating.formatToRoundPostfix(this.state.value.changePrice,2,'€',true)} </td>
+                        <td className={this.state.value.changePercent > 0.0001 ? 'uptrend' : 'downtrend'}>{GameFormating.formatToRoundPostfix(this.state.value.changePercent,2,'%',true)}</td>
                         <td className={changeChart > 0.0001 ? 'uptrend' : 'downtrend'}>{GameCalculator.roundValue(changeChart)}%</td>
                     </tr>
                 </tbody>

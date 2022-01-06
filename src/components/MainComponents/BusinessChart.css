@@ -26,6 +26,7 @@ select {
     font-weight: bold;
     width: 50px;
     border: solid thin #61666d;
+    text-align: right;
 }
 
 .businessChart table{

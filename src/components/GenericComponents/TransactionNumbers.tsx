@@ -28,7 +28,10 @@ export interface TNState {
     pricePerShare: number,
 }
 
+
 export class TransactionNumbers extends React.Component<{}, TNState>{
+
+
 
     constructor(prop: {}) {
         super(prop);
@@ -40,6 +43,7 @@ export class TransactionNumbers extends React.Component<{}, TNState>{
             shortName: '',
             pricePerShare: 1,
         }
+       
     }
 
     componentDidMount() {
@@ -67,9 +71,12 @@ export class TransactionNumbers extends React.Component<{}, TNState>{
     render(): React.ReactNode {
         let subline = this.state.type === TransfereType.StoreSaving ? 'For Saving Account' : this.getSubLineForBuySell()
 
-        return (<div> <Draggable><div style={UIHelper.isVisible(this.state.display)} id='tnBox' className="tnBoxContainer">
+        return (<div> <Draggable onStart={(e,data)=>{
+            let target = e.target as HTMLElement      
+            return target.tagName.toUpperCase() === 'DIV' || target.tagName.toUpperCase() === 'SVG' || target.tagName.toUpperCase() === 'PATH'?undefined:false
+        }} ><div style={UIHelper.isVisible(this.state.display)} id='tnBox' className="tnBoxContainer">
             <button title="Close Window" className="floatRight tnBoxCloseButton" onClick={(e) => { this.setState({ display: false }) }}><FontAwesomeIcon icon={faTimes} /></button>
-            <div title="Dragg window" className="floatRight"><FontAwesomeIcon icon={faExpandArrowsAlt} /></div>
+            <div title="Dragg window" className="floatRight dragInfo"><FontAwesomeIcon icon={faExpandArrowsAlt} /></div>
             <div className="tnBoxHeader">Buy / Sell Calculator</div>
             <input title="Amount to be used" className="tnBoxInput" type='number' readOnly={false} value={this.state.value} min='0' onChange={(e) => { this.setState({ value: parseInt(e.target.value) }) }} />
             {subline}
