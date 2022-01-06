@@ -2,9 +2,11 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #f0f6fc;
 }
+
 body{
   padding-top: 10px;
 }
+
 #stonks {
   background-color: #21262d; 
   width: 1280px;
@@ -40,3 +42,4 @@ body{
   border-bottom: solid thin #61666d;
   padding:15px;
 }
+
