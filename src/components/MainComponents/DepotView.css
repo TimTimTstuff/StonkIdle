@@ -128,8 +128,15 @@
 }
 
 .depotActionButton{
-    width: 96px;
+    width: 148px;
     border-radius: 4px;
     padding:4px;
     margin:4px;
+}
+
+.depotDetailInfoHeader{
+    font-size: 8pt;
+    font-weight: bold;
+    text-transform: uppercase;
+
 }

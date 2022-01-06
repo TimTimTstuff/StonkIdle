@@ -83,8 +83,8 @@ export class DepotView extends React.Component<{}, DepotViewState> {
                                     </div>
                                     <div className='depotViewDataBody'>
                                         <span className='sharesAmount'><small>x{depot?.shareAmount}</small></span>
-                                        <span className={'smallNote ' + (isUptrend ? 'downtrend' : 'uptrend')}>{GameFormating.formatPostfix(diffPerc,'%',true,2)}</span>
-                                        <span className={'floatRight priceInfo ' + (isUptrend ? 'downtrend' : 'uptrend')}> {GameFormating.formatPostfix(sellPrice,'€',false,2)}</span>
+                                        <span className={'smallNote ' + (isUptrend ? 'downtrend' : 'uptrend')}>{GameFormating.formatPostfix(diffPerc, '%', true, 2)}</span>
+                                        <span className={'floatRight priceInfo ' + (isUptrend ? 'downtrend' : 'uptrend')}> {GameFormating.formatPostfix(sellPrice, '€', false, 2)}</span>
 
                                     </div>
                                 </div>
@@ -104,8 +104,10 @@ export class DepotView extends React.Component<{}, DepotViewState> {
         let iconClassStock = GameCalculator.getPotentialClassIcon(business.potential)
         let buySellDiff = GS.getDepotService().getDepotBuySellDiff(this.state.currentBusiness)
         let price = GS.getBusinessCalculator().getBusinessCurrentPrices(this.state.currentBusiness)
+        let time = GS.getTimeService()
         let thisCirlce = GS.getBusinessCalculator().getCurrentCicleForBusiness(this.state.currentBusiness)
         let thisAge = GS.getBusinessCalculator().getCurrentAgeForBusiness(this.state.currentBusiness)
+        if(thisAge == undefined|| thisCirlce == undefined) return;
         return <div className='depotViewItem depotDetails' style={UIHelper.isVisible(UIHelper.hasTutorialCheck(7))}>
             <span>
                 {business.name} <small>({business.shortName})</small><br />
@@ -134,11 +136,15 @@ export class DepotView extends React.Component<{}, DepotViewState> {
 
             <div className='detailBox'>
                 <div className='detailBoxTitle'>per Share</div>
-                <div className={'detailBoxContent ' + (buySellDiff > 0 ? 'uptrend' : 'downtrend')}>{GameFormating.formatToRoundPostfix(buySellDiff,2,'€',true)}</div>
+                <div className={'detailBoxContent ' + (buySellDiff > 0 ? 'uptrend' : 'downtrend')}>{GameFormating.formatToRoundPostfix(buySellDiff, 2, '€', true)}</div>
             </div>
             <div className='detailBox'>
                 <div className='detailBoxTitle'>Total</div>
                 <div className={'detailBoxContent ' + (buySellDiff > 0 ? 'uptrend' : 'downtrend')}>{GameFormating.formatToRoundPostfix(GS.getDepotService().getDepotValueByCompanyName(this.state.currentBusiness))}</div>
+            </div>
+            <div className='detailBox'>
+                <div className='detailBoxTitle'>Diff</div>
+                <div className={'detailBoxContent ' + (buySellDiff > 0 ? 'uptrend' : 'downtrend')}>{GameFormating.formatToRoundPostfix(buySellDiff*price.s)}</div>
             </div>
             <div className='clearFloat'></div>
 
@@ -166,34 +172,45 @@ export class DepotView extends React.Component<{}, DepotViewState> {
 
                 GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).callEvent(EventNames.openTransfereWindow, this, tr);
             }}>Sell</button>
-            <button className='buttonInfo depotActionButton' onClick={() => {
-                GS.getGlobalEvents().callEvent(EventNames.showPopup, this, ({
-                    display: true,
-                    title: `Info: ${business.name}`,
-                    content: (<div><span>Stock History</span><table>
-                        <tbody>
-                            <tr>
-                                <td colSpan={4} className='tableSpacer'>This Cicle</td></tr>
-                            <tr>
-                                <td>High:</td><td>{thisCirlce?.high}€</td><td>Low:</td><td>{thisCirlce?.low}€</td>
-                            </tr>
-                            <tr>
-                                <td>Start:</td><td>{thisCirlce?.start}€</td><td>End:</td><td>{thisCirlce?.end}€</td>
-                            </tr>
 
-                            <tr>
-                                <td colSpan={4} className='tableSpacer'>This Age</td>
-                            </tr>
-                            <tr>
-                                <td>High:</td><td>{thisAge?.high}€</td><td>Low:</td><td>{thisAge?.low}€</td>
-                            </tr>
-                            <tr>
-                                <td>Start:</td><td>{thisAge?.start}€</td><td>End:</td><td>{thisAge?.end}€</td>
-                            </tr>
-                        </tbody>
-                    </table></div>)
-                } as PopupState))
-            }}>Info</button>
+            <div>
+            <div className='depotDetailInfoHeader'>Info Cicle: {time.getCurrentCicle()}</div>
+                        <div className='detailBox'>
+                            <div className='detailBoxTitle'>Start</div>
+                            <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(thisCirlce.start)}</div>
+                        </div>
+                        <div className='detailBox'>
+                            <div className='detailBoxTitle'>End</div>
+                            <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(thisCirlce.end)}</div>
+                        </div>
+                        <div className='detailBox'>
+                            <div className='detailBoxTitle'>High</div>
+                            <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(thisCirlce.high)}</div>
+                        </div>
+                        <div className='detailBox'>
+                            <div className='detailBoxTitle'>Low</div>
+                            <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(thisCirlce.low)}</div>
+                        </div>
+                        <div className='clearFloat'></div>
+                        <div className='depotDetailInfoHeader'>Info Age: {time.getCurrentAge()}</div>
+                        <div className='detailBox'>
+                            <div className='detailBoxTitle'>Start</div>
+                            <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(thisAge.start)}</div>
+                        </div>
+                        <div className='detailBox'>
+                            <div className='detailBoxTitle'>End</div>
+                            <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(thisAge.end)}</div>
+                        </div>
+                        <div className='detailBox'>
+                            <div className='detailBoxTitle'>High</div>
+                            <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(thisAge.high)}</div>
+                        </div>
+                        <div className='detailBox'>
+                            <div className='detailBoxTitle'>Low</div>
+                            <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(thisAge.low)}</div>
+                        </div>
+                        <div className='clearFloat'></div>
+            </div>
         </div>;
     }
 

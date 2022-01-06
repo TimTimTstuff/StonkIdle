@@ -161,11 +161,11 @@ export class BusinessCalculator implements IGameService {
 
     //#region history
     getCurrentAgeForBusiness(currentBusiness: string):HistorySlice {
-        let cA = this._timeService.getCurrentAge()
+        let cA = this._timeService.getFormated('ageA',this._timeService.getTicks())
         return (this.getBusiness(currentBusiness) as Business).historyAge[cA]
     }
     getCurrentCicleForBusiness(currentBusiness: string) {
-        let cC = this._timeService.getCurrentCicle()
+        let cC = this._timeService.getFormated('A_C',this._timeService.getTicks())
         return (this.getBusiness(currentBusiness) as Business).historyCicle[cC]
     }
     //#endregion
