@@ -12,6 +12,7 @@ import { TutorialModul } from './data/TutorialData'
 import { StoreManager } from './services/businessCalculator/StoreManager'
 import { GoalsData } from './data/GoalsData'
 import { InfoData } from './services/dataServices/InfoData'
+import { GameLogCategories } from '../components/InfoComponents/GameLog'
 
 export class Game {
 
@@ -76,7 +77,7 @@ export class Game {
         })
 
         this._gameEvent?.subscribe(EventNames.circleChange, (caller, args) => {
-            this._gameEvent?.callEvent(EventNames.AddLogMessage, this, { msg: `Change of Cicle`, key: 'info' })
+            this._gameEvent?.callEvent(EventNames.AddLogMessage, this, { msg: `Change of Cicle`, key: 'info', cat:GameLogCategories.Game })
             this._accountService?.onCicleUpdate()
         })
     }

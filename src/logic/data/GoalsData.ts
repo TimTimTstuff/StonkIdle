@@ -1,3 +1,4 @@
+import { GameLogCategories } from "../../components/InfoComponents/GameLog";
 import { PlayerSave } from "../../model/AccountData";
 import { GameCalculator } from "../module/calculator/GameCalculator";
 import { GameServices, GlobalEvents, LogService } from "../services";
@@ -92,27 +93,27 @@ export class GoalsData implements IGameService {
             switch (g.price.type) {
                 case GoalPriceType.incSavingInterest:
                     GameServices.getService<AccountService>(AccountService.serviceName).addSavingInterestRate(g.price.value)
-                    this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Goal reached! Get ${g.price.value} to your Saving Interest-rate`,key:'goal'})
+                    this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Goal reached! Get ${g.price.value} to your Saving Interest-rate`,key:'goal', cat:GameLogCategories.General})
                     break
                 case GoalPriceType.incSavingPeriod:
                     GameServices.getService<AccountService>(AccountService.serviceName).addSavingInterestPeriods(g.price.value)
-                    this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Goal reached! Get ${g.price.value} to your Saving Interest-period`,key:'goal'})
+                    this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Goal reached! Get ${g.price.value} to your Saving Interest-period`,key:'goal', cat:GameLogCategories.General})
                     break
                 case GoalPriceType.lowCreditInterest:
                     GameServices.getService<AccountService>(AccountService.serviceName).removeCreditInterestRate(g.price.value)
-                    this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Goal reached! Get ${g.price.value} to your Credit Interest-rate`,key:'goal'})
+                    this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Goal reached! Get ${g.price.value} to your Credit Interest-rate`,key:'goal', cat:GameLogCategories.General})
                     break
                 case GoalPriceType.lowShopPrices:
                     this._flag.addToFlag(GameFlags.s_i_discount,g.price.value)
-                    this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Goal reached! Get ${g.price.value}% discount on Store Items`,key:'goal'})
+                    this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Goal reached! Get ${g.price.value}% discount on Store Items`,key:'goal', cat:GameLogCategories.General})
                     break
                 case GoalPriceType.maxItemInShop:
                     this._flag.addToFlag(GameFlags.s_i_maxItems, g.price.value)
-                    this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Goal reached! Get ${g.price.value} more items Slots in the Store`,key:'goal'})
+                    this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Goal reached! Get ${g.price.value} more items Slots in the Store`,key:'goal', cat:GameLogCategories.General})
                     break
                 case GoalPriceType.chanceForItem:
                     this._flag.addToFlag(GameFlags.s_i_itemChance,GameCalculator.roundValue(g.price.value*10,0))
-                    this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Goal reached! Get ${g.price.value}% to Shop Item Chance`,key:'goal'})
+                    this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Goal reached! Get ${g.price.value}% to Shop Item Chance`,key:'goal', cat:GameLogCategories.General})
                     break
                 default:
                     this._log.warn(GoalsData.serviceName,`Cant find Price for ${g.price}`,g)

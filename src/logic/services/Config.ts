@@ -46,7 +46,8 @@ export class GameConfig {
                 g_gup:GameConfig.gameTickSpeedInMS,
                 s_ic:GameConfig.storeItemChance,
                 s_mi:GameConfig.storeMaxItems,
-                s_di:0           
+                s_di:0,
+                l_h:''          
             },
             stats:{
                 
@@ -69,6 +70,7 @@ export class GameFlags {
     static s_i_itemChance: string = 's_ic'
     static s_i_maxItems: string = 's_mi'
     static s_i_discount: string ='s_di'
+    static l_s_hide: string = 'l_h'
 }
 export class EventNames {
     public static periodChange:string = 'periodChange'

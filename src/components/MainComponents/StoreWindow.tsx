@@ -200,7 +200,7 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
 
             <div className='detailBox'>
                 <div className='detailBoxTitle'>Items Quantity</div>
-                <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(stat.getStat(GameStats.ItemsQuantity),0)}</div>
+                <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(stat.getStat(GameStats.ItemsQuantity),0,'')}</div>
             </div>
             
             <div className='clearFloat'></div>

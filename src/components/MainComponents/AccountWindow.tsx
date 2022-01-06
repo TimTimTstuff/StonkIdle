@@ -3,11 +3,9 @@ import { AccountService } from "../../logic/services/accounts/AccountService";
 import { GameServices, GlobalEvents } from "../../logic/services";
 import { EventNames } from "../../logic/services/Config";
 import './AccountWindow.css'
-import { GameCalculator } from "../../logic/module/calculator/GameCalculator";
 import { UIHelper } from "../../logic/module/calculator/UiHelper";
 import { TNState, TransfereType } from "../GenericComponents/TransactionNumbers";
-import { InfoBubble } from "../GenericComponents/InfoBubble";
-import { GS } from "../../logic/services/GS";
+import { GameFormating } from "../../logic/module/calculator/GameFormating";
 
 type AccountWindowState = {
     balance: number
@@ -71,15 +69,15 @@ export class AccountWindow extends React.Component<{}, AccountWindowState> {
                 <tbody>
                     <tr>
                         <td>Balance</td>
-                        <td className="balance">{GameCalculator.roundValueToEuro(this.state.balance)}</td>
-                        <td className="balance">{GameCalculator.roundValueToEuro(this.state.savingBalance)}</td>
-                        <td className="balance">{GameCalculator.roundValueToEuro(this.state.creditBalance)}</td>
+                        <td className="balance">{GameFormating.formatToRoundPostfix(this.state.balance,0)}</td>
+                        <td className="balance">{GameFormating.formatToRoundPostfix(this.state.savingBalance,0)}</td>
+                        <td className="balance">{GameFormating.formatToRoundPostfix(this.state.creditBalance,0)}</td>
                     </tr>
                     <tr>
                         <td>Interst</td>
                         <td>0%</td>
-                        <td>{GameCalculator.roundValue(this.state.savingInterest)}%</td>
-                        <td>{GameCalculator.roundValue(this.state.creditInterest)}%</td>
+                        <td>{GameFormating.formatToRoundPostfix(this.state.savingInterest,2,'%')}</td>
+                        <td>{GameFormating.formatToRoundPostfix(this.state.creditInterest,2,'%')}</td>
                     </tr>
                     <tr>
                         <td>Periods</td>
@@ -124,9 +122,7 @@ export class AccountWindow extends React.Component<{}, AccountWindowState> {
                        buyCallback:(a)=>{this._account.transfereCreditToMain(a)}
                    }
                    GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).callEvent(EventNames.openTransfereWindow,this,tr)
-               }}>Get Credit</button>     
-
-               <InfoBubble title="Your Accounts" content={GS.getInfoData().getInfoBubble_AccountWindow()} />          
+               }}>Get Credit</button>             
             </div>
         </div>)
     }

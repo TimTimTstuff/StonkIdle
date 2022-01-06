@@ -1,4 +1,5 @@
 import { GlobalEvents, LogService } from "..";
+import { GameLogCategories } from "../../../components/InfoComponents/GameLog";
 import { ItemType, StoreItem } from "../../../model/StoreItem";
 import { GameCalculator } from "../../module/calculator/GameCalculator";
 import { AccountService } from "../accounts/AccountService";
@@ -62,7 +63,7 @@ export class StoreManager implements IGameService {
         this._stats.setStat(GameStats.ItemsAmount,item.price,GameStatsMethod.Add)
         if(this._account.removeMainAccount(item.price)){
             this._account.addToTaxLogBuyItem(item.price)
-            this._event.callEvent(EventNames.AddLogMessage,this,{key:'info',msg:`Store: Item ${item.title} was bought for ${GameCalculator.roundValueToEuro(item.price)}`})
+            this._event.callEvent(EventNames.AddLogMessage,this,{key:'info',msg:`Store: Item ${item.title} was bought for ${GameCalculator.roundValueToEuro(item.price)}`, cat:GameLogCategories.Shop})
             this.processItem(item)
             item.avaliableTicks = 0
             this._save.getGameSave().store.splice(this._save.getGameSave().store.indexOf(item),1)
@@ -74,7 +75,7 @@ export class StoreManager implements IGameService {
         switch(item.itemType){
             case ItemType.ChangeInterestRuntime:
                 this._account.addSavingInterestPeriods(item.effect.value)
-                this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Interest Period was extended by ${item.effect.value} Periods`, key:'info'})
+                this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Interest Period was extended by ${item.effect.value} Periods`, key:'info', cat:GameLogCategories.Shop})
                 break;
             case ItemType.LotteryTicket:
                 let chance = GameCalculator.roundValue(Math.random()*1000,0)
@@ -85,7 +86,7 @@ export class StoreManager implements IGameService {
                     msg = `Booom. You got a ${chance} which is a Win. You gain: ${price}€`
                     this._account.addMainAccount(price,'Lottery Win')
                 }
-                this._event.callEvent(EventNames.AddLogMessage,this,{key:win?'goal':'info', msg:msg})
+                this._event.callEvent(EventNames.AddLogMessage,this,{key:win?'goal':'info', msg:msg, cat:GameLogCategories.Shop})
                 break;
             default:
                 this._log.warn(StoreManager.serviceName, `Item whitout processing Logic!`,item)

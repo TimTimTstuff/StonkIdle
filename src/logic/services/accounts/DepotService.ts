@@ -1,4 +1,5 @@
 import { GlobalEvents } from "..";
+import { GameLogCategories } from "../../../components/InfoComponents/GameLog";
 import { DepotData } from "../../../model/AccountData";
 import { GameCalculator } from "../../module/calculator/GameCalculator";
 import { BusinessCalculator } from "../businessCalculator/BusinessCalculator";
@@ -66,12 +67,12 @@ export class DepotService implements IGameService {
         let sellPrice =  GameCalculator.roundValue(b.s*amount)
 
         if(business == undefined || depot == undefined){
-            this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Can't find stock: ${shortName}`, key:'error'})
+            this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Can't find stock: ${shortName}`, key:'error', cat:GameLogCategories.Depot})
             return false
         }
 
         if(depot.shareAmount < amount){
-            this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Not enough shares owned to sell ${shortName} - ${amount}pc (${depot.shareAmount} owned)`, key:'error'})
+            this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Not enough shares owned to sell ${shortName} - ${amount}pc (${depot.shareAmount} owned)`, key:'error', cat:GameLogCategories.Depot})
             return false
         }
 
@@ -80,7 +81,7 @@ export class DepotService implements IGameService {
         this._stats.setStat(GameStats.SharesSellQuantity, amount, GameStatsMethod.Add)
         this._account.addMainAccount(sellPrice)
         this._account.addToTaxLogSellStock(sellPrice)
-        this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Soled ${shortName} - ${amount}pc (${sellPrice}€ / ${b.b}€/pc)`, key:'buy'})
+        this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Soled ${shortName} - ${amount}pc (${sellPrice}€ / ${b.b}€/pc)`, key:'buy', cat:GameLogCategories.Depot})
         depot.transactions.forEach(t => {
             if(t.sA <= 0 || amount === 0) return
 
@@ -106,17 +107,17 @@ export class DepotService implements IGameService {
         let buyPrice = GameCalculator.roundValue(b.b*amount)
         
         if(business == undefined || depot == undefined){
-            this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Can't find stock: ${shortName}`, key:'error'})
+            this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Can't find stock: ${shortName}`, key:'error', cat:GameLogCategories.Depot})
             return false
         }
         
         if(this._account.getMainAccountBalance() < buyPrice){
-            this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Not enough funding to buy ${shortName} - ${amount}pc (${buyPrice} needed)`, key:'error'})
+            this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Not enough funding to buy ${shortName} - ${amount}pc (${buyPrice} needed)`, key:'error', cat:GameLogCategories.Depot})
             return false
         };
 
         if(business.floatingStock < amount){
-            this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Not enough free stocks to buy ${shortName} - ${amount}pc (${business?.floatingStock} avaliable)`, key:'error'})
+            this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Not enough free stocks to buy ${shortName} - ${amount}pc (${business?.floatingStock} avaliable)`, key:'error', cat:GameLogCategories.Depot})
             return false
         }
 
@@ -124,7 +125,7 @@ export class DepotService implements IGameService {
         this._account.removeMainAccount(buyPrice)
         this._account.addToTaxLogBuyStock(buyPrice)
         depot.transactions.push({sN:shortName, sA:amount, iS:false, sP:b.b})
-        this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Bought ${shortName} - ${amount}pc (${buyPrice}€ / ${b.b}€/pc)`, key:'buy'})
+        this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Bought ${shortName} - ${amount}pc (${buyPrice}€ / ${b.b}€/pc)`, key:'buy', cat:GameLogCategories.Depot})
         this._stats.setStat(GameStats.SharesBuyQuantity, amount, GameStatsMethod.Add)
         this._stats.setStat(GameStats.SharesBuyAmount, buyPrice, GameStatsMethod.Add)
         this.recalculateStockAmount(shortName)

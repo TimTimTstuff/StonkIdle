@@ -1,4 +1,5 @@
 import { GlobalEvents } from "..";
+import { GameLogCategories } from "../../../components/InfoComponents/GameLog";
 import { Taxlog } from "../../../model/AccountData";
 import { GameCalculator } from "../../module/calculator/GameCalculator";
 import { EventNames, GameConfig, GameFlags } from "../Config";
@@ -9,7 +10,7 @@ import { TimeService } from "../timeService/TimeService";
 import { GameStats, GameStatsMethod, StatsService } from "./StatsService";
 
 export class AccountService implements IGameService {
-    
+
 
     //#region Service
     public static serviceName = 'Account'
@@ -73,7 +74,7 @@ export class AccountService implements IGameService {
 
     private recalculateTax(log: Taxlog) {
         log.totalIncome = GameCalculator.roundValue((log.sellShare + log.interest) - (log.buyShare + log.buyItem))
-        log.cost = GameCalculator.roundValue((log.totalIncome * (this._flag.getFlagFloat(GameFlags.g_f_taxPercentage)/100) * -1))
+        log.cost = GameCalculator.roundValue((log.totalIncome * (this._flag.getFlagFloat(GameFlags.g_f_taxPercentage) / 100) * -1))
     }
 
     private getCurrentTaxLog() {
@@ -122,8 +123,10 @@ export class AccountService implements IGameService {
         this.addCreditInterestPeriods(101)
         if (tax.cost > 0) {
             this.addMainAccount(tax.cost, 'Tax Return')
+            this._stats.setStat(GameStats.TaxAmount, tax.cost, GameStatsMethod.Add)
         } else {
             this.removeMainAccount(tax.cost * -1, 'Pay Taxes', true)
+            this._stats.setStat(GameStats.TaxAmount, tax.cost, GameStatsMethod.Add)
         }
 
     }
@@ -179,7 +182,7 @@ export class AccountService implements IGameService {
         }
         this._saveService.getGameSave().player.mainAccount.balance -= amount
         if (notify) {
-            this._event.callEvent(EventNames.AddLogMessage, this, { msg: `Main: -${amount}€ ${reason !== undefined ? `Reason: ${reason}` : ''}`, key: 'out' })
+            this._event.callEvent(EventNames.AddLogMessage, this, { msg: `Main: -${amount}€ ${reason !== undefined ? `Reason: ${reason}` : ''}`, key: 'out', cat:GameLogCategories.Account })
         }
         this._event.callEvent(EventNames.moneyUpdate, this, { i: false, a: amount })
         return true
@@ -188,7 +191,7 @@ export class AccountService implements IGameService {
     public addMainAccount(amount: number, reason?: string, notify: boolean = true): boolean {
         this._saveService.getGameSave().player.mainAccount.balance += amount
         if (notify) {
-            this._event.callEvent(EventNames.AddLogMessage, this, { msg: `Main: ${amount}€ ${reason !== undefined ? `Reason: ${reason}` : ''}`, key: 'income' })
+            this._event.callEvent(EventNames.AddLogMessage, this, { msg: `Main: ${amount}€ ${reason !== undefined ? `Reason: ${reason}` : ''}`, key: 'income', cat:GameLogCategories.Account })
         }
         this._event.callEvent(EventNames.moneyUpdate, this, { i: true, a: amount })
         this._stats.setStat(GameStats.HighestMainAccount, this.getMainAccountBalance(), GameStatsMethod.OverwriteIfHigher)
@@ -197,7 +200,7 @@ export class AccountService implements IGameService {
     //#endregion
 
     //#region credit account
-   
+
     addCreditInterestRate(value: number) {
         this._saveService.getGameSave().player.creditAccount.interest += value
     }
@@ -228,7 +231,7 @@ export class AccountService implements IGameService {
             return false
         }
         this._saveService.getGameSave().player.creditAccount.balance -= amount
-        this._event.callEvent(EventNames.AddLogMessage, this, { msg: `Credit: -${amount}€ ${reason !== undefined ? `Reason: ${reason}` : ''}`, key: 'out' })
+        this._event.callEvent(EventNames.AddLogMessage, this, { msg: `Credit: -${amount}€ ${reason !== undefined ? `Reason: ${reason}` : ''}`, key: 'out', cat:GameLogCategories.Account })
         this._event.callEvent(EventNames.moneyUpdate, this, { i: false, a: amount })
         return true
 
@@ -250,7 +253,7 @@ export class AccountService implements IGameService {
 
         this._saveService.getGameSave().player.creditAccount.balance += amount
         if (notify) {
-            this._event.callEvent(EventNames.AddLogMessage, this, { msg: `Credit: ${amount}€ ${reason !== undefined ? `Reason: ${reason}` : ''}`, key: 'income' })
+            this._event.callEvent(EventNames.AddLogMessage, this, { msg: `Credit: ${amount}€ ${reason !== undefined ? `Reason: ${reason}` : ''}`, key: 'income', cat:GameLogCategories.Account })
         }
         this._event.callEvent(EventNames.moneyUpdate, this, { i: false, a: amount })
         return true
@@ -287,14 +290,14 @@ export class AccountService implements IGameService {
             return false
         }
         this._saveService.getGameSave().player.savingAccount.balance -= amount
-        this._event.callEvent(EventNames.AddLogMessage, this, { msg: `Savings: -${amount}€ ${reason !== undefined ? `Reason: ${reason}` : ''}`, key: 'out' })
+        this._event.callEvent(EventNames.AddLogMessage, this, { msg: `Savings: -${amount}€ ${reason !== undefined ? `Reason: ${reason}` : ''}`, key: 'out', cat:GameLogCategories.Account })
         this._event.callEvent(EventNames.moneyUpdate, this, { i: false, a: amount })
         return true
     }
 
     public addSavingAccount(amount: number, reason?: string): boolean {
         this._saveService.getGameSave().player.savingAccount.balance += amount
-        this._event.callEvent(EventNames.AddLogMessage, this, { msg: `Savings: ${amount}€ ${reason !== undefined ? `Reason: ${reason}` : ''}`, key: 'income' })
+        this._event.callEvent(EventNames.AddLogMessage, this, { msg: `Savings: ${amount}€ ${reason !== undefined ? `Reason: ${reason}` : ''}`, key: 'income', cat:GameLogCategories.Account })
         this._event.callEvent(EventNames.moneyUpdate, this, { i: true, a: amount })
         this._stats.setStat(GameStats.HighestSavingAccount, this.getSavingBalance(), GameStatsMethod.OverwriteIfHigher)
         return true
