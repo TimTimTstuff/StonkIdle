@@ -168,7 +168,7 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
                     </tr>
                 </tbody>
             </table>
-            <InfoBubble title="Stock Chart" content={GS.getInfoData().getInfoBubble_Chart()} />
+
             <div className="floatLeft chartCompanyInfo">
                 <span className="chartCompanyName">{data?.name}</span>
                 <span className="chartCompanyNameShort">{data?.shortName}</span>
