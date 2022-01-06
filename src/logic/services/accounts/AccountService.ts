@@ -104,7 +104,7 @@ export class AccountService implements IGameService {
             let interest = GameCalculator.roundValue((savingAccount.interest / 100 / 100) * savingAccount.balance)
             this.addToTaxLogInterest(interest)
             this.addMainAccount(interest, 'interest income', true)
-            this._stats.setStat(GameStats.Interest, interest, GameStatsMethod.Add)
+            this._stats.setStat(GameStats.InterestAmount, interest, GameStatsMethod.Add)
         }
 
         let creditAccount = this._saveService.getGameSave().player.creditAccount
@@ -113,7 +113,7 @@ export class AccountService implements IGameService {
             let interest = GameCalculator.roundValue((creditAccount.interest / 100 / 100) * creditAccount.balance)
             this.addToTaxLogInterest(interest)
             this.removeMainAccount(interest * -1, 'interest payment', true)
-            this._stats.setStat(GameStats.Interest, interest, GameStatsMethod.Add)
+            this._stats.setStat(GameStats.InterestAmount, interest, GameStatsMethod.Add)
         }
     }
 

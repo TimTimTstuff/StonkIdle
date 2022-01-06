@@ -132,19 +132,19 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
                         <th>Sell €</th>
                     </tr>
                     <tr>
-                        <td>{stat.getStat(GameStats.BuyedSharesTotal)}</td>
-                        <td>{GameCalculator.roundValueToEuro(stat.getStat(GameStats.BuyPriceTotal))}</td>
-                        <td>{stat.getStat(GameStats.SellForShare)}</td>
-                        <td>{GameCalculator.roundValueToEuro(stat.getStat(GameStats.SellPriceTotal))}</td>
+                        <td>{stat.getStat(GameStats.SharesBuyQuantity)}</td>
+                        <td>{GameCalculator.roundValueToEuro(stat.getStat(GameStats.SharesBuyAmount))}</td>
+                        <td>{stat.getStat(GameStats.SharesSellQuantity)}</td>
+                        <td>{GameCalculator.roundValueToEuro(stat.getStat(GameStats.SharesSellAmount))}</td>
                     </tr>
                     <tr>
                         <th className="numTableSpacer" colSpan={8}>Store</th>
                     </tr>
                     <tr>
                         <th>Spend on Items</th>
-                        <td>{stat.getStat(GameStats.SpendOnItems)}</td>
+                        <td>{stat.getStat(GameStats.ItemsAmount)}</td>
                         <th>Total Tax</th>
-                        <td>{stat.getStat(GameStats.PayedForTax)}</td>
+                        <td>{stat.getStat(GameStats.TaxAmount)}</td>
                     </tr>
                 </tbody>
             </table>
@@ -182,8 +182,61 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
                 <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(flag.getFlagInt(GameFlags.g_f_taxPercentage),0,'%')}</div>
             </div>
             <div className='clearFloat'></div>
+            
             <div className='depotDetailInfoHeader'>Game Stats</div>
             
+            <div className='detailBox'>
+                <div className='detailBoxTitle'>Buy Quantity</div>
+                <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(stat.getStat(GameStats.SharesBuyQuantity),0,'')}</div>
+            </div>
+            <div className='detailBox'>
+                <div className='detailBoxTitle'>Buy Amount</div>
+                <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(stat.getStat(GameStats.SharesBuyAmount),0)}</div>
+            </div>
+            <div className='detailBox'>
+                <div className='detailBoxTitle'>Interest</div>
+                <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(stat.getStat(GameStats.InterestAmount),0)}</div>
+            </div>
+
+            <div className='detailBox'>
+                <div className='detailBoxTitle'>Items Quantity</div>
+                <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(stat.getStat(GameStats.ItemsQuantity),0)}</div>
+            </div>
+            
+            <div className='clearFloat'></div>
+
+            <div className='detailBox'>
+                <div className='detailBoxTitle'>Sell Quantity</div>
+                <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(stat.getStat(GameStats.SharesSellQuantity),0,'')}</div>
+            </div>
+
+            <div className='detailBox'>
+                <div className='detailBoxTitle'>Sell Amount</div>
+                <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(stat.getStat(GameStats.SharesSellAmount),0)}</div>
+            </div>
+
+            <div className='detailBox'>
+                <div className='detailBoxTitle'>TAX</div>
+                <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(stat.getStat(GameStats.TaxAmount),0)}</div>
+            </div>
+
+            <div className='detailBox'>
+                <div className='detailBoxTitle'>Items amount</div>
+                <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(stat.getStat(GameStats.ItemsAmount),0)}</div>
+            </div>
+
+            <div className='clearFloat'></div>
+
+            <div className='detailBox'>
+                <div className='detailBoxTitle'>Buy / Sell</div>
+                <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(stat.getStat(GameStats.SharesSellQuantity)-stat.getStat(GameStats.SharesBuyQuantity),0,'')}</div>
+            </div>
+
+            <div className='detailBox'>
+                <div className='detailBoxTitle'>Buy / Sell</div>
+                <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(stat.getStat(GameStats.SharesSellAmount)-stat.getStat(GameStats.SharesBuyAmount),0,'€',true)}</div>
+            </div>
+
         </div>)
     }
 

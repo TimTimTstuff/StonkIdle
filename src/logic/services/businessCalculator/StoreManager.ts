@@ -58,8 +58,8 @@ export class StoreManager implements IGameService {
         let item = this.getItems().find(a => a.id === id)
         if(item === undefined || !this._account.hasMainAmount(item.price)) return
         
-        this._stats.setStat(GameStats.ItemsBought,1,GameStatsMethod.Add)
-        this._stats.setStat(GameStats.SpendOnItems,item.price,GameStatsMethod.Add)
+        this._stats.setStat(GameStats.ItemsQuantity,1,GameStatsMethod.Add)
+        this._stats.setStat(GameStats.ItemsAmount,item.price,GameStatsMethod.Add)
         if(this._account.removeMainAccount(item.price)){
             this._account.addToTaxLogBuyItem(item.price)
             this._event.callEvent(EventNames.AddLogMessage,this,{key:'info',msg:`Store: Item ${item.title} was bought for ${GameCalculator.roundValueToEuro(item.price)}`})

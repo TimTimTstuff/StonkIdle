@@ -251,7 +251,7 @@ export class GoalsData implements IGameService {
                 flagName: undefined
             },
             {
-                statName:GameStats.Interest,
+                statName:GameStats.InterestAmount,
                 id:'hi_1',
                 name:'Earn money with Interest',
                 operator:Operator.get,
@@ -345,7 +345,7 @@ export class GoalsData implements IGameService {
             },
             {
                 flagName:undefined,
-                statName:GameStats.SellPriceTotal,
+                statName:GameStats.SharesSellAmount,
                 id:'sfs_1',
                 level:[
                     {targetValue:10000,price:{value:190,type:GoalPriceType.incSavingPeriod}},
@@ -367,7 +367,7 @@ export class GoalsData implements IGameService {
                 operator:Operator.get
             },
             {
-                statName: GameStats.SpendOnItems,
+                statName: GameStats.ItemsAmount,
                 flagName:undefined,
                 id:'sib_1',
                 name:'Buy in the Store',

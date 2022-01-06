@@ -4,48 +4,17 @@ import { IGameService } from "../IGameService";
 import { SaveDataService } from "../saveData/SaveDataService";
 import { TimeService } from "../timeService/TimeService";
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 export enum GameStats {
-    BuyedSharesTotal = 0,
-    SellForShare = 1,
-    Interest = 2,
+    SharesBuyQuantity = 0,
+    SharesSellQuantity = 1,
+    InterestAmount = 2,
     HighestMainAccount = 3,
-    PayedForTax = 4,
-    SellPriceTotal = 5,
-    BuyPriceTotal = 6,
+    TaxAmount = 4,
+    SharesSellAmount = 5,
+    SharesBuyAmount = 6,
     HighestSavingAccount = 7,
-    ItemsBought = 8,
-    SpendOnItems = 9
+    ItemsQuantity = 8,
+    ItemsAmount = 9
 }
 
 export enum GameStatsMethod{
