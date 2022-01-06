@@ -4,19 +4,17 @@
 }
 
 #reactLog{
-    border: solid thin #61666d;
-    width: 250px;
+    width: 245px;
     float:right;
-    margin-right: -20px;
+    margin-right: -9px;
     margin-top: -15px;
     padding-left: 5px;
 }
 
 .reactLog{
     font-size: 12pt;
-    height: 284px;
+    height: 279px;
     overflow: auto;
-    width: 250px;
 }
 
 .logmessage{

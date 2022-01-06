@@ -1,5 +1,5 @@
 /* Icon Colors */
-.marketVeryHigh .marketVeryHigh>path {
+.marketVeryHigh, .marketVeryHigh>path {
     color: rgb(55, 212, 34) !important;
 }
 
@@ -27,24 +27,36 @@
     color: rgb(56, 162, 211);
 }
 
-.dragInfo, .dragInfo path{
+.dragInfo, .dragInfo path {
     color: #61666d;
 }
 
-.downtrend, .downtrend>path{
+.downtrend, .downtrend>path {
     color: rgb(184, 40, 40) !important;
 }
 
-.uptrend, .uptrend>path{
+.uptrend, .uptrend>path {
     color: rgb(103, 230, 103) !important;
 }
 
-.downtrend, .downtrend>path{
+.downtrend, .downtrend>path {
     color: rgb(184, 40, 40) !important;
 }
 
-.uptrend, .uptrend>path{
+.uptrend, .uptrend>path {
     color: rgb(103, 230, 103) !important;
+}
+
+.buttonInfo {
+    background-color: rgb(27, 143, 182);
+}
+
+.buttonSuccess {
+    background-color: rgb(28, 88, 28);
+}
+
+.buttonCancel {
+    background-color: red;
 }
 
 /* Layout */
@@ -128,4 +140,27 @@ tr {
     user-select: none;
     /* Non-prefixed version, currently
                                     supported by Chrome, Edge, Opera and Firefox */
+}
+
+/* Scrollbars */
+* {
+    /* Foreground, Background */
+    scrollbar-color: #999 #333;
+}
+
+*::-webkit-scrollbar {
+    width: 10px;
+    /* Mostly for vertical scrollbars */
+    height: 10px;
+    /* Mostly for horizontal scrollbars */
+}
+
+*::-webkit-scrollbar-thumb {
+    /* Foreground */
+    background: #999;
+}
+
+*::-webkit-scrollbar-track {
+    /* Background */
+    background: #333;
 }

@@ -42,6 +42,7 @@ function App() {
       </div>
       <Popup />
       <TransactionNumbers />
+      <div className='clearFloat'></div>
     </div>
   );
 }
