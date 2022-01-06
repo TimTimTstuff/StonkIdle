@@ -5,7 +5,6 @@
 
 .depotViewItem{
     float: left;
-    border: solid thin #61666d;
     width: 220px;
     padding:5px;
 }
@@ -25,6 +24,12 @@
     width: 220px;
 }
 
+.depotList{
+    margin-left: -10px;
+    margin-top: -10px;
+    height: 296px;
+}
+
 .depotListItem {
     border: solid thin #61666d;
     margin-bottom: 4px;
@@ -42,6 +47,12 @@
     width: 355px;
     height: 280px;
     overflow: auto;
+}
+
+.depotDetails span{
+    margin-left: 5px;
+    font-weight: bold;
+    text-transform: uppercase;
 }
 
 .shortName{
@@ -114,4 +125,11 @@
 .depotListItemHeader .price{
     margin-top: 0;
     padding-top: 0;
+}
+
+.depotActionButton{
+    width: 96px;
+    border-radius: 4px;
+    padding:4px;
+    margin:4px;
 }

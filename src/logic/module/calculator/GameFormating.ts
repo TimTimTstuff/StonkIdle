@@ -3,8 +3,8 @@ export class GameFormating{
         return value.toLocaleString()
     }
 
-    public static formatPostfix(value:number, curr:string = '€'){
-        return value.toLocaleString()+curr
+    public static formatPostfix(value:number, curr:string = '€', numberPrefix:boolean = false, precision:number = 0){
+        return (numberPrefix&&value>0?'+':'')+value.toFixed(precision).toLocaleString()+curr
     }
 
     public static round(value:number, precision:number = 0){
@@ -16,8 +16,12 @@ export class GameFormating{
         return Math.round(value*prec)/prec
     }
 
-    public static formatToRoundPostfix(value:number, precision:number = 2, postfix:string = '€'){
-        return GameFormating.formatPostfix(GameFormating.round(value,precision),postfix)
+    public static formatToRound(value:number, precision:number = 2, numberPrefix:boolean = false):string {
+        return (numberPrefix&&value>0?'+':'')+GameFormating.round(value,precision).toFixed(precision).toLocaleString()
+    }
+
+    public static formatToRoundPostfix(value:number, precision:number = 2, postfix:string = '€', numberPrefix:boolean = false):string{
+        return GameFormating.formatPostfix(GameFormating.round(value,precision),postfix, numberPrefix, precision)
     }
 
 }

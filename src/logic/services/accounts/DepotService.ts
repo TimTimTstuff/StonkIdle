@@ -47,7 +47,7 @@ export class DepotService implements IGameService {
         let price = this._business.getBusinessCurrentPrices(shortName).s
         let depot = this.getDepotByCompanyName(shortName)?.buyIn??0
         
-        return depot - price
+        return price - depot
     }
 
     getDepotTotalValue(): number{

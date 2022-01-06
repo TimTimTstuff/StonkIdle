@@ -59,37 +59,37 @@ export class DepotView extends React.Component<{}, DepotViewState> {
                         </div>
                     </div>
 
-                    {allBusiness.sort((a, b) => this.compareBusinessByTotalDepotValue(a, b) )
-                    .map((a, idx) => {
+                    {allBusiness.sort((a, b) => this.compareBusinessByTotalDepotValue(a, b))
+                        .map((a, idx) => {
 
-                        let depot = GameServices.getService<DepotService>(DepotService.serviceName).getDepotByCompanyName(a.shortName)
-                        let price = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getBusinessCurrentPrices(a.shortName)
-                        let prePrice = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getBusinessPrePrices(a.shortName)
+                            let depot = GameServices.getService<DepotService>(DepotService.serviceName).getDepotByCompanyName(a.shortName)
+                            let price = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getBusinessCurrentPrices(a.shortName)
+                            let prePrice = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getBusinessPrePrices(a.shortName)
 
-                        let isUptrend = (depot?.buyIn ?? 0) > price.s;
-                        let sellPrice = GameCalculator.roundValue(price.s * (depot?.shareAmount ?? 0))
-                        let buyPrice = GameCalculator.roundValue((depot?.buyIn ?? 0) * (depot?.shareAmount ?? 0))
-                        let diffPerc = (GameCalculator.roundValue((100/buyPrice * sellPrice)-100))
-                        diffPerc = isNaN(diffPerc)?0:diffPerc
-                        let icon = price.s > prePrice.s ? faAngleUp : faAngleDown
+                            let isUptrend = (depot?.buyIn ?? 0) > price.s;
+                            let sellPrice = GameCalculator.roundValue(price.s * (depot?.shareAmount ?? 0))
+                            let buyPrice = GameCalculator.roundValue((depot?.buyIn ?? 0) * (depot?.shareAmount ?? 0))
+                            let diffPerc = (GameCalculator.roundValue((100 / buyPrice * sellPrice) - 100))
+                            diffPerc = isNaN(diffPerc) ? 0 : diffPerc
+                            let icon = price.s > prePrice.s ? faAngleUp : faAngleDown
 
-                        return <div key={idx} data-shortname={a.shortName} className='depotListItem noselect' onClick={() => {
-                            this.selectCompany(a.shortName)
-                        }}>
-                            <div className='depotViewData'>
-                                <div className='depotViewDataHeader'>
-                                    <span className='compName'>{a.name}</span>
-                                    <span className={(price.s < prePrice.s ? 'downtrend' : 'uptrend')}> <FontAwesomeIcon className={price.s < prePrice.s ? 'downtrend' : 'uptrend'} icon={icon} /></span>
-                                </div>
-                                <div className='depotViewDataBody'>
-                                    <span className='sharesAmount'><small>x{depot?.shareAmount}</small></span>
-                                    <span className={'smallNote ' + (isUptrend ? 'downtrend' : 'uptrend')}>{(isUptrend ? '' : '+')}{diffPerc}%</span>
-                                    <span className={'floatRight priceInfo ' + (isUptrend ? 'downtrend' : 'uptrend')}> {GameFormating.formatPostfix(sellPrice)}</span>
-                                    
+                            return <div key={idx} data-shortname={a.shortName} className='depotListItem noselect' onClick={() => {
+                                this.selectCompany(a.shortName)
+                            }}>
+                                <div className='depotViewData'>
+                                    <div className='depotViewDataHeader'>
+                                        <span className='compName'>{a.name}</span>
+                                        <span className={(price.s < prePrice.s ? 'downtrend' : 'uptrend')}> <FontAwesomeIcon className={price.s < prePrice.s ? 'downtrend' : 'uptrend'} icon={icon} /></span>
+                                    </div>
+                                    <div className='depotViewDataBody'>
+                                        <span className='sharesAmount'><small>x{depot?.shareAmount}</small></span>
+                                        <span className={'smallNote ' + (isUptrend ? 'downtrend' : 'uptrend')}>{GameFormating.formatPostfix(diffPerc,'%',true,2)}</span>
+                                        <span className={'floatRight priceInfo ' + (isUptrend ? 'downtrend' : 'uptrend')}> {GameFormating.formatPostfix(sellPrice,'€',false,2)}</span>
+
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    })}
+                        })}
                 </div>
 
                 {this.getBusinessDepotRender()}
@@ -98,19 +98,51 @@ export class DepotView extends React.Component<{}, DepotViewState> {
     }
 
     private getBusinessDepotRender() {
-      let business = GS.getBusinessCalculator().getBusiness(this.state.currentBusiness) as Business
-      let depot = GS.getDepotService().getDepotByCompanyName(this.state.currentBusiness) as DepotData
-      let depotService = GS.getDepotService()
-      let iconClassStock = GameCalculator.getPotentialClassIcon(business.potential)
-      let buySellDiff = GS.getDepotService().getDepotBuySellDiff(this.state.currentBusiness)
-      let price = GS.getBusinessCalculator().getBusinessCurrentPrices(this.state.currentBusiness)
-      let thisCirlce = GS.getBusinessCalculator().getCurrentCicleForBusiness(this.state.currentBusiness)
-      let thisAge = GS.getBusinessCalculator().getCurrentAgeForBusiness(this.state.currentBusiness)
-      return <div className='depotViewItem depotDetails' style={UIHelper.isVisible(UIHelper.hasTutorialCheck(7))}>
-            {business.name} <small>({business.shortName})</small><br />
+        let business = GS.getBusinessCalculator().getBusiness(this.state.currentBusiness) as Business
+        let depot = GS.getDepotService().getDepotByCompanyName(this.state.currentBusiness) as DepotData
+        let depotService = GS.getDepotService()
+        let iconClassStock = GameCalculator.getPotentialClassIcon(business.potential)
+        let buySellDiff = GS.getDepotService().getDepotBuySellDiff(this.state.currentBusiness)
+        let price = GS.getBusinessCalculator().getBusinessCurrentPrices(this.state.currentBusiness)
+        let thisCirlce = GS.getBusinessCalculator().getCurrentCicleForBusiness(this.state.currentBusiness)
+        let thisAge = GS.getBusinessCalculator().getCurrentAgeForBusiness(this.state.currentBusiness)
+        return <div className='depotViewItem depotDetails' style={UIHelper.isVisible(UIHelper.hasTutorialCheck(7))}>
+            <span>
+                {business.name} <small>({business.shortName})</small><br />
+            </span>
+            <div className='detailBox'>
+                <div className='detailBoxTitle'>Sell</div>
+                <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(price.s)}</div>
+            </div>
+            <div className='detailBox'>
+                <div className='detailBoxTitle'>Buy</div>
+                <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(price.b)}</div>
+            </div>
+            <div className='detailBox'>
+                <div className='detailBoxTitle'>Shares</div>
+                <div className='detailBoxContent'>{GameFormating.formatToRound(depot?.shareAmount ?? 0, 0)}</div>
+            </div>
+            <div className='detailBox'>
+                <div className='detailBoxTitle'>Performance</div>
+                <div className='detailBoxContent'><FontAwesomeIcon className={iconClassStock.c} icon={iconClassStock.i} /></div>
+            </div>
+            <div className='clearFloat'></div>
+            <div className='detailBox'>
+                <div className='detailBoxTitle'>Buy In</div>
+                <div className={'detailBoxContent ' + (buySellDiff > 0 ? 'uptrend' : 'downtrend')}>{GameFormating.formatToRoundPostfix(depot.buyIn ?? 0)}</div>
+            </div>
 
-           
-            <button onClick={() => {
+            <div className='detailBox'>
+                <div className='detailBoxTitle'>per Share</div>
+                <div className={'detailBoxContent ' + (buySellDiff > 0 ? 'uptrend' : 'downtrend')}>{GameFormating.formatToRoundPostfix(buySellDiff,2,'€',true)}</div>
+            </div>
+            <div className='detailBox'>
+                <div className='detailBoxTitle'>Total</div>
+                <div className={'detailBoxContent ' + (buySellDiff > 0 ? 'uptrend' : 'downtrend')}>{GameFormating.formatToRoundPostfix(GS.getDepotService().getDepotValueByCompanyName(this.state.currentBusiness))}</div>
+            </div>
+            <div className='clearFloat'></div>
+
+            <button className='buttonSuccess depotActionButton' onClick={() => {
                 let tr: TNState = {
                     display: true,
                     pricePerShare: (price.b ?? 0),
@@ -121,8 +153,8 @@ export class DepotView extends React.Component<{}, DepotViewState> {
                 };
 
                 GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).callEvent(EventNames.openTransfereWindow, this, tr);
-            } }>Buy</button>
-            <button onClick={() => {
+            }}>Buy</button>
+            <button className='buttonSuccess depotActionButton' onClick={() => {
                 let tr: TNState = {
                     display: true,
                     pricePerShare: (price.s ?? 0),
@@ -133,26 +165,13 @@ export class DepotView extends React.Component<{}, DepotViewState> {
                 };
 
                 GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).callEvent(EventNames.openTransfereWindow, this, tr);
-            } }>Sell</button>
-            <button onClick={() => { 
-                GS.getGlobalEvents().callEvent(EventNames.showPopup,this,({
-                    display:true,
+            }}>Sell</button>
+            <button className='buttonInfo depotActionButton' onClick={() => {
+                GS.getGlobalEvents().callEvent(EventNames.showPopup, this, ({
+                    display: true,
                     title: `Info: ${business.name}`,
-                    content:  (<table>
+                    content: (<div><span>Stock History</span><table>
                         <tbody>
-                            <tr>
-                                <td>Owned:</td>
-                                <td>{depot?.shareAmount}</td>
-                                <td>Performance</td>
-                                <td><FontAwesomeIcon className={iconClassStock.c} icon={iconClassStock.i} /></td>
-                            </tr>
-                            <tr>
-                                <td>Buy In:</td><td>{depot.buyIn}€</td><td>Value:</td><td className={buySellDiff > 0 ? 'uptrend' : 'downtrend'}>{buySellDiff}€</td>
-                            </tr>
-                            <tr>
-                                <td>Sell:</td><td>{price.s}€</td><td>Buy:</td><td>{price.b}€</td>
-                            </tr>
-        
                             <tr>
                                 <td colSpan={4} className='tableSpacer'>This Cicle</td></tr>
                             <tr>
@@ -161,7 +180,7 @@ export class DepotView extends React.Component<{}, DepotViewState> {
                             <tr>
                                 <td>Start:</td><td>{thisCirlce?.start}€</td><td>End:</td><td>{thisCirlce?.end}€</td>
                             </tr>
-        
+
                             <tr>
                                 <td colSpan={4} className='tableSpacer'>This Age</td>
                             </tr>
@@ -172,9 +191,9 @@ export class DepotView extends React.Component<{}, DepotViewState> {
                                 <td>Start:</td><td>{thisAge?.start}€</td><td>End:</td><td>{thisAge?.end}€</td>
                             </tr>
                         </tbody>
-                    </table>)
+                    </table></div>)
                 } as PopupState))
-            } }>Info</button>
+            }}>Info</button>
         </div>;
     }
 
