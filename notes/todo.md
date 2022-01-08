@@ -11,9 +11,16 @@
 - Tutorial 
     - Redo Order / Content
     - Change on Change from CHange on Period
-- Stats
-    - Make the stats page look better
 - News
     - Design of Posts
     - Event to Push news {title, msg, shortname, category}
-
+    - Buy Abo in Store
+- School
+    - Add learning (One Class = x Periods) {Market Potential, Market Volatility}
+- Rebirth
+    - Savings / 1mio = Points
+        - Speedup Ticks by 5% (0.5)
+        - Start Saving + 5000€ (max) 
+        - Lower Tax: 0.5% (min 10%)
+        - Start Period Savings: +100
+        - Start Money: +1000

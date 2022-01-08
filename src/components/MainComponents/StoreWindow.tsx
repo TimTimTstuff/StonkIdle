@@ -154,7 +154,8 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
     getTabNumbersContent(): React.ReactNode {
         let flag = GameServices.getService<FlagService>(FlagService.serviceName)
         let stat = GameServices.getService<StatsService>(StatsService.serviceName)
-
+        let secPerPeriod = GameFormating.formatToRoundPostfix(100 / (1000 / (flag.getFlagInt(GameFlags.g_i_gameLoopTickSpeed))* flag.getFlagFloat(GameFlags.g_i_ticksPerLoop)), 0, ' sec');
+        
         return (<div className='tabBoxContentItem numbers'>
             <div className='depotDetailInfoHeader'>Meta</div>
             <div className='detailBox'>
@@ -180,6 +181,11 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
             <div className='detailBox'>
                 <div className='detailBoxTitle'>TAX Percentage</div>
                 <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(flag.getFlagInt(GameFlags.g_f_taxPercentage),0,'%')}</div>
+            </div>
+
+            <div className='detailBox'>
+                <div className='detailBoxTitle'>Time per Period</div>
+                <div className='detailBoxContent'>{secPerPeriod}</div>
             </div>
             <div className='clearFloat'></div>
             

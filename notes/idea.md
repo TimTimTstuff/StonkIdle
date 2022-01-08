@@ -1,16 +1,9 @@
 # Features Ideas
 
-
-# Technical
-- Special calculation / facade classes
-
 # TemporaryBuffs
 - {stat, value, periods}
 
 # Business
-- Add Industry Type
-- Add Basic performance (change on circle)
-- Move Details into Popup
 - Ceiling on gains -> Dragg to optimal price
 
 # Global Events

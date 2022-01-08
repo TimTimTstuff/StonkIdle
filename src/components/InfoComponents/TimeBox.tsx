@@ -1,7 +1,7 @@
 import React from "react";
 import { GameFormating } from "../../logic/module/calculator/GameFormating";
 import { LogService, GameServices } from "../../logic/services";
-import { GameConfig } from "../../logic/services/Config";
+import { GameConfig, GameFlags } from "../../logic/services/Config";
 import { GS } from "../../logic/services/GS";
 import { TimeService } from "../../logic/services/timeService/TimeService";
 import { InfoBubble } from "../GenericComponents/InfoBubble";
@@ -60,10 +60,14 @@ export class TimeBox extends React.Component<TimeData, TimeData>{
                            </tr>
                     </tbody>
                 </table>
+                
+                <br/>
             </div>
             <div className="timeload"><div className="timeloadinner" style={{ width: currTicks + '%' }}></div></div>
         </div>)
     }
 
 
+
+    
 }
