@@ -99,16 +99,18 @@ Numbers
  Goals
 */
 .goalItem{
-  width: 270px;
+  width: 180px;
   border: solid thin #61666d;
-  margin:5px;
-  padding: 5px;
+  margin: 2px;
   font-size: 10pt;
+  height: 130px;
 }
 
 .goalItemHeader{
   text-align: center;
   font-weight: bold;
+  background-color: #cf9d11;
+  height: 36px;
 }
 
 .goalItemInfo{
@@ -121,14 +123,25 @@ Numbers
 }
 
 .goalItemProgress{
-  background-color: #318343;
+  background-color: #3a9e4f;
   border-radius: 3px;
+  font-weight: bold;
   height: 18px;
 }
 
+.goalItemInfoValue{
+  font-size: 8pt;
+  vertical-align: middle;
+  text-align: center;
+  height: 41px;
+}
+
 .goalItemPrice{
+  border-top: solid thin #61666d;
   font-size: 9pt;
   text-align: center;
+  background-color: #47505f;
+  height: 32px;
 }
 
 

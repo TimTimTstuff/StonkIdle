@@ -29,7 +29,7 @@ export enum Potential{
 export enum MarketVolatility {
     Low = -200,
     Medium = 0,
-    High = 200
+    High = 100
 }
 
 export interface Business {

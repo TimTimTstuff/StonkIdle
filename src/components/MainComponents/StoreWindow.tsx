@@ -1,3 +1,4 @@
+import { faDiscord } from "@fortawesome/free-brands-svg-icons";
 import { faAtlas, faAward, faBriefcase, faDumpsterFire, faFileInvoice, faInfo, faStore, faUserCog } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react"
@@ -268,6 +269,16 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
                             this._eventService.callEvent(EventNames.showPopup, this, pop)
                         }}><FontAwesomeIcon className="dangerIcon" icon={faDumpsterFire} /></button></td>
                     </tr>
+                    <tr>
+                        <td>Game Version</td>
+                        <td>0.0.4</td>
+                        <td>Last Update</td>
+                        <td>08.01.2022</td>
+                    </tr>
+                    <tr>
+                        <td>Contact</td>
+                        <td style={{textAlign:'center'}}><a href="https://discord.gg/4HZrm2v" rel='noreferrer' target={'_blank'}><small style={{fontSize:'6pt'}}>https://discord.gg/4HZrm2v</small><br/> <FontAwesomeIcon icon={faDiscord} /></a></td>
+                    </tr>
                 </tbody>
             </table>
         </div>)
@@ -348,13 +359,13 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
             goalContent = gs.getListCurrentGoals().map((g, gId) => {
                 return (
                     <div key={gId} className="goalItem floatLeft">
-                        <div className="goalItemHeader">{g.name} <small>({g.level}/{g.maxLevel})</small></div>
+                        <div className="goalItemHeader">{g.name} <br/><small>({g.level}/{g.maxLevel})</small></div>
                         <div className="goalItemInfo">
                             <div className="goalItemProgress" style={{ width: g.percentReached + '%' }}>
                                 {g.percentReached}%
                             </div>
                         </div>
-                        <div className="goalItemInfo">
+                        <div className="goalItemInfoValue">
                             {GameCalculator.roundValueToEuro(g.currValue)}/{GameCalculator.roundValueToEuro(g.goal)}
                         </div>
                         <div className="goalItemPrice">{UIHelper.getGoalPriceName(g.price)}</div>

@@ -177,12 +177,12 @@ export class BusinessCalculator implements IGameService {
 
     //#region Private
     private getSwitchPerformance() {
-        let chance = 1000
+        let chance = 900
         if (this._save.marketPotential == Potential.VeryLow || this._save.marketPotential == Potential.VeryHigh) {
-            chance = 1200
+            chance += 150
         }
         if (this._save.marketPotential == Potential.Low || this._save.marketPotential == Potential.High) {
-            chance = 1150
+            chance +=50
         }
         let erg = (Math.random() * (chance + this._save.marketVolatility))
 

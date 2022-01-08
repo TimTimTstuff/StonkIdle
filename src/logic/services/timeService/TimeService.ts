@@ -59,6 +59,7 @@ export class TimeService implements IGameService {
         }
         if (newTb.circle > this._lastTb.circle) {
             GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).callEvent(EventNames.circleChange, this, { o: this._lastTb.period, n: newTb.period })
+            console.log('here?')
         }
         if (newTb.age > this._lastTb.age) {
             GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).callEvent(EventNames.ageChange, this, { o: this._lastTb.period, n: newTb.period })
