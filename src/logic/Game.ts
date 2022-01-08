@@ -14,6 +14,7 @@ import { GoalsData } from './data/GoalsData'
 import { InfoData } from './services/dataServices/InfoData'
 import { GameLogCategories } from '../components/InfoComponents/GameLog'
 import { NewsService } from './services/dataServices/NewsService'
+import { SchoolService } from './services/dataServices/SchoolService'
 
 export class Game {
 
@@ -33,6 +34,7 @@ export class Game {
     private _goal: GoalsData | undefined
     private _info: InfoData | undefined
     private _news: NewsService | undefined
+    private _school: SchoolService | undefined
 
     constructor() {
         if (Game.instance !== undefined) throw new Error('Dublicate Game')
@@ -126,6 +128,9 @@ export class Game {
 
         this._news = new NewsService(this._saveManager, this._gameEvent)
         GameServices.registerService(this._news)
+
+        this._school = new SchoolService(this._saveManager, this._gameEvent)
+        GameServices.registerService(this._school)
 
 
     }

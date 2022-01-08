@@ -8,10 +8,11 @@ import { GameServices, GlobalEvents } from '../../logic/services';
 import { DepotService } from '../../logic/services/accounts/DepotService';
 import { BusinessCalculator } from '../../logic/services/businessCalculator/BusinessCalculator';
 import { EventNames, GameConfig } from '../../logic/services/Config';
+import { SchoolClassList } from '../../logic/services/dataServices/SchoolService';
 import { GS } from '../../logic/services/GS';
 import { TimeService } from '../../logic/services/timeService/TimeService';
 import { DepotData } from '../../model/AccountData';
-import { Business } from '../../model/Business';
+import { Business, HistorySlice } from '../../model/Business';
 import { InfoBubble } from '../GenericComponents/InfoBubble';
 import { PopupState } from '../GenericComponents/Popup';
 import { TNState, TransfereType } from '../GenericComponents/TransactionNumbers';
@@ -48,16 +49,7 @@ export class DepotView extends React.Component<{}, DepotViewState> {
         return (
             <div id='depots' className='depotView'>
                 <div style={UIHelper.isVisible(UIHelper.hasTutorialCheck(6))} className='depotViewItem depotList'>
-                    <div className='depotListItem noselect depotListItemHeader'>
-                        <div className='depotViewData'>
-                            <div className='floatLeft'>
-                                <span className='compName'>Total:</span>
-                            </div>
-                            <div className='floatRight priceInfo'>
-                                <span className='uptrend'>{GameFormating.formatToRoundPostfix(totalInStock)}</span>
-                            </div>
-                        </div>
-                    </div>
+                    {this.getRenderTotalDepotValue(totalInStock)}
 
                     {allBusiness.sort((a, b) => this.compareBusinessByTotalDepotValue(a, b))
                         .map((a, idx) => {
@@ -97,17 +89,30 @@ export class DepotView extends React.Component<{}, DepotViewState> {
         )
     }
 
+    private getRenderTotalDepotValue(totalInStock: number) {
+        if (!GS.getShoolService().classFinished(SchoolClassList.DepotTotalValue)) return
+        return <div className='depotListItem noselect depotListItemHeader'>
+            <div className='depotViewData'>
+                <div className='floatLeft'>
+                    <span className='compName'>Total:</span>
+                </div>
+                <div className='floatRight priceInfo'>
+                    <span className='uptrend'>{GameFormating.formatToRoundPostfix(totalInStock)}</span>
+                </div>
+            </div>
+        </div>;
+    }
+
     private getBusinessDepotRender() {
         let business = GS.getBusinessCalculator().getBusiness(this.state.currentBusiness) as Business
         let depot = GS.getDepotService().getDepotByCompanyName(this.state.currentBusiness) as DepotData
         let depotService = GS.getDepotService()
-        let iconClassStock = GameCalculator.getPotentialClassIcon(business.potential)
         let buySellDiff = GS.getDepotService().getDepotBuySellDiff(this.state.currentBusiness)
         let price = GS.getBusinessCalculator().getBusinessCurrentPrices(this.state.currentBusiness)
         let time = GS.getTimeService()
         let thisCirlce = GS.getBusinessCalculator().getCurrentCicleForBusiness(this.state.currentBusiness)
         let thisAge = GS.getBusinessCalculator().getCurrentAgeForBusiness(this.state.currentBusiness)
-        if(thisAge == undefined|| thisCirlce == undefined) return;
+        if (thisAge == undefined || thisCirlce == undefined) return;
         return <div className='depotViewItem depotDetails' style={UIHelper.isVisible(UIHelper.hasTutorialCheck(7))}>
             <span>
                 {business.name} <small>({business.shortName})</small><br />
@@ -124,28 +129,10 @@ export class DepotView extends React.Component<{}, DepotViewState> {
                 <div className='detailBoxTitle'>Shares</div>
                 <div className='detailBoxContent'>{GameFormating.formatToRound(depot?.shareAmount ?? 0, 0)}</div>
             </div>
-            <div className='detailBox'>
-                <div className='detailBoxTitle'>Performance</div>
-                <div className='detailBoxContent'><FontAwesomeIcon className={iconClassStock.c} icon={iconClassStock.i} /></div>
-            </div>
-            <div className='clearFloat'></div>
-            <div className='detailBox'>
-                <div className='detailBoxTitle'>Buy In</div>
-                <div className={'detailBoxContent ' + (buySellDiff > 0 ? 'uptrend' : 'downtrend')}>{GameFormating.formatToRoundPostfix(depot.buyIn ?? 0)}</div>
-            </div>
 
-            <div className='detailBox'>
-                <div className='detailBoxTitle'>per Share</div>
-                <div className={'detailBoxContent ' + (buySellDiff > 0 ? 'uptrend' : 'downtrend')}>{GameFormating.formatToRoundPostfix(buySellDiff, 2, '€', true)}</div>
-            </div>
-            <div className='detailBox'>
-                <div className='detailBoxTitle'>Total</div>
-                <div className={'detailBoxContent ' + (buySellDiff > 0 ? 'uptrend' : 'downtrend')}>{GameFormating.formatToRoundPostfix(GS.getDepotService().getDepotValueByCompanyName(this.state.currentBusiness))}</div>
-            </div>
-            <div className='detailBox'>
-                <div className='detailBoxTitle'>Diff</div>
-                <div className={'detailBoxContent ' + (buySellDiff > 0 ? 'uptrend' : 'downtrend')}>{GameFormating.formatToRoundPostfix(buySellDiff*depot.shareAmount)}</div>
-            </div>
+            {this.getRenderBusinessPerformance(business)}
+            <div className='clearFloat'></div>
+            {this.getRenderBusinessAdditionalShareInfo(depot, buySellDiff)}
             <div className='clearFloat'></div>
 
             <button className='buttonSuccess depotActionButton' onClick={() => {
@@ -173,44 +160,81 @@ export class DepotView extends React.Component<{}, DepotViewState> {
                 GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).callEvent(EventNames.openTransfereWindow, this, tr);
             }}>Sell</button>
 
-            <div>
+                {this.getRenderBusinessHistoryData(time, thisCirlce, thisAge)}
+        </div>;
+    }
+    private getRenderBusinessHistoryData(time: TimeService, thisCirlce: HistorySlice, thisAge: HistorySlice) {
+        if(!GS.getShoolService().classFinished(SchoolClassList.BusinessHistoricalData)) return
+        return <div>
             <div className='depotDetailInfoHeader'>Info Cicle: {time.getCurrentCicle()}</div>
-                        <div className='detailBox'>
-                            <div className='detailBoxTitle'>Start</div>
-                            <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(thisCirlce.start)}</div>
-                        </div>
-                        <div className='detailBox'>
-                            <div className='detailBoxTitle'>End</div>
-                            <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(thisCirlce.end)}</div>
-                        </div>
-                        <div className='detailBox'>
-                            <div className='detailBoxTitle'>High</div>
-                            <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(thisCirlce.high)}</div>
-                        </div>
-                        <div className='detailBox'>
-                            <div className='detailBoxTitle'>Low</div>
-                            <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(thisCirlce.low)}</div>
-                        </div>
-                        <div className='clearFloat'></div>
-                        <div className='depotDetailInfoHeader'>Info Age: {time.getCurrentAge()}</div>
-                        <div className='detailBox'>
-                            <div className='detailBoxTitle'>Start</div>
-                            <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(thisAge.start)}</div>
-                        </div>
-                        <div className='detailBox'>
-                            <div className='detailBoxTitle'>End</div>
-                            <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(thisAge.end)}</div>
-                        </div>
-                        <div className='detailBox'>
-                            <div className='detailBoxTitle'>High</div>
-                            <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(thisAge.high)}</div>
-                        </div>
-                        <div className='detailBox'>
-                            <div className='detailBoxTitle'>Low</div>
-                            <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(thisAge.low)}</div>
-                        </div>
-                        <div className='clearFloat'></div>
+            <div className='detailBox'>
+                <div className='detailBoxTitle'>Start</div>
+                <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(thisCirlce.start)}</div>
             </div>
+            <div className='detailBox'>
+                <div className='detailBoxTitle'>End</div>
+                <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(thisCirlce.end)}</div>
+            </div>
+            <div className='detailBox'>
+                <div className='detailBoxTitle'>High</div>
+                <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(thisCirlce.high)}</div>
+            </div>
+            <div className='detailBox'>
+                <div className='detailBoxTitle'>Low</div>
+                <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(thisCirlce.low)}</div>
+            </div>
+            <div className='clearFloat'></div>
+            <div className='depotDetailInfoHeader'>Info Age: {time.getCurrentAge()}</div>
+            <div className='detailBox'>
+                <div className='detailBoxTitle'>Start</div>
+                <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(thisAge.start)}</div>
+            </div>
+            <div className='detailBox'>
+                <div className='detailBoxTitle'>End</div>
+                <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(thisAge.end)}</div>
+            </div>
+            <div className='detailBox'>
+                <div className='detailBoxTitle'>High</div>
+                <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(thisAge.high)}</div>
+            </div>
+            <div className='detailBox'>
+                <div className='detailBoxTitle'>Low</div>
+                <div className='detailBoxContent'>{GameFormating.formatToRoundPostfix(thisAge.low)}</div>
+            </div>
+            <div className='clearFloat'></div>
+        </div>;
+    }
+
+    private getRenderBusinessAdditionalShareInfo(depot: DepotData, buySellDiff: number): React.ReactNode {
+        if (GS.getShoolService().classFinished(SchoolClassList.BusinessAdditionalContent))
+
+            return (<div><div className='detailBox'>
+                <div className='detailBoxTitle'>Buy In</div>
+                <div className={'detailBoxContent ' + (buySellDiff > 0 ? 'uptrend' : 'downtrend')}>{GameFormating.formatToRoundPostfix(depot.buyIn ?? 0)}</div>
+            </div>
+
+                <div className='detailBox'>
+                    <div className='detailBoxTitle'>per Share</div>
+                    <div className={'detailBoxContent ' + (buySellDiff > 0 ? 'uptrend' : 'downtrend')}>{GameFormating.formatToRoundPostfix(buySellDiff, 2, '€', true)}</div>
+                </div>
+                <div className='detailBox'>
+                    <div className='detailBoxTitle'>Total</div>
+                    <div className={'detailBoxContent ' + (buySellDiff > 0 ? 'uptrend' : 'downtrend')}>{GameFormating.formatToRoundPostfix(GS.getDepotService().getDepotValueByCompanyName(this.state.currentBusiness))}</div>
+                </div>
+                <div className='detailBox'>
+                    <div className='detailBoxTitle'>Diff</div>
+                    <div className={'detailBoxContent ' + (buySellDiff > 0 ? 'uptrend' : 'downtrend')}>{GameFormating.formatToRoundPostfix(buySellDiff * depot.shareAmount)}</div>
+                </div></div>)
+    }
+
+    private getRenderBusinessPerformance(business: Business) {
+
+        if (!GS.getShoolService().classFinished(SchoolClassList.BusinessPerformance)) return
+        let iconClassStock = GameCalculator.getPotentialClassIcon(business.potential)
+
+        return <div className='detailBox'>
+            <div className='detailBoxTitle'>Performance</div>
+            <div className='detailBoxContent'><FontAwesomeIcon className={iconClassStock.c} icon={iconClassStock.i} /></div>
         </div>;
     }
 

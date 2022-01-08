@@ -1,7 +1,7 @@
 import { Potential, MarketVolatility } from "../../model/Business"
 import { MainSave } from "../../model/MainSave"
 export class GameConfig {
-    static saveVersion: string = '0.5'
+    static saveVersion: string = '0.6'
     static storeItemChance: number = 250
     static storeMaxItems: number = 5
     public static gameChartUpdate: number = 1500
@@ -63,20 +63,18 @@ export class GameConfig {
     }
 }
 export class GameFlags {
-    static g_f_taxPercentage: string = 'tax'
-    static g_f_shareSpread: string = 'spread'
-    static f_i_MarketPotential: string = 'f_mpot'
-    static f_i_MarketVolatility: string = 'f_mvol'
-    static f_i_BusinessPotential: string = 'f_bpot'
-    static t_i_level: string = 't_s'
-    static t_b_active: string = 't_act'
-    static g_i_gameLoopTickSpeed: string = 'g_gup'
-    static g_i_ticksPerLoop: string = 'g_tps'
-    static s_i_itemChance: string = 's_ic'
-    static s_i_maxItems: string = 's_mi'
-    static s_i_discount: string ='s_di'
-    static l_s_hide: string = 'l_h'
-    static n_n_AbonementTime: string = 'n_a'
+    static g_f_taxPercentage: string = 'tax'//store tax amount
+    static g_f_shareSpread: string = 'spread'//store share spread buy/sell
+    static t_i_level: string = 't_s'//Tutorial Level
+    static t_b_active: string = 't_act'//Tutorial active
+    static g_i_gameLoopTickSpeed: string = 'g_gup'//IntervallTickSpeed
+    static g_i_ticksPerLoop: string = 'g_tps'//Ticks per Loop
+    static s_i_itemChance: string = 's_ic'//Chance find item in shop
+    static s_i_maxItems: string = 's_mi' //max items in the shop
+    static s_i_discount: string ='s_di' //discound on shop items
+    static l_s_hide: string = 'l_h'//GameLog Filter records
+    static n_n_AbonementTime: string = 'n_a'//news subscription time
+    static sw_s_lastTab: string = 's_lt'//last opend tab in the store window
 }
 export class EventNames {
     public static periodChange:string = 'periodChange'

@@ -11,6 +11,8 @@ import { AccountService } from "../../logic/services/accounts/AccountService";
 import { GameStats, StatsService } from "../../logic/services/accounts/StatsService";
 import { StoreManager } from "../../logic/services/businessCalculator/StoreManager";
 import { EventNames, GameFlags } from "../../logic/services/Config";
+import { SchoolClassList } from "../../logic/services/dataServices/SchoolService";
+import { GS } from "../../logic/services/GS";
 import { FlagService } from "../../logic/services/saveData/FlagService";
 import { SaveDataService } from "../../logic/services/saveData/SaveDataService";
 import { TimeService } from "../../logic/services/timeService/TimeService";
@@ -30,14 +32,16 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
 
     constructor(prop: {}) {
         super(prop);
-        this.state = {
-            window: 'tab1'
-        }
+
         this._flag = GameServices.getService<FlagService>(FlagService.serviceName)
         this._accountService = GameServices.getService<AccountService>(AccountService.serviceName)
         this._timeService = GameServices.getService<TimeService>(TimeService.serviceName)
         this._eventService = GameServices.getService<GlobalEvents>(GlobalEvents.serviceName)
         this._store = GameServices.getService<StoreManager>(StoreManager.serviceName)
+        let last = this._flag.getFlagString(GameFlags.sw_s_lastTab)
+        this.state = {
+            window: last == '' ? 'tab1' : last
+        }
 
     }
 
@@ -69,14 +73,15 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
                 content = this.getTabSchoolContent()
                 break
         }
+        this._flag.setFlag(GameFlags.sw_s_lastTab, this.state.window)
         return (<div className='tabBox'>
 
             <div style={UIHelper.isVisible(UIHelper.hasTutorialCheck(8))} className='tabBoxHeader'>
                 <div onClick={(e) => { this.setState({ window: 'tab1' }) }} className='tabBoxHeaderItem noselect' title="Account Information" ><FontAwesomeIcon icon={faFileInvoice} /></div>
                 <div onClick={(e) => { this.setState({ window: 'goal' }) }} className='tabBoxHeaderItem noselect' title="Goals" ><FontAwesomeIcon icon={faAward} /></div>
-                <div onClick={(e) => { this.setState({ window: 'store' }) }} className='tabBoxHeaderItem noselect' title="Store" ><FontAwesomeIcon icon={faStore} /></div>
+                {this.getRenderTabStoreButton()}
                 <div onClick={(e) => { this.setState({ window: 'school' }) }} className='tabBoxHeaderItem noselect' title="School"><FontAwesomeIcon icon={faGraduationCap} /></div>
-                <div onClick={(e) => { this.setState({ window: 'numbers' }) }} className='tabBoxHeaderItem noselect' title="All numbers" ><FontAwesomeIcon icon={faAtlas} /></div>
+                {this.getRenderTabNumbersButton()}
                 <div onClick={(e) => { this.setState({ window: 'setting' }) }} className='tabBoxHeaderItem noselect' title="Game Settings"><FontAwesomeIcon icon={faUserCog} /></div>
 
             </div>
@@ -86,11 +91,22 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
         </div>)
     }
 
+    private getRenderTabNumbersButton() {
+        if(!GS.getShoolService().classFinished(SchoolClassList.StoreSeeNumbers)) return
+        return <div onClick={(e) => { this.setState({ window: 'numbers' }); }} className='tabBoxHeaderItem noselect' title="All numbers"><FontAwesomeIcon icon={faAtlas} /></div>;
+    }
+
+    private getRenderTabStoreButton() {
+        if(!GS.getShoolService().classFinished(SchoolClassList.StoreSeeStoreTab)) return
+
+        return <div onClick={(e) => { this.setState({ window: 'store' }); }} className='tabBoxHeaderItem noselect' title="Store"><FontAwesomeIcon icon={faStore} /></div>;
+    }
+
     /**
      * Template Line
           <div className='tabBoxContentItem tab1'>Tab 2</div> 
      */
-    getTabSchoolContent():React.ReactNode{
+    getTabSchoolContent(): React.ReactNode {
 
         return (<div className='tabBoxContentItem school'>
             <div className="schoolItem">
@@ -98,17 +114,17 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
                 <div className="schoolItemContent">
                     <div className="schoolItemContentDescription">Learn more about the Market</div>
                     <div className="schoolItemContentProgress">
-                        <div className="schoolItemContentProgressValue">0%</div>
+                        <div className="schoolItemContentPro">0%</div>
                     </div>
                 </div>
                 <div className="schoolItemFooter">
-                   10 Periods a 100€ per Period
+                    10 Periods a 100€ per Period
                 </div>
             </div>
         </div>)
     }
-    
-   
+
+
 
     getTabNumbersContent(): React.ReactNode {
         let flag = GameServices.getService<FlagService>(FlagService.serviceName)
@@ -235,7 +251,7 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
                     </tr>
                     <tr>
                         <td>Contact</td>
-                        <td style={{textAlign:'center'}}><a href="https://discord.gg/4HZrm2v" rel='noreferrer' target={'_blank'}><small style={{fontSize:'6pt'}}>https://discord.gg/4HZrm2v</small><br/> <FontAwesomeIcon icon={faDiscord} /></a></td>
+                        <td style={{ textAlign: 'center' }}><a href="https://discord.gg/4HZrm2v" rel='noreferrer' target={'_blank'}><small style={{ fontSize: '6pt' }}>https://discord.gg/4HZrm2v</small><br /> <FontAwesomeIcon icon={faDiscord} /></a></td>
                     </tr>
                 </tbody>
             </table>
@@ -311,13 +327,13 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
 
     getGoalContent(): React.ReactNode {
         let gs = GameServices.getService<GoalsData>(GoalsData.serviceName)
-        let goalContent:React.ReactNode = (<small className="noItemsInStore">No Goals left. Congratulations!</small>)
+        let goalContent: React.ReactNode = (<small className="noItemsInStore">No Goals left. Congratulations!</small>)
 
         if (gs.getListCurrentGoals().length > 0) {
             goalContent = gs.getListCurrentGoals().map((g, gId) => {
                 return (
                     <div key={gId} className="goalItem floatLeft">
-                        <div className="goalItemHeader">{g.name} <br/><small>({g.level}/{g.maxLevel})</small></div>
+                        <div className="goalItemHeader">{g.name} <br /><small>({g.level}/{g.maxLevel})</small></div>
                         <div className="goalItemInfo">
                             <div className="goalItemProgress" style={{ width: g.percentReached + '%' }}>
                                 {g.percentReached}%

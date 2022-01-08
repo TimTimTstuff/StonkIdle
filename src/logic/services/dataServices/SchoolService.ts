@@ -4,8 +4,16 @@ import { GS } from "../GS";
 import { IGameService } from "../IGameService";
 import { SaveDataService } from "../saveData/SaveDataService";
 
-export enum SchoolClassList{
-
+export enum SchoolClassList {
+    MarketPotential = 1,
+    MarketVolatility = 2,
+    DepotTotalValue = 3,
+    BusinessPerformance = 4,
+    BusinessAdditionalContent = 5,
+    BusinessHistoricalData = 6,
+    StoreSeeTab1 = 7,
+    StoreSeeNumbers = 8,
+    StoreSeeStoreTab = 9
 }
 
 export interface SchoolClass {
@@ -50,8 +58,8 @@ export class SchoolService implements IGameService{
         })
     }
 
-    processClass(cClass: SchoolClass) {
-       console.log('Class process')
+    public processClass(cClass: SchoolClass) {
+       this._save.getGameSave().player.schools.push(cClass.id)
     }
 
     public startClass(school:SchoolClassList) {
@@ -70,7 +78,7 @@ export class SchoolService implements IGameService{
     }
 
     public classFinished(school:SchoolClassList){
-
+        return this._save.getGameSave().player.schools.indexOf(school) > -1
     }
 
     private setupClasses():SchoolClass[] {

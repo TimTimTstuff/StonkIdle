@@ -7,6 +7,7 @@ import { BusinessCalculator } from "./businessCalculator/BusinessCalculator";
 import { StoreManager } from "./businessCalculator/StoreManager";
 import { InfoData } from "./dataServices/InfoData";
 import { NewsService } from "./dataServices/NewsService";
+import { SchoolService } from "./dataServices/SchoolService";
 import { FlagService } from "./saveData/FlagService";
 import { SaveDataService } from "./saveData/SaveDataService";
 import { TimeService } from "./timeService/TimeService";
@@ -59,5 +60,9 @@ export class GS extends GameServices{
 
     public static getInfoData():InfoData{
         return this.getService(InfoData.serviceName)
+    }
+
+    public static getShoolService():SchoolService{
+        return this.getService(SchoolService.serviceName)
     }
 }

@@ -2,6 +2,8 @@ import { CSSProperties } from "react";
 import { GoalPrice, GoalPriceType } from "../../data/GoalsData";
 import { GameServices } from "../../services";
 import { GameFlags } from "../../services/Config";
+import { SchoolClassList } from "../../services/dataServices/SchoolService";
+import { GS } from "../../services/GS";
 import { FlagService } from "../../services/saveData/FlagService";
 
 export class UIHelper{
@@ -26,6 +28,10 @@ export class UIHelper{
     static getHiddenByFlag(flag:string): CSSProperties | undefined {
         let flagService = GameServices.getService<FlagService>(FlagService.serviceName)
         return flagService.getFlagBool(flag)?{display:'block'}:{display:'none'}
+    }
+
+    static getHiddenClass(school:SchoolClassList): CSSProperties | undefined {
+        return GS.getShoolService().classFinished(school)?{display:'block'}:{display:'none'}
     }
 
     static hasTutorialCheck(level:number):boolean{

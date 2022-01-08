@@ -5,6 +5,8 @@ import { UIHelper } from "../../logic/module/calculator/UiHelper";
 import { GameServices, GlobalEvents } from "../../logic/services";
 import { BusinessCalculator } from "../../logic/services/businessCalculator/BusinessCalculator";
 import { EventNames, GameFlags } from "../../logic/services/Config";
+import { SchoolClassList } from "../../logic/services/dataServices/SchoolService";
+import { GS } from "../../logic/services/GS";
 import { FlagService } from "../../logic/services/saveData/FlagService";
 import { TimeService } from "../../logic/services/timeService/TimeService";
 import { Potential, MarketVolatility } from "../../model/Business";
@@ -19,7 +21,6 @@ export class GlobalInfo extends React.Component<{}, GlobalInfoState> {
 
     private _businessService: BusinessCalculator
     private _timeService: TimeService
-    private _flag: FlagService
     private _preMarket: Potential
     private _tickChange: number
     private _volChanged: number
@@ -27,7 +28,6 @@ export class GlobalInfo extends React.Component<{}, GlobalInfoState> {
 
     constructor(arg: {}) {
         super(arg);
-        this._flag = GameServices.getService<FlagService>(FlagService.serviceName)
         this._businessService = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName)
         this._timeService = GameServices.getService<TimeService>(TimeService.serviceName)
         this.state = {
@@ -63,28 +63,42 @@ export class GlobalInfo extends React.Component<{}, GlobalInfoState> {
     }
 
     render(): React.ReactNode {
-        let iconClass = GameCalculator.getPotentialClassIcon(this._businessService.getMarketPerformance())
-        let iconClassVol = GameCalculator.getVolatilityClassIcon(this._businessService.getMarketVolatility())
         return (
             <div>
                 <div style={UIHelper.isVisible(UIHelper.hasTutorialCheck(3))}>
-                    <div className="marketSituation" style={UIHelper.getHiddenByFlag(GameFlags.f_i_MarketPotential)} >
-                        <span className="sincePotientialTop" >Market Potential</span><br />
-                        <span className={iconClass.c}>
-                            <FontAwesomeIcon className={iconClass.c + ' marketIcon'} icon={iconClass.i} /><br />
-                        </span>
-                        <span className="sincePotiential">Since: {this._timeService.getFormated('A/C/P', this._tickChange)}</span>
-                    </div>
+                    {this.getMarketPotential()}
 
-                    <div className="marketSituation" style={UIHelper.getHiddenByFlag(GameFlags.f_i_MarketVolatility)}>
-                        <span className="sincePotientialTop">Market Volatility</span><br />
-                        <span className={iconClassVol.c}>
-                            <FontAwesomeIcon className={iconClassVol.c + ' marketIcon'} icon={iconClassVol.i} /><br />
-                        </span>
-                        <span className="sincePotiential">Since: {this._timeService.getFormated('A/C/P', this._volChanged)}</span>
-
-                    </div>
+                    {this.getMarketVolatility()}
                 </div>
             </div>)
+    }
+
+    private getMarketVolatility() {
+
+        if(!GS.getShoolService().classFinished(SchoolClassList.MarketVolatility)) return ''
+        let iconClassVol = GameCalculator.getVolatilityClassIcon(this._businessService.getMarketVolatility())
+
+        return <div className="marketSituation" style={UIHelper.getHiddenClass(SchoolClassList.MarketVolatility)}>
+            <span className="sincePotientialTop">Market Volatility</span><br />
+            <span className={iconClassVol.c}>
+                <FontAwesomeIcon className={iconClassVol.c + ' marketIcon'} icon={iconClassVol.i} /><br />
+            </span>
+            <span className="sincePotiential">Since: {this._timeService.getFormated('A/C/P', this._volChanged)}</span>
+
+        </div>;
+    }
+
+    private getMarketPotential() {
+
+        if(!GS.getShoolService().classFinished(SchoolClassList.MarketPotential)) return ''
+
+        let iconClass = GameCalculator.getPotentialClassIcon(this._businessService.getMarketPerformance())
+        return <div className="marketSituation" style={UIHelper.getHiddenClass(SchoolClassList.MarketPotential)}>
+            <span className="sincePotientialTop">Market Potential</span><br />
+            <span className={iconClass.c}>
+                <FontAwesomeIcon className={iconClass.c + ' marketIcon'} icon={iconClass.i} /><br />
+            </span>
+            <span className="sincePotiential">Since: {this._timeService.getFormated('A/C/P', this._tickChange)}</span>
+        </div>;
     }
 }
