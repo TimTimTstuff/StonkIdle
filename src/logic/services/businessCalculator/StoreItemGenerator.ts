@@ -17,6 +17,23 @@ export enum ItemPriceFactor{
 }
 
 export class StoreItemGenerator {
+    static itemGenerator_NewsSubscription(): StoreItem {
+        let ticksToPeriod = GameCalculator.roundValue((Math.random()*500),0)
+        let item: StoreItem = {
+            avaliableTicks:Math.floor(Math.random()*5000),
+            id: StoreItemGenerator.getRandomId(),
+            description:'Get your latest Market news!',
+            title: 'News Subscription',
+            effect:{
+                shortName:'',
+                value: ticksToPeriod
+            },
+            itemType: ItemType.NewsSubscription,
+            price: StoreItemGenerator.generateStorePrice(ItemPriceFactor.Moderat)
+        }
+
+        return item
+    }
 
     public static itemGenerator_Jackpot():StoreItem{
 

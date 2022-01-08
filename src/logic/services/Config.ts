@@ -1,7 +1,7 @@
 import { Potential, MarketVolatility } from "../../model/Business"
 import { MainSave } from "../../model/MainSave"
 export class GameConfig {
-    static saveVersion: string = '0.4'
+    static saveVersion: string = '0.5'
     static storeItemChance: number = 250
     static storeMaxItems: number = 5
     public static gameChartUpdate: number = 1500
@@ -21,6 +21,7 @@ export class GameConfig {
     static tax: number = 25
     static maxTaxLogs: number = 10 
     static maxSavingAsCreditPercentage: number = 25
+    static maxNews: number = 10
     static getDefaultSave(): MainSave {
         return {
             name: 'unknown',
@@ -37,6 +38,7 @@ export class GameConfig {
                 taxLog:{},
                 goals:{}
             },
+            news:[],
             flags:{
                 tax:GameConfig.tax,
                 spread:GameConfig.getBaseSpread,
@@ -47,7 +49,8 @@ export class GameConfig {
                 s_ic:GameConfig.storeItemChance,
                 s_mi:GameConfig.storeMaxItems,
                 s_di:0,
-                l_h:''          
+                l_h:'',
+                n_a:0          
             },
             stats:{
                 
@@ -71,6 +74,7 @@ export class GameFlags {
     static s_i_maxItems: string = 's_mi'
     static s_i_discount: string ='s_di'
     static l_s_hide: string = 'l_h'
+    static n_n_AbonementTime: string = 'n_a'
 }
 export class EventNames {
     public static periodChange:string = 'periodChange'
@@ -82,4 +86,5 @@ export class EventNames {
     static showPopup: string = 'showPopup'
     static openTransfereWindow: string ='openTransfereWindow'
     static GoalDone: string = 'goalDone'
+    static newNews: string = 'newNews'
 }

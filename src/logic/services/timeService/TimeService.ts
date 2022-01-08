@@ -75,6 +75,10 @@ export class TimeService implements IGameService {
         return this.getTimeBox(this.getTicks()).age
     }
 
+    getCurrentPeriod() {
+        return this.getTimeBox(this.getTicks()).period
+    }
+
     
     getCurrentCicle() {
         return this.getTimeBox(this.getTicks()).circle
@@ -108,8 +112,8 @@ export class TimeService implements IGameService {
         return box;
     }
 
-    getCurrentTimeFormated(): string {
-        return this.getFormated('A-C-P (T)', this.getTicks());
+    getCurrentTimeFormated(format:string = 'A-C-P (T)'): string {
+        return this.getFormated(format, this.getTicks());
     }
 
     getFormated(format: string, time: number | TimeBox): string {

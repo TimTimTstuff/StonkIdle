@@ -73,6 +73,10 @@ export class StoreManager implements IGameService {
     }
     processItem(item: StoreItem) {
         switch(item.itemType){
+            case ItemType.NewsSubscription:
+                this._flag.addToFlag(GameFlags.n_n_AbonementTime,item.effect.value)
+                this._event.callEvent(EventNames.AddLogMessage,this,{msg:`News Subscription was bought for ${item.effect.value} Periods`, key:'info', cat:GameLogCategories.Shop})
+                break
             case ItemType.ChangeInterestRuntime:
                 this._account.addSavingInterestPeriods(item.effect.value)
                 this._event.callEvent(EventNames.AddLogMessage,this,{msg:`Interest Period was extended by ${item.effect.value} Periods`, key:'info', cat:GameLogCategories.Shop})
@@ -99,10 +103,16 @@ export class StoreManager implements IGameService {
        if(GameCalculator.checkChance(this._flag.getFlagInt(GameFlags.s_i_itemChance)) && this._flag.getFlagInt(GameFlags.s_i_maxItems) > this.getItems().length){
           
             let chance = Math.random()*1000
-
-            if(chance > 500){
+            let chanceBase = 1000/3;
+            if(chance > chanceBase*2){
                 this.addItem(StoreItemGenerator.itemGenerator_PeriodExtension())
-            }else{
+            } 
+            else if(chance > chanceBase*1)
+            {
+                this.addItem(StoreItemGenerator.itemGenerator_NewsSubscription())
+            }
+            else
+            {
                 this.addItem(StoreItemGenerator.itemGenerator_Jackpot())
             }
             

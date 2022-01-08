@@ -1,3 +1,4 @@
+import { faGlassCheers } from "@fortawesome/free-solid-svg-icons";
 import { GameServices, LogService } from "..";
 import { Business, HistorySlice, MarketVolatility, Potential } from "../../../model/Business";
 import { MainSave } from "../../../model/MainSave";
@@ -6,6 +7,7 @@ import { BusinessHelper } from "../../module/business/BusinessHelper";
 import { GameCalculator } from "../../module/calculator/GameCalculator";
 import { GameRandom } from "../../module/calculator/GameRandom";
 import { GameConfig, GameFlags } from "../Config";
+import { GS } from "../GS";
 import { IGameService } from "../IGameService";
 import { FlagService } from "../saveData/FlagService";
 import { SaveDataService } from "../saveData/SaveDataService";
@@ -32,10 +34,6 @@ export class BusinessCalculator implements IGameService {
                 BusinessHelper.generateBusiness(), 
                 BusinessHelper.generateBusiness(), 
                 BusinessHelper.generateBusiness(), 
-                BusinessHelper.generateBusiness(),
-                BusinessHelper.generateBusiness(),
-                BusinessHelper.generateBusiness(),
-                BusinessHelper.generateBusiness(),
             ]
         }
     }
@@ -68,6 +66,7 @@ export class BusinessCalculator implements IGameService {
     //#region gameUpdate
     onCicleChange() {
 
+        GS.getNewsService().addNews('Happy new Cicle',`We now start the Cicle ${this._timeService.getCurrentCicle()}! \n We wish you luck with your Trades!`,faGlassCheers,'uptrend')
         this._save.business.forEach(b =>{
             b.basePotential = GameRandom.randomEnum(Potential)
         })
@@ -80,6 +79,8 @@ export class BusinessCalculator implements IGameService {
             if (this.getSwitchPerformance()) {
                 let newM = BusinessHelper.getRandomPotential()
                 b.potential = newM
+                let ci = GameCalculator.getPotentialClassIcon(newM)
+                GS.getNewsService().addNews(`Potential: ${b.shortName}`,`${b.name} got an update in it's potential. \n Potential is now: ${Potential[newM]}`, ci.i, ci.c )
                 this._logService.debug(BusinessCalculator.serviceName, `Switch ${b.shortName} Potential to ${newM}`)
             }
         })
@@ -88,10 +89,14 @@ export class BusinessCalculator implements IGameService {
             let newM = BusinessHelper.getRandomPotential()
             this._logService.debug(BusinessCalculator.serviceName, `Switch Market Potential to ${newM}`)
             this._save.marketPotential = newM
+            let ci = GameCalculator.getPotentialClassIcon(newM)
+            GS.getNewsService().addNews(`Market Potential!`,`Evaluation of the Market Potential got an update! \n Potential is now: ${Potential[newM]}`,ci.i, ci.c)
         }
         if ((Math.random() * 1000) > GameConfig.marketVolatilityChange) {
             this._save.marketVolatility = BusinessHelper.getRandomVolatitlity()
             this._logService.debug(BusinessCalculator.serviceName, `Swith Volatility to: ${this._save.marketVolatility}`)
+            let ci = GameCalculator.getVolatilityClassIcon(this._save.marketVolatility)
+            GS.getNewsService().addNews(`Market Volatility!`,`The Market volatility changed. It is now: ${MarketVolatility[this._save.marketVolatility]}`, ci.i, ci.c)
         }
     }
 

@@ -180,9 +180,21 @@ Numbers
   width: 104px;
 }
 
+.noItemsInStore{
+  margin: auto;
+  margin-top: 80px;
+  text-align: center;
+  width: 200px;
+  display: block;
+  font-size: 14pt;
+}
+
 .itemType_1{
   background-color: rgb(190, 138, 238);
 }
 .itemType_7{
   background-color: rgb(252, 160, 98);
+}
+.itemType_8{
+  background-color: rgb(41, 132, 236);
 }

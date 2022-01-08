@@ -13,6 +13,7 @@ import { StoreManager } from './services/businessCalculator/StoreManager'
 import { GoalsData } from './data/GoalsData'
 import { InfoData } from './services/dataServices/InfoData'
 import { GameLogCategories } from '../components/InfoComponents/GameLog'
+import { NewsService } from './services/dataServices/NewsService'
 
 export class Game {
 
@@ -31,6 +32,7 @@ export class Game {
     private _store: StoreManager | undefined
     private _goal: GoalsData | undefined
     private _info: InfoData | undefined
+    private _news: NewsService | undefined
 
     constructor() {
         if (Game.instance !== undefined) throw new Error('Dublicate Game')
@@ -79,6 +81,7 @@ export class Game {
         this._gameEvent?.subscribe(EventNames.circleChange, (caller, args) => {
             this._gameEvent?.callEvent(EventNames.AddLogMessage, this, { msg: `Change of Cicle`, key: 'info', cat:GameLogCategories.Game })
             this._accountService?.onCicleUpdate()
+            this._businessCalculator?.onCicleChange()
         })
     }
 
@@ -119,6 +122,9 @@ export class Game {
 
         this._info = new InfoData()
         GameServices.registerService(this._info)
+
+        this._news = new NewsService(this._saveManager, this._gameEvent)
+        GameServices.registerService(this._news)
 
 
     }

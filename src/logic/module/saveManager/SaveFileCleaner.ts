@@ -15,6 +15,20 @@ export class SaveFileCleaner {
         if(save.player.goals === undefined){
             save.player.goals = {}
         }
+
+        //news
+        if(save.news === undefined){
+            save.news = []
+        }
+
+        //flags
+        let keys = Object.keys(dSave.flags)
+        keys.forEach(k =>{
+            if(save.flags[k] === undefined){
+                save.flags[k] = dSave.flags[k]
+                console.log('Add: '+k)
+            }
+        })
     }
 
 }

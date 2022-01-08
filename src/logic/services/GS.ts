@@ -6,11 +6,15 @@ import { StatsService } from "./accounts/StatsService";
 import { BusinessCalculator } from "./businessCalculator/BusinessCalculator";
 import { StoreManager } from "./businessCalculator/StoreManager";
 import { InfoData } from "./dataServices/InfoData";
+import { NewsService } from "./dataServices/NewsService";
 import { FlagService } from "./saveData/FlagService";
 import { SaveDataService } from "./saveData/SaveDataService";
 import { TimeService } from "./timeService/TimeService";
 
 export class GS extends GameServices{
+    static getNewsService(): NewsService {
+        return this.getService(NewsService.serviceName)
+    }
 
     public static getAccountService():AccountService{
         return this.getService(AccountService.serviceName)

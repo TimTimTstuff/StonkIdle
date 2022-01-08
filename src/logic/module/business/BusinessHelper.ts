@@ -15,7 +15,6 @@ const demoName = [
     {n: "Dkpure Exports", s:'DEX'},
     {n: "Air fleet Kings", s:'AFK'},
     {n: 'Power Organization Peng', s:'POP'},
-    
 ]
 
 export class BusinessHelper {
