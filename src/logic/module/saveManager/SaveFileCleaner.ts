@@ -29,6 +29,11 @@ export class SaveFileCleaner {
                 console.log('Add: '+k)
             }
         })
+
+        if(save.player.schools === undefined){
+            save.player.schools = []
+            console.log('Add School')
+        }
     }
 
 }

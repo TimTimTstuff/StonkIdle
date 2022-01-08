@@ -1,5 +1,5 @@
 import { faDiscord } from "@fortawesome/free-brands-svg-icons";
-import { faAtlas, faAward, faBriefcase, faDumpsterFire, faFileInvoice, faInfo, faStore, faUserCog } from "@fortawesome/free-solid-svg-icons";
+import { faAtlas, faAward, faBriefcase, faDumpsterFire, faFileInvoice, faGraduationCap, faInfo, faSchool, faStore, faUniversity, faUserCog } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react"
 import { GoalsData } from "../../logic/data/GoalsData";
@@ -65,6 +65,9 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
             case 'numbers':
                 content = this.getTabNumbersContent()
                 break
+            case 'school':
+                content = this.getTabSchoolContent()
+                break
         }
         return (<div className='tabBox'>
 
@@ -72,6 +75,7 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
                 <div onClick={(e) => { this.setState({ window: 'tab1' }) }} className='tabBoxHeaderItem noselect' title="Account Information" ><FontAwesomeIcon icon={faFileInvoice} /></div>
                 <div onClick={(e) => { this.setState({ window: 'goal' }) }} className='tabBoxHeaderItem noselect' title="Goals" ><FontAwesomeIcon icon={faAward} /></div>
                 <div onClick={(e) => { this.setState({ window: 'store' }) }} className='tabBoxHeaderItem noselect' title="Store" ><FontAwesomeIcon icon={faStore} /></div>
+                <div onClick={(e) => { this.setState({ window: 'school' }) }} className='tabBoxHeaderItem noselect' title="School"><FontAwesomeIcon icon={faGraduationCap} /></div>
                 <div onClick={(e) => { this.setState({ window: 'numbers' }) }} className='tabBoxHeaderItem noselect' title="All numbers" ><FontAwesomeIcon icon={faAtlas} /></div>
                 <div onClick={(e) => { this.setState({ window: 'setting' }) }} className='tabBoxHeaderItem noselect' title="Game Settings"><FontAwesomeIcon icon={faUserCog} /></div>
 
@@ -86,71 +90,25 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
      * Template Line
           <div className='tabBoxContentItem tab1'>Tab 2</div> 
      */
-    getTabNumbersContent1(): React.ReactNode {
-        let flag = GameServices.getService<FlagService>(FlagService.serviceName)
-        let stat = GameServices.getService<StatsService>(StatsService.serviceName)
-        return (<div className='tabBoxContentItem numbers'>
-            <table className="numbersTable">
-                <tbody>
-                    <tr>
-                        <th className="numTableSpacer" colSpan={6}>Shares</th>
-                    </tr>
-                    <tr>
-                        <th>Buy/Sell Spread:</th>
-                        <td>{GameCalculator.roundValue((flag.getFlagFloat(GameFlags.g_f_shareSpread) / 10), 3)}%</td>
+    getTabSchoolContent():React.ReactNode{
 
-                    </tr>
-                    <tr>
-                        <th className="numTableSpacer" colSpan={6}>Store</th>
-                    </tr>
-                    <tr>
-                        <th>Store Item Chance <small>(per Period)</small>:</th>
-                        <td>{flag.getFlagInt(GameFlags.s_i_itemChance) / 10}%</td>
-                        <th>Max store Items:</th>
-                        <td>{flag.getFlagInt(GameFlags.s_i_maxItems)}</td>
-                        <th>Store Discount:</th>
-                        <td>{flag.getFlagInt(GameFlags.s_i_discount)}%</td>
-                    </tr>
-                    <tr>
-                        <th className="numTableSpacer" colSpan={6}>Living</th>
-                    </tr>
-                    <tr>
-                        <th>Tax:</th>
-                        <td>{flag.getFlagInt(GameFlags.g_f_taxPercentage)}%</td>
-                    </tr>
-                </tbody>
-            </table>
-            <span>Statistics</span>
-            <table className="numbersTable">
-                <tbody>
-                    <tr>
-                        <th className="numTableSpacer" colSpan={8}>Shares</th>
-                    </tr>
-                    <tr>
-                        <th>Buy</th>
-                        <th>Buy €</th>
-                        <th>Sell</th>
-                        <th>Sell €</th>
-                    </tr>
-                    <tr>
-                        <td>{stat.getStat(GameStats.SharesBuyQuantity)}</td>
-                        <td>{GameCalculator.roundValueToEuro(stat.getStat(GameStats.SharesBuyAmount))}</td>
-                        <td>{stat.getStat(GameStats.SharesSellQuantity)}</td>
-                        <td>{GameCalculator.roundValueToEuro(stat.getStat(GameStats.SharesSellAmount))}</td>
-                    </tr>
-                    <tr>
-                        <th className="numTableSpacer" colSpan={8}>Store</th>
-                    </tr>
-                    <tr>
-                        <th>Spend on Items</th>
-                        <td>{stat.getStat(GameStats.ItemsAmount)}</td>
-                        <th>Total Tax</th>
-                        <td>{stat.getStat(GameStats.TaxAmount)}</td>
-                    </tr>
-                </tbody>
-            </table>
+        return (<div className='tabBoxContentItem school'>
+            <div className="schoolItem">
+                <div className="schoolItemHeader">Market</div>
+                <div className="schoolItemContent">
+                    <div className="schoolItemContentDescription">Learn more about the Market</div>
+                    <div className="schoolItemContentProgress">
+                        <div className="schoolItemContentProgressValue">0%</div>
+                    </div>
+                </div>
+                <div className="schoolItemFooter">
+                   10 Periods a 100€ per Period
+                </div>
+            </div>
         </div>)
     }
+    
+   
 
     getTabNumbersContent(): React.ReactNode {
         let flag = GameServices.getService<FlagService>(FlagService.serviceName)
@@ -295,7 +253,7 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
                     <div className="storeItemDescription">{i.description}</div>
                     <div className="storeItemBuy"><button onClick={(e) => {
                         this._store.buyItem(i.id)
-                    }}><FontAwesomeIcon icon={faBriefcase} /></button></div>
+                    }}>Buy</button></div>
                 </div>)
             })}
         </div>)

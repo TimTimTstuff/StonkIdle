@@ -1,3 +1,5 @@
+import { SchoolClassList } from "../logic/services/dataServices/SchoolService";
+
 export interface PlayerSave {
     mainAccount:AccountData
     savingAccount:AccountData
@@ -5,6 +7,8 @@ export interface PlayerSave {
     depots:DepotData[]
     taxLog:{[index:string]:Taxlog}
     goals:{[index:string]:number}
+    currentSchool:{id:SchoolClassList,p:number} | undefined
+    schools:number[]
 }
 
 export interface Taxlog {

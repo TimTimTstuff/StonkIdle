@@ -36,7 +36,9 @@ export class GameConfig {
                 savingAccount:{balance: 100000, id:'saving', interest:2.4, interestForPeriods:200, name:'Saving Account', isSaving:true},
                 creditAccount:{balance: 0, id:'credit',interest:9.8, interestForPeriods:101, name:'Credit Account', isSaving:true},
                 taxLog:{},
-                goals:{}
+                goals:{},
+                currentSchool:undefined,
+                schools:[]
             },
             news:[],
             flags:{
