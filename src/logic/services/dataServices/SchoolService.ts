@@ -167,7 +167,7 @@ export class SchoolService implements IGameService{
         })
 
         classes.push({
-            id:SchoolClassList.AddBusiness5,
+            id:SchoolClassList.AddBusiness6,
             title:'Whats in the Market 6',
             description:'You discover another Bussines to invest in!',
             periodsToFinish:400,

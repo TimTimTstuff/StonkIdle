@@ -28,7 +28,6 @@ export class Popup extends React.Component<{}, PopupState> {
     }
 
     componentDidMount() {
-        console.log('mount popup')
         GameServices.getService<GlobalEvents>(GlobalEvents.serviceName).subscribe(EventNames.showPopup, (caller, data) => {
             let p = data as PopupState
             this.setState(p)

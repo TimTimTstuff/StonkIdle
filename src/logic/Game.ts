@@ -152,6 +152,8 @@ export class Game {
         log.setChannelActive('BusinessCalculator', false)
         log.setChannelActive('StoreItemGenerator', false) 
         log.setChannelActive('TutorialData', false) 
+        log.setChannelActive('GAME', false)
+        log.setChannelActive('TimeBox', false)
     }
 
 }

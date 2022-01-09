@@ -233,6 +233,14 @@ export class BusinessCalculator implements IGameService {
             if (bb.low > price.sellPrice) bb.low = price.sellPrice
             bb.end = price.sellPrice
         }
+
+        let keysCicle = Object.keys(business.historyCicle)
+        if(keysCicle.length > 50)
+        {
+            for(let i = 0; keysCicle.length-i > 50; i++){
+                delete business.historyCicle[keysCicle[i]]
+            }
+        }
     }
     //#endregion
 

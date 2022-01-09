@@ -78,7 +78,6 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
             if (GameConfig.businessChartMaxPoints < (this._chartData.labels?.length ?? 0)) {
                 this._chartData.labels?.shift()
             }
-            console.log('Update B')
             BusinessChart.cartRef?.update()
         })
 

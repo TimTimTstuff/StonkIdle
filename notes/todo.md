@@ -1,11 +1,7 @@
 # Bugs
 
 # Features
-- Info Bubbles
-    - Find better positions
-    - Create content for the buttons
-    - Overlay!
-    
+   
 - Rebirth
     - Savings / 1mio = Points
         - Speedup Ticks by 5% (0.5)
