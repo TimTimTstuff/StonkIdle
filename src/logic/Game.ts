@@ -15,6 +15,7 @@ import { InfoData } from './services/dataServices/InfoData'
 import { GameLogCategories } from '../components/InfoComponents/GameLog'
 import { NewsService } from './services/dataServices/NewsService'
 import { SchoolService } from './services/dataServices/SchoolService'
+import { GS } from './services/GS'
 
 export class Game {
 
@@ -77,6 +78,9 @@ export class Game {
             }
             this._businessCalculator?.onPeriodChange()
             this._accountService?.onPeriodUpdate()
+
+            if(this._saveManager === undefined) return
+
             this._saveManager?.save()
         })
 

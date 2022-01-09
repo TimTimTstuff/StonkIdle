@@ -74,6 +74,7 @@ export class SaveDataService implements IGameService {
     }
 
     public save(): void {
+        this.getGameSave().lastSave = new Date().getTime()
         this._saveManager.saveFile();
     }
 }

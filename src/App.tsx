@@ -1,7 +1,7 @@
 import './App.css';
 import './global.css'
 import { Popup } from './components/GenericComponents/Popup';
-import { TransactionNumbers, TransfereType } from './components/GenericComponents/TransactionNumbers';
+import { TransactionNumbers } from './components/GenericComponents/TransactionNumbers';
 import { GameLog } from './components/InfoComponents/GameLog';
 import { GlobalInfo } from './components/InfoComponents/GlobalInfo';
 import { TimeBox } from './components/InfoComponents/TimeBox';

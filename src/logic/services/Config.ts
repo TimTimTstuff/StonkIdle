@@ -39,7 +39,7 @@ export class GameConfig {
     static getDefaultSave(): MainSave {
         return {
             name: 'unknown',
-            lastSave: new Date(),
+            lastSave: new Date().getTime(),
             ticks: 0,
             business:[],
             marketPotential:Potential.High,

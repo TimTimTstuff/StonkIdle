@@ -6,7 +6,7 @@ export interface MainSave {
     news: NewsData[]
     ticks: number
     name: string
-    lastSave: Date
+    lastSave: number
     business: Business[]
     player: PlayerSave,
     marketPotential:Potential,
