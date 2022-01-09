@@ -213,39 +213,39 @@ export class GoalsData implements IGameService {
                     },
                     {
                         price: { type: GoalPriceType.lowCreditInterest, value: 0.2 },
-                        targetValue: 300000
-                    },
-                    {
-                        price: { type: GoalPriceType.incSavingInterest, value: 0.3 },
                         targetValue: 500000
                     },
                     {
-                        price: { type: GoalPriceType.incSavingPeriod, value: 500 },
-                        targetValue: 700000
-                    },
-                    {
-                        price: { type: GoalPriceType.incSavingInterest, value: 0.2 },
-                        targetValue: 900000
-                    },
-                    {
-                        price: { type: GoalPriceType.incSavingPeriod, value: 500 },
+                        price: { type: GoalPriceType.incSavingInterest, value: 0.3 },
                         targetValue: 1000000
                     },
                     {
-                        price: { type: GoalPriceType.incSavingPeriod, value: 1000 },
-                        targetValue: 120000
-                    },
-                    {
-                        price: { type: GoalPriceType.incSavingInterest, value: 0.1 },
+                        price: { type: GoalPriceType.incSavingPeriod, value: 500 },
                         targetValue: 1500000
                     },
                     {
+                        price: { type: GoalPriceType.incSavingInterest, value: 0.2 },
+                        targetValue: 2000000
+                    },
+                    {
+                        price: { type: GoalPriceType.incSavingPeriod, value: 500 },
+                        targetValue: 5000000
+                    },
+                    {
+                        price: { type: GoalPriceType.incSavingPeriod, value: 1000 },
+                        targetValue: 10000000
+                    },
+                    {
                         price: { type: GoalPriceType.incSavingInterest, value: 0.1 },
-                        targetValue: 1750000
+                        targetValue: 15000000
+                    },
+                    {
+                        price: { type: GoalPriceType.incSavingInterest, value: 0.1 },
+                        targetValue: 17500000
                     },
                     {
                         price: { type: GoalPriceType.incSavingInterest, value: 0.3 },
-                        targetValue: 2500000
+                        targetValue: 25000000
                     },
 
                 ],

@@ -198,7 +198,7 @@ export class SchoolService implements IGameService{
             description:'You discover another Bussines to invest in!',
             periodsToFinish:25,
             pricePerPeriod:20,
-            minOther:3
+            minOther:5
         })
 
         classes.push({
@@ -207,7 +207,7 @@ export class SchoolService implements IGameService{
             description:'You discover another Bussines to invest in!',
             periodsToFinish:50,
             pricePerPeriod:30,
-            minOther:5
+            minOther:7
         })
 
         classes.push({
@@ -216,7 +216,7 @@ export class SchoolService implements IGameService{
             description:'You discover another Bussines to invest in!',
             periodsToFinish:100,
             pricePerPeriod:40,
-            minOther:6
+            minOther:8
         })
 
         classes.push({
@@ -225,7 +225,7 @@ export class SchoolService implements IGameService{
             description:'You discover another Bussines to invest in!',
             periodsToFinish:200,
             pricePerPeriod:50,
-            minOther:7
+            minOther:9
         })
 
         classes.push({
@@ -234,7 +234,7 @@ export class SchoolService implements IGameService{
             description:'You discover another Bussines to invest in!',
             periodsToFinish:400,
             pricePerPeriod:60,
-            minOther:8
+            minOther:10
         })
 
         classes.push({
