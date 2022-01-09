@@ -8,6 +8,7 @@ import { UIHelper } from "../../logic/module/calculator/UiHelper";
 import { GameServices, GlobalEvents } from "../../logic/services";
 import { BusinessCalculator } from "../../logic/services/businessCalculator/BusinessCalculator";
 import { EventNames, GameConfig } from "../../logic/services/Config";
+import { GS } from "../../logic/services/GS";
 import { TimeService } from "../../logic/services/timeService/TimeService";
 import './BusinessChart.css'
 
@@ -50,6 +51,7 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
     componentDidMount() {
         let event = GameServices.getService<GlobalEvents>(GlobalEvents.serviceName)
         event.subscribe(EventNames.periodChange, () => {
+            this.fixChartData()
             this.changeCompany(this.state.shortName)
             GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getAllBusiness().forEach(b => {
                 let s = b.stockPriceHistory[b.stockPriceHistory.length - 1];
@@ -83,6 +85,36 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
             this.changeCompany(shortName as string)
         })
     }
+    fixChartData() {
+       GS.getBusinessCalculator().getAllBusiness().forEach(b =>{
+
+        let cd = this._chartData.datasets.find(c => c.label === b.shortName)
+        if(cd === undefined){
+            let index =  Object.keys(this._businessToIndex).length
+            this._businessToIndex[b.shortName] = index
+
+            this._chartData.datasets[index] = {
+                data: [],
+                label: b.shortName,
+                business: b,
+                borderWidth: 2,
+                fill: true,
+                backgroundColor: '#39d353',
+                borderColor: '#39d353',
+                fontColor: '#ffffff',
+                spanGaps: true,
+                radius: false,
+                stepped:false,
+                cubicInterpolationMode: 'monotone',
+                segment: {
+                    borderColor: (ctx: any) => down(ctx, '#b00b69') || up(ctx, '#39d353'),
+                },
+                
+            }
+        }
+
+       })
+    }
 
     initializeChart() {
         Chart.register(BarController, LineController, CategoryScale, LinearScale, BarController, BarElement, PointElement, LineElement, Tooltip)
@@ -102,6 +134,7 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
                 radius: false,
                 stepped:false,
                 cubicInterpolationMode: 'monotone',
+
                 segment: {
                     borderColor: (ctx: any) => down(ctx, '#b00b69') || up(ctx, '#39d353'),
                 },
@@ -110,6 +143,7 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
             counter++;
             this.changeCompany(b.shortName)
         })
+
         GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getAllBusiness().forEach(b => {
             b?.stockPriceHistory.forEach(s => {
                 this._chartData.datasets[this._businessToIndex[b.shortName]].data.push(s?.sellPrice)
@@ -120,6 +154,7 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
                 }
             })
         })
+
         this.changeCompany(this.state.shortName)
     }
 
@@ -129,9 +164,9 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
         let price = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getBusinessCurrentPrices(newComp)
         let pre = buyPrice?.stockPriceHistory[buyPrice.stockPriceHistory.length - 2]
         if (pre === undefined) return
-        for (var i = 0; i < this._chartData.datasets.length; i++) {
-            // eslint-disable-next-line eqeqeq
-            if (BusinessChart.cartRef == undefined) return
+        // eslint-disable-next-line eqeqeq
+        if (BusinessChart.cartRef == undefined) return
+        for (var i = 0; i < BusinessChart.cartRef.data.datasets.length; i++) {
             BusinessChart.cartRef.data.datasets[i].hidden = i === this._businessToIndex[newComp] ? false : true;
         }
 

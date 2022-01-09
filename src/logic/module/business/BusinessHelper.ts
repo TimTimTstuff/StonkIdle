@@ -5,36 +5,25 @@ import { TimeService } from "../../services/timeService/TimeService";
 import { GameCalculator } from "../calculator/GameCalculator";
 import { GameRandom } from "../calculator/GameRandom";
 
-const demoName = [
-    {n: "World Idle Platform", s: "WIP"},
-    {n: "Little Lama Loft", s:'LOL'},
-    {n: "Ultra Waifu United", s:'UWU'},
-    {n: "Alter Reconstruction", s:'ARE'},
-    {n: "Riddle with me", s:'RWM'},
-    {n: "Nerd Errors Games", s:'NEG'},
-    {n: "Dkpure Exports", s:'DEX'},
-    {n: "Air fleet Kings", s:'AFK'},
-    {n: 'Power Organization Peng', s:'POP'},
-]
+
 
 export class BusinessHelper {
    
     private static curIN:number =  0;
 
-    public static generateBusiness():Business{
+    public static generateBusiness(name:string, shortName:string):Business{
         let maxStock = Math.floor((Math.random()*1000000)+10000)
         let floatingStock = Math.floor(maxStock/100*GameConfig.defaultFloatingPercentage)
-        let demoBus = demoName[BusinessHelper.curIN]
         BusinessHelper.curIN++ 
         let startPrice = GameCalculator.roundValue(Math.random()*GameConfig.maxShareStartPrice)
 
         let business: Business = {
             createTick: GameServices.getService<TimeService>(TimeService.serviceName).getTicks(),
             floatingStock:floatingStock,
-            name: demoBus.n,
+            name: name,
             potential: GameRandom.randomEnum(Potential),
             basePotential: GameRandom.randomEnum(Potential),
-            shortName: demoBus.s,
+            shortName: shortName,
             stockPriceHistory: [
                 {sellPrice: startPrice, buyPrice: startPrice+0.5, date: 100 },
                 {sellPrice: startPrice+0.1, buyPrice: startPrice+0.7, date: 100 },

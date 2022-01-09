@@ -211,3 +211,34 @@ Numbers
 .itemType_8{
   background-color: rgb(41, 132, 236);
 }
+
+/* School */
+.schoolItem{
+  float: left;
+  width: 289px;
+  height: 74px;
+  border: solid thin #47505f;
+  margin: 2px;
+}
+
+.schoolItemHeader{
+  font-size: 11pt;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.schoolItemContentDescription{
+  font-size: 7pt;
+}
+
+.schoolItemFooter{
+  font-size: 7pt;
+}
+
+.schoolItemContentProgress{
+  border: solid thin #47505f;
+  font-size: 7pt;
+}
+.schoolItemContentPro{
+  background-color: #3a9e4f;
+}

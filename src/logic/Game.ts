@@ -81,7 +81,6 @@ export class Game {
         })
 
         this._gameEvent?.subscribe(EventNames.circleChange, (caller, args) => {
-            console.log('Change Cicle ehre?')
             this._gameEvent?.callEvent(EventNames.AddLogMessage, this, { msg: `Change of Cicle`, key: 'info', cat:GameLogCategories.Game })
             this._accountService?.onCicleUpdate()
             this._businessCalculator?.onCicleChange()

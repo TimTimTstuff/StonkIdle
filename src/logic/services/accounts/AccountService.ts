@@ -121,6 +121,7 @@ export class AccountService implements IGameService {
     public onCicleUpdate() {
         let tax = this.getPreviouseTaxLog()
         this.addCreditInterestPeriods(101)
+        if(tax === undefined) return
         if (tax.cost > 0) {
             this.addMainAccount(tax.cost, 'Tax Return')
             this._stats.setStat(GameStats.TaxAmount, tax.cost, GameStatsMethod.Add)

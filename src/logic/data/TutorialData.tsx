@@ -193,7 +193,6 @@ export class TutorialModul {
                 </i>
                 <button onClick={(e) => {
                     this.setTutorialStage(99)
-                    this._flagService.setFlag(GameFlags.g_i_ticksPerLoop,1)
                     this._flagService.setFlag(GameFlags.t_b_active, false)
                     this._event.callEvent(EventNames.showPopup,this,{display:false})
                 } }>Skip Tutorial?</button>

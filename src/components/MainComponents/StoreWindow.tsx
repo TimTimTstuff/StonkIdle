@@ -11,7 +11,7 @@ import { AccountService } from "../../logic/services/accounts/AccountService";
 import { GameStats, StatsService } from "../../logic/services/accounts/StatsService";
 import { StoreManager } from "../../logic/services/businessCalculator/StoreManager";
 import { EventNames, GameFlags } from "../../logic/services/Config";
-import { SchoolClassList } from "../../logic/services/dataServices/SchoolService";
+import { SchoolClass, SchoolClassList } from "../../logic/services/dataServices/SchoolService";
 import { GS } from "../../logic/services/GS";
 import { FlagService } from "../../logic/services/saveData/FlagService";
 import { SaveDataService } from "../../logic/services/saveData/SaveDataService";
@@ -77,7 +77,7 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
         return (<div className='tabBox'>
 
             <div style={UIHelper.isVisible(UIHelper.hasTutorialCheck(8))} className='tabBoxHeader'>
-                <div onClick={(e) => { this.setState({ window: 'tab1' }) }} className='tabBoxHeaderItem noselect' title="Account Information" ><FontAwesomeIcon icon={faFileInvoice} /></div>
+                {this.getRenderTab1Button()}
                 <div onClick={(e) => { this.setState({ window: 'goal' }) }} className='tabBoxHeaderItem noselect' title="Goals" ><FontAwesomeIcon icon={faAward} /></div>
                 {this.getRenderTabStoreButton()}
                 <div onClick={(e) => { this.setState({ window: 'school' }) }} className='tabBoxHeaderItem noselect' title="School"><FontAwesomeIcon icon={faGraduationCap} /></div>
@@ -91,13 +91,18 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
         </div>)
     }
 
+    private getRenderTab1Button() {
+        if(!GS.getShoolService().classFinished(SchoolClassList.StoreSeeTab1)) return
+        return <div onClick={(e) => { this.setState({ window: 'tab1' }); } } className='tabBoxHeaderItem noselect' title="Account Information"><FontAwesomeIcon icon={faFileInvoice} /></div>;
+    }
+
     private getRenderTabNumbersButton() {
-        if(!GS.getShoolService().classFinished(SchoolClassList.StoreSeeNumbers)) return
+        if (!GS.getShoolService().classFinished(SchoolClassList.StoreSeeNumbers)) return
         return <div onClick={(e) => { this.setState({ window: 'numbers' }); }} className='tabBoxHeaderItem noselect' title="All numbers"><FontAwesomeIcon icon={faAtlas} /></div>;
     }
 
     private getRenderTabStoreButton() {
-        if(!GS.getShoolService().classFinished(SchoolClassList.StoreSeeStoreTab)) return
+        if (!GS.getShoolService().classFinished(SchoolClassList.StoreSeeStoreTab)) return
 
         return <div onClick={(e) => { this.setState({ window: 'store' }); }} className='tabBoxHeaderItem noselect' title="Store"><FontAwesomeIcon icon={faStore} /></div>;
     }
@@ -107,24 +112,47 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
           <div className='tabBoxContentItem tab1'>Tab 2</div> 
      */
     getTabSchoolContent(): React.ReactNode {
-
+        let current = GS.getShoolService().getCurrentClass()
+        let currentClass = GS.getShoolService().getClassById(current?.id??0)
         return (<div className='tabBoxContentItem school'>
-            <div className="schoolItem">
-                <div className="schoolItemHeader">Market</div>
-                <div className="schoolItemContent">
-                    <div className="schoolItemContentDescription">Learn more about the Market</div>
-                    <div className="schoolItemContentProgress">
-                        <div className="schoolItemContentPro">0%</div>
+            {GS.getShoolService().getAvaliableClasses().map((c, id) => {
+                let perc = c.id === current?.id ? 100 / c.periodsToFinish * (current?.p ?? 0) : 0
+                let pp = GameFormating.formatToRoundPostfix(perc, 2, '%')
+                return (<div key={id} className="schoolItem">
+                    <div className="schoolItemHeader">{c.title}
+                        {this.getRanderShoolGetClassButton(c,currentClass)}
+
                     </div>
-                </div>
-                <div className="schoolItemFooter">
-                    10 Periods a 100€ per Period
-                </div>
-            </div>
+
+                    <div className="schoolItemContent">
+                        <div className="schoolItemContentDescription">{c.description}</div>
+                        <div className="schoolItemContentProgress">
+                            <div style={{ width: pp }} className="schoolItemContentPro">{pp}</div>
+                        </div>
+                    </div>
+                    <div className="schoolItemFooter">
+                        {c.periodsToFinish} Periods a {GameFormating.formatToRoundPostfix(c.pricePerPeriod)} per Period
+
+                    </div>
+                </div>)
+            }
+            )}
+
         </div>)
     }
 
 
+
+    private getRanderShoolGetClassButton(c: SchoolClass, current: SchoolClass| undefined) {
+        if(current !== undefined && c.id === current.id){
+            return <button onClick={(e) => { this._eventService.callEvent(EventNames.showPopup,this,({title:'Stop School', content:'When you stop the class you lose all your progress!',display:true,okButtonCallback:()=>{GS.getShoolService().stopSchool(); this.setState({window:this.state.window})}} as PopupState)) } } className="">Stop</button>; 
+        }else if(current !== undefined){
+            return ''
+        }else
+        {
+            return <button onClick={(e) => { GS.getShoolService().startClass(c.id); this.setState({window:this.state.window}) } } className="">Learn</button>;
+        }
+    }
 
     getTabNumbersContent(): React.ReactNode {
         let flag = GameServices.getService<FlagService>(FlagService.serviceName)

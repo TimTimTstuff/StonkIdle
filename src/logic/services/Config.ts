@@ -17,11 +17,25 @@ export class GameConfig {
     static maxShareStartPrice: number = 25
     static getBaseSpread: number = 12
     static marketVolatilityChange: number = 995
-    static singleTimeTick: number = 3
+    static singleTimeTick: number = 2
     static tax: number = 25
     static maxTaxLogs: number = 10 
     static maxSavingAsCreditPercentage: number = 25
     static maxNews: number = 10
+    static initComp = [
+        {n: "World Idle Platform", s: "WIP"},
+        {n: "Little Lama Loft", s:'LOL'},
+        {n: "Ultra Waifu United", s:'UWU'},
+    ]
+    
+    static demoName = [
+        {n: "Alter Reconstruction", s:'ARE'},
+        {n: "Riddle with me", s:'RWM'},
+        {n: "Nerd Errors Games", s:'NEG'},
+        {n: "Dkpure Exports", s:'DEX'},
+        {n: "Air fleet Kings", s:'AFK'},
+        {n: 'Power Organization Peng', s:'POP'},
+    ]
     static getDefaultSave(): MainSave {
         return {
             name: 'unknown',
@@ -62,6 +76,8 @@ export class GameConfig {
         }
     }
 }
+
+
 export class GameFlags {
     static g_f_taxPercentage: string = 'tax'//store tax amount
     static g_f_shareSpread: string = 'spread'//store share spread buy/sell

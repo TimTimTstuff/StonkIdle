@@ -30,11 +30,10 @@ export class BusinessCalculator implements IGameService {
         this._save = GameServices.getService<SaveDataService>(SaveDataService.serviceName).getGameSave()
         this._flag = flag
         if (this._save.business === undefined || this._save.business.length === 0) {
-            this._save.business = [
-                BusinessHelper.generateBusiness(), 
-                BusinessHelper.generateBusiness(), 
-                BusinessHelper.generateBusiness(), 
-            ]
+            this._save.business = []
+            this.addBusiness(GameConfig.initComp[0])
+            this.addBusiness(GameConfig.initComp[1])
+            this.addBusiness(GameConfig.initComp[2])
         }
     }
     //#endregion
@@ -131,6 +130,10 @@ export class BusinessCalculator implements IGameService {
         }else if(sellPrice < 1){
             cB.basePotential = Potential.VeryHigh
         }
+    }
+
+    public addBusiness(business: {s:string, n:string}){
+        this._save.business.push(BusinessHelper.generateBusiness(business.n,business.s))
     }
 
     //#endregion
