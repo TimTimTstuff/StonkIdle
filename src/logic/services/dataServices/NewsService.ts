@@ -1,9 +1,10 @@
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import React from "react";
 import { GlobalEvents } from "..";
-import { EventNames, GameConfig } from "../Config";
+import { EventNames, GameConfig, GameFlags } from "../Config";
 import { GS } from "../GS";
 import { IGameService } from "../IGameService";
+import { FlagService } from "../saveData/FlagService";
 import { SaveDataService } from "../saveData/SaveDataService";
 
 export interface NewsData{
@@ -24,9 +25,14 @@ export class NewsService implements IGameService{
     public static serviceName: string = 'NewsService'
     //#endregion
 
-    constructor(save: SaveDataService, event: GlobalEvents) {
+    constructor(save: SaveDataService, event: GlobalEvents, flag: FlagService) {
         this._save = save        
         this._event = event
+        this._event.subscribe(EventNames.periodChange,(caller, args)=>{
+            if(flag.getFlagInt(GameFlags.n_n_AbonementTime) > 0){
+                flag.addToFlag(GameFlags.n_n_AbonementTime,-1)
+            }
+        })
     }
 
     private cleanNews(){

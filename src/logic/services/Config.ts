@@ -66,7 +66,10 @@ export class GameConfig {
                 s_mi:GameConfig.storeMaxItems,
                 s_di:0,
                 l_h:'',
-                n_a:0          
+                n_a:0,
+                o_m:0,         
+                o_d:0,
+                o_h:0
             },
             stats:{
                 
@@ -91,6 +94,9 @@ export class GameFlags {
     static l_s_hide: string = 'l_h'//GameLog Filter records
     static n_n_AbonementTime: string = 'n_a'//news subscription time
     static sw_s_lastTab: string = 's_lt'//last opend tab in the store window
+    static o_i_minutes: string = 'o_m'//offline minutes
+    static o_i_days: string = 'o_d'//offline days
+    static o_i_hours: string = 'o_h'//offline hours
 }
 export class EventNames {
     public static periodChange:string = 'periodChange'

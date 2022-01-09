@@ -16,11 +16,14 @@ import { GameLogCategories } from '../components/InfoComponents/GameLog'
 import { NewsService } from './services/dataServices/NewsService'
 import { SchoolService } from './services/dataServices/SchoolService'
 import { GS } from './services/GS'
+import { OfflineEarningsService } from './services/timeService/OfflineEarningsService'
+import { GameFormating } from './module/calculator/GameFormating'
 
 export class Game {
 
     private static instance: Game;
-    public static loopId: number
+    public static loopId: number;
+    public static lastLoop:number;
     //Services
     private _gameEvent: GlobalEvents | undefined
     private _timeService: TimeService | undefined
@@ -36,12 +39,14 @@ export class Game {
     private _info: InfoData | undefined
     private _news: NewsService | undefined
     private _school: SchoolService | undefined
+    private _offline: OfflineEarningsService | undefined
 
     constructor() {
         if (Game.instance !== undefined) throw new Error('Dublicate Game')
         this.registerServices()
         this.registgerGameEvents()
         this.setupGameLoop()
+        Game.lastLoop = new Date().getTime()
         if (this._flagService?.getFlagBool(GameFlags.t_b_active)) {
             TutorialModul.RunTutorial()
         }
@@ -61,12 +66,15 @@ export class Game {
     private setupGameLoop() {
         clearInterval(Game.loopId)
         Game.loopId = setInterval(() => {
-
+            let xLoop = this._flagService?.getFlagInt(GameFlags.g_i_gameLoopTickSpeed)??200
             if (this._timeService === undefined) {
                 this._log?.error('Game', `No TimeService?`)
             }
+            let delta = new Date().getTime() - Game.lastLoop
+            let ticks = GameFormating.round(delta/xLoop)
+            Game.lastLoop = new Date().getTime()
             //calculate ticks in game speed
-            this._timeService?.addTimeTick()
+            this._timeService?.addTimeTick(ticks)
 
         }, this._flagService?.getFlagInt(GameFlags.g_i_gameLoopTickSpeed)) as unknown as number
     }
@@ -78,9 +86,7 @@ export class Game {
             }
             this._businessCalculator?.onPeriodChange()
             this._accountService?.onPeriodUpdate()
-
-            if(this._saveManager === undefined) return
-
+            this._offline?.processOfflineTime()
             this._saveManager?.save()
         })
 
@@ -129,11 +135,14 @@ export class Game {
         this._info = new InfoData()
         GameServices.registerService(this._info)
 
-        this._news = new NewsService(this._saveManager, this._gameEvent)
+        this._news = new NewsService(this._saveManager, this._gameEvent, this._flagService)
         GameServices.registerService(this._news)
 
         this._school = new SchoolService(this._saveManager, this._gameEvent)
         GameServices.registerService(this._school)
+
+        this._offline = new OfflineEarningsService(this._gameEvent, this._flagService, this._saveManager)
+        GameServices.registerService(this._offline)
 
 
     }

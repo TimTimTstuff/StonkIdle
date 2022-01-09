@@ -39,8 +39,9 @@ export class TimeService implements IGameService {
         return TimeService.serviceName
     }
 
-    addTimeTick(): void {
-        this.addTicks(this._flagService.getFlagFloat(GameFlags.g_i_ticksPerLoop));
+    addTimeTick(multiplier:number): void {
+        
+        this.addTicks(this._flagService.getFlagFloat(GameFlags.g_i_ticksPerLoop)*multiplier);
     }
 
     getTicks(): number {

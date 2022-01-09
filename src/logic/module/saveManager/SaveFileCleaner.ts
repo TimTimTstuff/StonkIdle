@@ -24,7 +24,7 @@ export class SaveFileCleaner {
         //flags
         let keys = Object.keys(dSave.flags)
         keys.forEach(k =>{
-            if(save.flags[k] === undefined){
+            if(save.flags[k] === undefined || save.flags[k]===null){
                 save.flags[k] = dSave.flags[k]
                 console.log('Add: '+k)
             }
