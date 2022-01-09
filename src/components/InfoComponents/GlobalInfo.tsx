@@ -1,3 +1,4 @@
+import { faQuestion } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { GameCalculator } from "../../logic/module/calculator/GameCalculator";
@@ -65,12 +66,13 @@ export class GlobalInfo extends React.Component<{}, GlobalInfoState> {
     render(): React.ReactNode {
         if(!UIHelper.hasTutorialCheck(1)) return ''
         return (
-            <div>
+            <div className="globalInfo">
                 <div>
                     {this.getMarketPotential()}
-
                     {this.getMarketVolatility()}
                 </div>
+
+                    {this.getHelpIcon()}
             </div>)
     }
 
@@ -87,6 +89,10 @@ export class GlobalInfo extends React.Component<{}, GlobalInfoState> {
             <span className="sincePotiential">Since: {this._timeService.getFormated('A/C/P', this._volChanged)}</span>
 
         </div>;
+    }
+
+    private getHelpIcon() {
+        return <button onClick={()=>{GS.getGlobalEvents().callEvent(EventNames.ShowGameOverlay,this,true)}} className="helpButton"><FontAwesomeIcon className="helpIcon" icon={faQuestion}/></button>
     }
 
     private getMarketPotential() {

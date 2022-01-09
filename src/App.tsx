@@ -12,6 +12,7 @@ import { StoreWindow } from './components/MainComponents/StoreWindow';
 import { Game } from './logic/Game';
 import { NewsWindow } from './components/InfoComponents/NewsWindow';
 import { UIHelper } from './logic/module/calculator/UiHelper';
+import { GameOverlay } from './components/InfoComponents/GameOverlay';
 
 function App() {
 
@@ -19,7 +20,8 @@ function App() {
   console.log('Call App')
 
   return (
-    <div className="App" id='stonks'>
+    <div className="App" id='stonks'>  
+    <GameOverlay />
       {getHeader()}
       {getBox1()}
       {getBox2()}
@@ -28,6 +30,7 @@ function App() {
 
       <Popup />
       <TransactionNumbers />
+    
       <div className='clearFloat'></div>
     </div>
   );

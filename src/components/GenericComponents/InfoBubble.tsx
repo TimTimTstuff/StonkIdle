@@ -32,7 +32,7 @@ export class InfoBubble extends React.Component<InfoBubbleProp, InfoBubbleState>
     render(): React.ReactNode {
         return (<button className="infoBubbleButton" onClick={()=>{
             GS.getGlobalEvents().callEvent(EventNames.showPopup, this, ({title:this.state.title, content:this.props.content, display:true} as PopupState) )
-        }}><FontAwesomeIcon icon={faInfoCircle} /></button>)
+        }}>{this.state.title} <FontAwesomeIcon className="infoBubbleIcon" icon={faInfoCircle} /></button>)
     }
 
 }

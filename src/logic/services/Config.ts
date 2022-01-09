@@ -113,4 +113,5 @@ export class EventNames {
     static openTransfereWindow: string ='openTransfereWindow'
     static GoalDone: string = 'goalDone'
     static newNews: string = 'newNews'
+    static ShowGameOverlay: string = 'showOverlay'
 }

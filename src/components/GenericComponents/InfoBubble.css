@@ -3,12 +3,17 @@
     font-size: 8pt;
 }
 
+.infoBubbleIcon{
+    padding-top: 2px;
+    padding-left: 5px;
+}
+
 .infoBubbleButton{
     font-size: 8pt;
-    padding:0px;
-    margin:0;
-    float:right;
+    padding:3px;
+    margin:3;
+    font-size: 9pt;
     display: flex;
-    border:none;
-    background-color: transparent;
+    border: solid thin #61666d;
+    background-color: #21262d;
 }
