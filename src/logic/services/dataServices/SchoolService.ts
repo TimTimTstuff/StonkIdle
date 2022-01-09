@@ -4,69 +4,6 @@ import { GS } from "../GS";
 import { IGameService } from "../IGameService";
 import { SaveDataService } from "../saveData/SaveDataService";
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 export enum SchoolClassList {
     MarketPotential = 1,
     MarketVolatility = 2,
@@ -121,6 +58,7 @@ export class SchoolService implements IGameService{
             }
             savedShool.p += 1
             GS.getAccountService().removeMainAccount(cClass.pricePerPeriod,'School Fee',true,true)
+            GS.getAccountService().addToTaxLogBuyItem(cClass.pricePerPeriod)
             if(savedShool.p >= cClass.periodsToFinish){
                 this.processClass(cClass)
                 this._event.callEvent(EventNames.AddLogMessage,this,{msg:`You finished Shool!`, key:'goal'})

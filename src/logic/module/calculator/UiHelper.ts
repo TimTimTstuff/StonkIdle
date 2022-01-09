@@ -37,7 +37,7 @@ export class UIHelper{
     static hasTutorialCheck(level:number):boolean{
         let flagService = GameServices.getService<FlagService>(FlagService.serviceName)
        
-        return flagService.getFlagInt(GameFlags.t_i_level) > level
+        return flagService.getFlagInt(GameFlags.t_i_level) >= level
     }
 
     static isVisible(visible:boolean):CSSProperties{

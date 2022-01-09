@@ -56,8 +56,9 @@ export class AccountWindow extends React.Component<{}, AccountWindowState> {
     }
 
     render(): React.ReactNode {
+        if(!UIHelper.hasTutorialCheck(1)) return ''
         return (<div  id='accountWindow'> 
-            <table style={UIHelper.isVisible(UIHelper.hasTutorialCheck(1))}>
+            <table>
                 <thead>
                     <tr>
                         <th>#</th>
@@ -87,7 +88,7 @@ export class AccountWindow extends React.Component<{}, AccountWindowState> {
                     </tr>
                 </tbody>
             </table>
-            <div className="floatLeft" style={UIHelper.isVisible(UIHelper.hasTutorialCheck(2))}>            
+            <div className="floatLeft">            
                <button onClick={(e)=>{
                    let tr: TNState = {
                        display:true,

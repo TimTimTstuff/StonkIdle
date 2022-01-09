@@ -1,4 +1,5 @@
 import React from "react";
+import { UIHelper } from "../../logic/module/calculator/UiHelper";
 import { GlobalEvents, GameServices } from "../../logic/services";
 import { EventNames, GameConfig, GameFlags } from "../../logic/services/Config";
 import { GS } from "../../logic/services/GS";
@@ -42,7 +43,7 @@ export class GameLog extends React.Component<{}, GameLogState> {
 
     render(): React.ReactNode {
         let hide = GS.getFlagService().getFlagString(GameFlags.l_s_hide).split('|')
-
+        if(!UIHelper.hasTutorialCheck(5)) return ''
         return (
             <div id="reactLog">
                 <h2>Logs</h2>

@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
+import { UIHelper } from "../../logic/module/calculator/UiHelper";
 import { EventNames, GameFlags } from "../../logic/services/Config";
 import { NewsData } from "../../logic/services/dataServices/NewsService";
 import { GS } from "../../logic/services/GS";
@@ -25,7 +26,7 @@ export class NewsWindow extends React.Component<{}, NewsState>{
                 return this.getNewsBox(id, news)
             })
         }
-
+        if(!UIHelper.hasTutorialCheck(5)) return ''
         return (<div className="newsWindow">
             <h2 className="newsWindowHeader">Market News</h2><small>Subscription for {GS.getFlagService().getFlagInt(GameFlags.n_n_AbonementTime)} Periods</small>
             <div className="newsWindowContent">

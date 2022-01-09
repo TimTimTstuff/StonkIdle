@@ -7,14 +7,12 @@ import { UIHelper } from '../../logic/module/calculator/UiHelper';
 import { GameServices, GlobalEvents } from '../../logic/services';
 import { DepotService } from '../../logic/services/accounts/DepotService';
 import { BusinessCalculator } from '../../logic/services/businessCalculator/BusinessCalculator';
-import { EventNames, GameConfig } from '../../logic/services/Config';
+import { EventNames } from '../../logic/services/Config';
 import { SchoolClassList } from '../../logic/services/dataServices/SchoolService';
 import { GS } from '../../logic/services/GS';
 import { TimeService } from '../../logic/services/timeService/TimeService';
 import { DepotData } from '../../model/AccountData';
 import { Business, HistorySlice } from '../../model/Business';
-import { InfoBubble } from '../GenericComponents/InfoBubble';
-import { PopupState } from '../GenericComponents/Popup';
 import { TNState, TransfereType } from '../GenericComponents/TransactionNumbers';
 import './DepotView.css'
 
@@ -45,10 +43,10 @@ export class DepotView extends React.Component<{}, DepotViewState> {
         let allBusiness = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getAllBusiness()
         let cDepot = GameServices.getService<DepotService>(DepotService.serviceName)
         let totalInStock = cDepot.getDepotTotalValue()
-
+        if(!UIHelper.hasTutorialCheck(3)) return ''
         return (
             <div id='depots' className='depotView'>
-                <div style={UIHelper.isVisible(UIHelper.hasTutorialCheck(6))} className='depotViewItem depotList'>
+                <div className='depotViewItem depotList'>
                     {this.getRenderTotalDepotValue(totalInStock)}
 
                     {allBusiness.sort((a, b) => this.compareBusinessByTotalDepotValue(a, b))
@@ -113,7 +111,7 @@ export class DepotView extends React.Component<{}, DepotViewState> {
         let thisCirlce = GS.getBusinessCalculator().getCurrentCicleForBusiness(this.state.currentBusiness)
         let thisAge = GS.getBusinessCalculator().getCurrentAgeForBusiness(this.state.currentBusiness)
         if (thisAge == undefined || thisCirlce == undefined) return;
-        return <div className='depotViewItem depotDetails' style={UIHelper.isVisible(UIHelper.hasTutorialCheck(7))}>
+        return <div className='depotViewItem depotDetails' >
             <span>
                 {business.name} <small>({business.shortName})</small><br />
             </span>

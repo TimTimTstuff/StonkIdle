@@ -63,9 +63,10 @@ export class GlobalInfo extends React.Component<{}, GlobalInfoState> {
     }
 
     render(): React.ReactNode {
+        if(!UIHelper.hasTutorialCheck(1)) return ''
         return (
             <div>
-                <div style={UIHelper.isVisible(UIHelper.hasTutorialCheck(3))}>
+                <div>
                     {this.getMarketPotential()}
 
                     {this.getMarketVolatility()}

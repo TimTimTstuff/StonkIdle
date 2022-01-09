@@ -13,7 +13,7 @@ import { TimeService } from "../../logic/services/timeService/TimeService";
 import './BusinessChart.css'
 
 type bcProps = {
-    shortName: string;
+    
 }
 
 type bcState = {
@@ -42,9 +42,9 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
                 buyPrice: 0,
                 changePrice:0
             },
-            shortName: props.shortName
+            shortName: ''
         }
-        this._currentComp = props.shortName
+        this._currentComp = ''
         this.initializeChart()
     }
 
@@ -53,6 +53,7 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
         event.subscribe(EventNames.periodChange, () => {
             this.fixChartData()
             this.changeCompany(this.state.shortName)
+
             GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getAllBusiness().forEach(b => {
                 let s = b.stockPriceHistory[b.stockPriceHistory.length - 1];
                 let pre = b.stockPriceHistory[b.stockPriceHistory.length - 2];
@@ -77,7 +78,7 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
             if (GameConfig.businessChartMaxPoints < (this._chartData.labels?.length ?? 0)) {
                 this._chartData.labels?.shift()
             }
-
+            console.log('Update B')
             BusinessChart.cartRef?.update()
         })
 
@@ -85,6 +86,7 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
             this.changeCompany(shortName as string)
         })
     }
+
     fixChartData() {
        GS.getBusinessCalculator().getAllBusiness().forEach(b =>{
 
@@ -184,11 +186,13 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
     }
 
     render(): React.ReactNode {
+        
         let data = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getBusiness(this.state.shortName)
         let firstPrice = GameServices.getService<BusinessCalculator>(BusinessCalculator.serviceName).getBusinessFirstPrice(this.state.shortName)
         let changeChart = 100 / this.state.value.sellPrice * (this.state.value.sellPrice - firstPrice.s)
-        return <div className="businessChart">
-            <table style={UIHelper.isVisible(UIHelper.hasTutorialCheck(5))}>
+    
+        return <div className="businessChart" style={UIHelper.isVisible(UIHelper.hasTutorialCheck(2))}>
+            <table >
                 <thead>
                     <tr>
                         <th>Sell</th>
@@ -213,7 +217,7 @@ export class BusinessChart extends React.Component<bcProps, bcState> {
                 <span className="chartCompanyName">{data?.name}</span>
                 <span className="chartCompanyNameShort">{data?.shortName}</span>
             </div>
-            <Line style={UIHelper.isVisible(UIHelper.hasTutorialCheck(4))} className="chartPullLeft" ref={(reference) => { BusinessChart.cartRef = reference }} height={270} width={620} data={this._chartData} options={
+            <Line className="chartPullLeft" ref={(reference) => { BusinessChart.cartRef = reference }} height={270} width={620} data={this._chartData} options={
                 {
 
                     responsive: true,

@@ -1,7 +1,10 @@
 import { Potential, MarketVolatility } from "../../model/Business"
 import { MainSave } from "../../model/MainSave"
-export class GameConfig {
+export class GameConfig {    
+    //Don't forget to update
+    static lastGameUpdate: string = '09.01.2022'
     static saveVersion: string = '0.6'
+
     static storeItemChance: number = 250
     static storeMaxItems: number = 5
     public static gameChartUpdate: number = 1500
@@ -36,6 +39,7 @@ export class GameConfig {
         {n: "Air fleet Kings", s:'AFK'},
         {n: 'Power Organization Peng', s:'POP'},
     ]
+
     static getDefaultSave(): MainSave {
         return {
             name: 'unknown',

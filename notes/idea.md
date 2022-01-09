@@ -1,5 +1,9 @@
 # Features Ideas
 
+# Offline Gains
+ - X Interest Periods
+ - x Periods time Speedup
+ - 
 # TemporaryBuffs
 - {stat, value, periods}
 
@@ -13,16 +17,11 @@
         -> push to very low
     - 
 
-# News
-    - On Market Potential/Volati change
-        - Market Watch thinks the current market Potential is ..
-    - On Business Potential Change
-        - Business Today: {com} 
+# News 
     - On new Item in Store
 
 # Money Chart
     - Chart shows: Savings + Depot + (Main - Credit)
-
 
 # Crypto Miner
     - Miner: 1 per Circle. 

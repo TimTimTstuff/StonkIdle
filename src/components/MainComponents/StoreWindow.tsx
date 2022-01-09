@@ -10,7 +10,7 @@ import { GlobalEvents, GameServices } from "../../logic/services";
 import { AccountService } from "../../logic/services/accounts/AccountService";
 import { GameStats, StatsService } from "../../logic/services/accounts/StatsService";
 import { StoreManager } from "../../logic/services/businessCalculator/StoreManager";
-import { EventNames, GameFlags } from "../../logic/services/Config";
+import { EventNames, GameConfig, GameFlags } from "../../logic/services/Config";
 import { SchoolClass, SchoolClassList } from "../../logic/services/dataServices/SchoolService";
 import { GS } from "../../logic/services/GS";
 import { FlagService } from "../../logic/services/saveData/FlagService";
@@ -40,7 +40,7 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
         this._store = GameServices.getService<StoreManager>(StoreManager.serviceName)
         let last = this._flag.getFlagString(GameFlags.sw_s_lastTab)
         this.state = {
-            window: last == '' ? 'tab1' : last
+            window: last == '' ? 'goal' : last
         }
 
     }
@@ -52,6 +52,7 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
     }
 
     render(): React.ReactNode {
+        if(!UIHelper.hasTutorialCheck(4)) return ''
         let content: string | React.ReactNode = ''
         switch (this.state.window) {
             case 'tab1':
@@ -76,7 +77,7 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
         this._flag.setFlag(GameFlags.sw_s_lastTab, this.state.window)
         return (<div className='tabBox'>
 
-            <div style={UIHelper.isVisible(UIHelper.hasTutorialCheck(8))} className='tabBoxHeader'>
+            <div className='tabBoxHeader'>
                 {this.getRenderTab1Button()}
                 <div onClick={(e) => { this.setState({ window: 'goal' }) }} className='tabBoxHeaderItem noselect' title="Goals" ><FontAwesomeIcon icon={faAward} /></div>
                 {this.getRenderTabStoreButton()}
@@ -140,8 +141,6 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
 
         </div>)
     }
-
-
 
     private getRanderShoolGetClassButton(c: SchoolClass, current: SchoolClass| undefined) {
         if(current !== undefined && c.id === current.id){
@@ -273,9 +272,9 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
                     </tr>
                     <tr>
                         <td>Game Version</td>
-                        <td>0.0.4</td>
+                        <td>{GameConfig.saveVersion}</td>
                         <td>Last Update</td>
-                        <td>08.01.2022</td>
+                        <td>{GameConfig.lastGameUpdate}</td>
                     </tr>
                     <tr>
                         <td>Contact</td>
@@ -310,7 +309,7 @@ export class StoreWindow extends React.Component<{}, StoreStage> {
             ['Interest'],
             ['Sell Shares'],
             ['Buy Shares'],
-            ['Buy Store'],
+            ['Store / School'],
             ['EBT'],
             ['Tax'],
             ['Total']]

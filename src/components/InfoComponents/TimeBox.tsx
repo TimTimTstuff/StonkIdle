@@ -1,5 +1,6 @@
 import React from "react";
 import { GameFormating } from "../../logic/module/calculator/GameFormating";
+import { UIHelper } from "../../logic/module/calculator/UiHelper";
 import { LogService, GameServices } from "../../logic/services";
 import { GameConfig, GameFlags } from "../../logic/services/Config";
 import { GS } from "../../logic/services/GS";
@@ -38,7 +39,7 @@ export class TimeBox extends React.Component<TimeData, TimeData>{
     render(): React.ReactNode {
         let currTicks = this._timeService.getCurrentTimeBox().ticks;
         let timeBox = this._timeService.getTimeBox(this.state.ticks)
-
+        if(!UIHelper.hasTutorialCheck(1)) return ''
         return (<div className="timeBoxContainer">
             <div className='timebox'>
                 <table>

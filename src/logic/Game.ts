@@ -52,6 +52,7 @@ export class Game {
         }
         setTimeout(() => {
             this._gameEvent?.callEvent(EventNames.selectedBusiness, this, this._businessCalculator?.getAllBusiness()[0].shortName)
+            TutorialModul.RunTutorial()
         }, 300)
     }
 

@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBriefcase, faExpandArrowsAlt, faTimes, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { DepotService } from "../../logic/services/accounts/DepotService";
 import { GameCalculator } from "../../logic/module/calculator/GameCalculator";
+import { GS } from "../../logic/services/GS";
 
 export enum TransfereType {
     StoreSaving,
@@ -28,10 +29,7 @@ export interface TNState {
     pricePerShare: number,
 }
 
-
 export class TransactionNumbers extends React.Component<{}, TNState>{
-
-
 
     constructor(prop: {}) {
         super(prop);
@@ -43,7 +41,7 @@ export class TransactionNumbers extends React.Component<{}, TNState>{
             shortName: '',
             pricePerShare: 1,
         }
-       
+
     }
 
     componentDidMount() {
@@ -69,33 +67,54 @@ export class TransactionNumbers extends React.Component<{}, TNState>{
 
     //#region render
     render(): React.ReactNode {
-        let subline = this.state.type === TransfereType.StoreSaving ? 'For Saving Account' : this.getSubLineForBuySell()
+        let subline = this.state.type !== TransfereType.SellStock && this.state.type !== TransfereType.BuyStock ? '' : this.getSubLineForBuySell()
 
-        return (<div> <Draggable onStart={(e,data)=>{
-            let target = e.target as HTMLElement      
-            return target.tagName.toUpperCase() === 'DIV' || target.tagName.toUpperCase() === 'SVG' || target.tagName.toUpperCase() === 'PATH'?undefined:false
-        }} ><div style={UIHelper.isVisible(this.state.display)} id='tnBox' className="tnBoxContainer">
-            <button title="Close Window" className="floatRight tnBoxCloseButton" onClick={(e) => { this.setState({ display: false }) }}><FontAwesomeIcon icon={faTimes} /></button>
-            <div title="Dragg window" className="floatRight dragInfo"><FontAwesomeIcon icon={faExpandArrowsAlt} /></div>
-            <div className="tnBoxHeader">Buy / Sell Calculator</div>
-            <input title="Amount to be used" className="tnBoxInput" type='number' readOnly={false} value={this.state.value} min='0' onChange={(e) => { this.setState({ value: parseInt(e.target.value) }) }} />
-            {subline}
-            <button title="Buy/Sell or Store" onClick={(e) => { this.state.buyCallback(this.state.value); this.setState({display:false}) }} className="tnBoxBuyButton"><FontAwesomeIcon icon={faBriefcase} /></button>
-            <button title="Reset Input" className="tnBoxInputResetButton" onClick={(e) => { this.setState({ value: 0 }) }}><FontAwesomeIcon icon={faTrash} /></button>
-            <table>
-                <tbody>
-                    {this.getBuyNumberPositive()}
-                    {this.getBuyNumberNegative()}
-                    {this.getBuyPercentagePositive()}
-                </tbody>
-            </table>
-        </div></Draggable></div>)
+        return (<div> <Draggable onStart={(e, data) => {
+            let target = e.target as HTMLElement
+            return target.tagName.toUpperCase() === 'DIV' || target.tagName.toUpperCase() === 'SVG' || target.tagName.toUpperCase() === 'PATH' ? undefined : false
+        }} >
+            <div style={UIHelper.isVisible(this.state.display)} id='tnBox' className="tnBoxContainer">
+                <button title="Close Window" className="floatRight tnBoxCloseButton" onClick={(e) => { this.setState({ display: false }) }}><FontAwesomeIcon icon={faTimes} /></button>
+                <div title="Dragg window" className="floatRight dragInfo"><FontAwesomeIcon icon={faExpandArrowsAlt} /></div>
+                <div className="tnBoxHeader">{this.getHeader()}</div>
+                <input title="Amount to be used" className="tnBoxInput" type='number' readOnly={false} value={this.state.value} min='0' onChange={(e) => { this.setState({ value: parseInt(e.target.value) }) }} />
+                {subline}
+                <button title="Buy/Sell or Store" onClick={(e) => { this.state.buyCallback(this.state.value); this.setState({ display: false }) }} className="tnBoxBuyButton"><FontAwesomeIcon icon={faBriefcase} /></button>
+                <button title="Reset Input" className="tnBoxInputResetButton" onClick={(e) => { this.setState({ value: 0 }) }}><FontAwesomeIcon icon={faTrash} /></button>
+                <table>
+                    <tbody>
+                        {this.getBuyNumberPositive()}
+                        {this.getBuyNumberNegative()}
+                        {this.getBuyPercentagePositive()}
+                    </tbody>
+                </table>
+            </div></Draggable></div>)
+    }
+    getHeader(): React.ReactNode {
+       switch(this.state.type){
+           case TransfereType.BuyStock:
+           case TransfereType.SellStock:
+            return (<span>{this.state.type === TransfereType.SellStock ? 'Sell' : 'Buy'} {this.state.shortName} - Price per Share: <span>{this.state.pricePerShare}€</span> </span>)
+           case TransfereType.StoreSaving:
+               return 'Store in Savings Account'
+           case TransfereType.TransfFromCredit:
+               return 'Get Credit'
+           case TransfereType.TransfToCredit:
+               return 'Pay Credit'
+
+       }
     }
 
     private getSubLineForBuySell() {
-        return (<div>
-              <span>{this.state.type === TransfereType.SellStock ? 'Sell' : 'Buy'}</span>: <span>{this.state.shortName}</span> <span>{this.state.pricePerShare}€</span> <span>Total: {GameCalculator.roundValueToEuro(this.state.pricePerShare*this.state.value)}</span>
-            </div>)
+        
+        let totalShares = this.state.type === TransfereType.SellStock
+        ?(GameServices.getService<DepotService>(DepotService.serviceName).getDepotByCompanyName(this.state.shortName)?.shareAmount??0) 
+        : (GS.getBusinessCalculator().getBusiness(this.state.shortName)?.floatingStock??0)
+
+        return (<div>       
+            <span>Total: {GameCalculator.roundValueToEuro(this.state.pricePerShare * this.state.value)} | </span>
+            <span>Shares to {this.state.type === TransfereType.SellStock ? 'Sell' : 'Buy'}: {totalShares} </span>
+        </div>)
     }
 
     private getBuyPercentagePositive() {
@@ -115,24 +134,28 @@ export class TransactionNumbers extends React.Component<{}, TNState>{
             this.addValue(percMoney)
         } else if (this.state.type === TransfereType.BuyStock) {
             let stocks = Math.floor(percMoney / this.state.pricePerShare)
+            let freeStocks = (GS.getBusinessCalculator().getBusiness(this.state.shortName)?.floatingStock ?? 0)
+            if (stocks > freeStocks) {
+                stocks = freeStocks
+            }
             this.addValue(stocks)
-        } else if(this.state.type === TransfereType.SellStock){
+        } else if (this.state.type === TransfereType.SellStock) {
             let sAm = GameServices.getService<DepotService>(DepotService.serviceName).getDepotByCompanyName(this.state.shortName)
-            if((sAm?.shareAmount??0) <= 0) return;
-            let p = Math.floor((sAm?.shareAmount??0) / 100 * percent)
+            if ((sAm?.shareAmount ?? 0) <= 0) return;
+            let p = Math.floor((sAm?.shareAmount ?? 0) / 100 * percent)
             this.addValue(p)
-        } else if(this.state.type === TransfereType.TransfFromCredit){
+        } else if (this.state.type === TransfereType.TransfFromCredit) {
             let sam = GameServices.getService<AccountService>(AccountService.serviceName).creditAccountLeft()
             let borrow = sam / 100 * percent
             this.addValue(Math.floor(borrow))
-        } else if(this.state.type === TransfereType.TransfToCredit){
+        } else if (this.state.type === TransfereType.TransfToCredit) {
             let sac = GameServices.getService<AccountService>(AccountService.serviceName)
             let money = sac.getMainAccountBalance()
             let cred = sac.getCreditBalance() / 100 * percent
-            let max = cred*-1
-            if(money > max){
+            let max = cred * -1
+            if (money > max) {
                 this.addValue(Math.floor(max))
-            }else{
+            } else {
                 this.addValue(Math.floor(money))
             }
         }
