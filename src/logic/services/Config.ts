@@ -2,8 +2,8 @@ import { Potential, MarketVolatility } from "../../model/Business"
 import { MainSave } from "../../model/MainSave"
 export class GameConfig {    
     //Don't forget to update
-    static lastGameUpdate: string = '09.01.2022'
-    static saveVersion: string = '0.6'
+    static lastGameUpdate: string = '10.01.2022'
+    static saveVersion: string = '0.6.1'
 
     static storeItemChance: number = 250
     static storeMaxItems: number = 5
