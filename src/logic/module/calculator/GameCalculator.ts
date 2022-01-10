@@ -6,7 +6,7 @@ export class GameCalculator {
     
     public static calculateBusinessSellPrice(business:Business, currentValue:number, marketPotential:Potential){
         let marketChance = GameRandom.GetRandom(0,1100-marketPotential)
-        let businessChance = GameRandom.GetRandom(0,(business.potential+business.basePotential)/2)
+        let businessChance = GameRandom.GetRandom(0,(business.potential+(business.basePotential*2))/3)
         let isUp = businessChance > marketChance
 
         let maxChangeInStock = isUp? ((businessChance*2)-marketChance) : ((marketChance*2)-businessChance)
