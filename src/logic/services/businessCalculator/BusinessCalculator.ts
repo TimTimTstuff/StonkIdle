@@ -188,7 +188,7 @@ export class BusinessCalculator implements IGameService {
             chance +=25
         }
         let erg = (Math.random() * (chance + this._save.marketVolatility))
-        console.log(`Change Business: ${erg}`)
+      
         return erg > GameConfig.businessChangesPotential
     }
 

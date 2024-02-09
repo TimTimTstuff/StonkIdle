@@ -1,14 +1,9 @@
 # Features Ideas
 
-# Offline Gains
- - X Interest Periods
- - x Periods time Speedup
- - 
 # TemporaryBuffs
 - {stat, value, periods}
 
 # Business
-- Ceiling on gains -> Dragg to optimal price
 
 # Global Events
     - Shortage on Industry X
@@ -16,9 +11,6 @@
     - No demand for Industry X
         -> push to very low
     - 
-
-# News 
-    - On new Item in Store
 
 # Money Chart
     - Chart shows: Savings + Depot + (Main - Credit)
@@ -37,18 +29,13 @@
     - Flat - 100€ per Period TAX 15% (Accsess to shool, News)
     - Own Apartment - 150€  TAX 15% (Learn Speed +25%, Access to DarkNet)
     - Own House - 250€ TAX 20% (Learn Speed +25%)
-
-# school
-    - Market Knowledge:
-        - Business Current Performance
-        - This Cicle
-        - This Age
-        - Market Potential
-        - Market Volatility
-    -price = class*90+10%
 # Logs by Topics
     - Checkboxes filter Logs
 
-# Info Buttons with explanation PopUp
-    - Info icon 
-    - Text
+# Rebirth
+    - Savings / 1mio = Points
+        - Speedup Ticks by 5% (0.5)
+        - Start Saving + 5000€ (max) 
+        - Lower Tax: 0.5% (min 10%)
+        - Start Period Savings: +100
+

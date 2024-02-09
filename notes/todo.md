@@ -1,19 +1,16 @@
 # Bugs
-
+- new business show wird in the chart. Prefill with empty?
+- click on mobile: React.initializeTouchEvents(true)
 # Features
-   
-- Rebirth
-    - Savings / 1mio = Points
-        - Speedup Ticks by 5% (0.5)
-        - Start Saving + 5000€ (max) 
-        - Lower Tax: 0.5% (min 10%)
-        - Start Period Savings: +100
-
-- Fixes
-    - Add school pay to Item in Store/Stats
+Business
+    - Business add fixed Industriy
+    - Show industry of business  
+    - Recheck volatility, changes more often
+    - Ceiling on gains -> Dragg to optimal price
     
-- Offline Gains
+School
+    - update design
 
-# Near Future
-- Business add fixed Industriy
-- Show industry of business
+Offline Gains
+    - Get speedup for Minutes
+    - Hours get buff for Interest (x2/x3)

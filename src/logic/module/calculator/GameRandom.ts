@@ -1,5 +1,3 @@
-import { BusinessIndustry } from "../../../model/Business"
-
 export class GameRandom {
 
     public static GetRandom(min:number, max:number, precision:number = 0){
